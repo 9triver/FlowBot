@@ -59,7 +59,7 @@ function start() {
   workspace = Blockly.inject('blocklyDiv',
     {
         toolbox:toolbox
-    });
+    });   
 }
 
 function registerFirstContextMenuOptions() {
