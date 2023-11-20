@@ -1,67 +1,22 @@
 'use strict';
-
 let workspace = null;
 
 function start() {
   registerFirstContextMenuOptions();
+  registerExcelContent();
+  workspace = Blockly.inject('blocklyDiv',
+    {
+        toolbox:document.getElementById('toolbox-categories'),
+    });
+  workspace.addChangeListener(event => {
+      const code = python.pythonGenerator.workspaceToCode(workspace);
+      document.getElementById('generatedCodeContainer').value = code;
+    });
   registerOutputOption();
   registerHelpOption();
   registerDisplayOption();
   Blockly.ContextMenuRegistry.registry.unregister('workspaceDelete');
-  // Create main workspace.
-  var toolbox = {
-    "kind": "categoryToolbox",
-    "contents": [
-      {
-        "kind": "category",
-        "name": "compute",
-        "contents": [
-          {
-            "kind": "block",
-            "type": "controls_if"
-          },
-        ]
-      },
-      {
-        "kind": "category",
-        "name": "decompose",
-        "categorystyle": "logic_category",
-        "contents": [
-          {
-            "kind": "block",
-            "type": "logic_compare"
-          },
-          {
-            "kind": "block",
-            "type": "logic_operation"
-          },
-          {
-            "kind": "block",
-            "type": "logic_boolean"
-          }
-        ]
-      },
-      {
-        "kind":"category",
-        "name":"verify",
-        "content":[
-        ]
-      },
-      {
-        "kind":"category",
-        "name":"file",
-        "content":[
-
-        ]
-      }
-    ]
-  };
-  workspace = Blockly.inject('blocklyDiv',
-    {
-        toolbox:toolbox
-    });   
 }
-
 function registerFirstContextMenuOptions() {
   // This context menu item shows how to use a precondition function to set the visibility of the item.
   const workspaceItem = {
@@ -82,7 +37,7 @@ function registerFirstContextMenuOptions() {
   };
   // Register.
   Blockly.ContextMenuRegistry.registry.register(workspaceItem);
-
+  
   // Duplicate the workspace item (using the spread operator).
   const blockItem = {...workspaceItem}
   // Use block scope and update the id to a nonconflicting value.
@@ -90,7 +45,34 @@ function registerFirstContextMenuOptions() {
   blockItem.id = 'hello_world_block';
   Blockly.ContextMenuRegistry.registry.register(blockItem);
 }
-
+function registerExcelContent()
+{ 
+  var openExcel = {
+    "message0": "openExcel %1",
+    "args0": [
+      {
+      "type" : "input_value",
+      "name":"FILE",
+      "check":"String"
+      }
+    ],
+    "colour":160
+  };
+  Blockly.Blocks['openExcel']=
+    {
+      init: function() {
+        this.jsonInit(openExcel);
+      } 
+    };
+    python.pythonGenerator.forBlock['openExcel'] = function(block, generator) {
+      // Collect argument strings.
+      const fieldValue = block.getFieldValue('MY_FIELD');
+      const value = '\'' + block.getFieldValue('VALUE') + '\'';
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      // Return code.
+      return 'solve_challenge()';
+    }
+}
 function registerHelpOption() {
   const helpItem = {
     displayText: 'Help! There are no blocks',
