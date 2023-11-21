@@ -19,24 +19,21 @@ class ExcelApplicationExtension(ExcelApplication):
         self.active_row = row
         self.active_column = column
 
-    def read_row(self, row: int = None, header: bool = False, column_num: int = None):
+    def read_row(
+        self,
+        row: int = None,
+        column_from: int = None,
+        column_to: int = None,
+    ):
         if row is None:
             row = self.active_row
-
-        if header:
-            column_names = self.read_row(1)
-            contents = {}
-            for column in range(1, len(column_names) + 1):
-                contents[column_names[column - 1]] = self.read_from_cells(
-                    row=row, column=column
-                )
-            return contents
-
+        column = column_from if column_from is not None else 1
+        column_num = column_to - column + 1 if column_to is not None else None
+        
         contents = []
-        column = 1
         content = self.read_from_cells(row=row, column=column)
         while (
-            column_num is None
+            column_from is None
             and content is not None
             or column_num is not None
             and column <= column_num
@@ -45,3 +42,34 @@ class ExcelApplicationExtension(ExcelApplication):
             column += 1
             content = self.read_from_cells(row=row, column=column)
         return contents
+
+    def read_area(
+        self,
+        row_from: int = None,
+        row_to: int = None,
+        column_from: int = None,
+        column_to: int = None,
+        header: bool = False,
+    ):
+        row_from = row_from if row_from is not None else 1
+        column_from = column_from if column_from is not None else 1
+        
+        if header:
+            column_names = self.read_row(
+                row=row_from, column_from=column_from, column_to=column_to
+            )
+            row_from += 1
+
+        row_contents = []
+        for row in range(row_from, row_to + 1):
+            row_content = self.read_row(row=row, column_from=column_from, column_to=column_to)
+            if header:
+                row_dict = {}
+                for i in range(0, len(column_names)):
+                    row_dict[column_names[i]] = row_content[i]
+                row_contents.append(row_dict)
+            else:
+                row_contents.append(row_content)
+
+        return row_contents
+        
