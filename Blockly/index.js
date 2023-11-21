@@ -3,7 +3,13 @@ let workspace = null;
 
 function start() {
   registerFirstContextMenuOptions();
-  registerExcelContent();
+
+  registerOpenExcel();
+  registerSaveExcel();
+
+  registerFetechRow();
+  registerFetechCol();
+
   workspace = Blockly.inject('blocklyDiv',
     {
         toolbox:document.getElementById('toolbox-categories'),
@@ -45,17 +51,20 @@ function registerFirstContextMenuOptions() {
   blockItem.id = 'hello_world_block';
   Blockly.ContextMenuRegistry.registry.register(blockItem);
 }
-function registerExcelContent()
+function registerOpenExcel()
 { 
   var openExcel = {
     "message0": "openExcel %1",
     "args0": [
       {
-      "type" : "input_value",
-      "name":"FILE",
-      "check":"String"
+        "type": "field_variable",
+        "name": "FILE",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
       }
     ],
+    "nextStatement": null,
     "colour":160
   };
   Blockly.Blocks['openExcel']=
@@ -102,6 +111,102 @@ function registerExcelContent()
       // Return code.
       return code;
     }
+}
+function registerSaveExcel(){
+  var saveExcel ={
+    "message0":" and SaveExcel",
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['saveExcel']=
+    {
+      init: function() {
+        this.jsonInit(saveExcel);
+      } 
+    };
+    python.pythonGenerator.forBlock['SaveExcel'] = function(block, generator) {
+      // Collect argument strings.
+      const fieldValue = block.getFieldValue('MY_FIELD');
+      const value = '\'' + block.getFieldValue('VALUE') + '\'';
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="from robocorp import browser\nfrom robocorp.tasks import task\n\nfrom RPA.Excel.Files import Files as Excel\nfrom RPA.HTTP import HTTP";
+      code +="\n@task";
+      code +="\ndef solve_challenge():"
+      code +="\n\tsrc = Excel()\n\tsrc.open_workbook(path='./data/2023.07 劳务税.xls')\n\tsrcTable = src.read_worksheet_as_table(name='3413', header=True)"
+      code +="\n\tnoneResident = Excel()";
+      code +="\n\tnoneResident.create_workbook(path='./output/非居民.xls', fmt='xls', sheet_name='非居民')";
+      code +="\n\tnoneResidentTable = []";
+      code +="\n\tlocal = Excel()";
+      code +="\n\tlocal.create_workbook(path='./output/国内.xls', fmt='xls', sheet_name='国内')";
+      code +="\n\tlocalTable = []";
+      code +="\n\tforeigner = Excel()";
+      code +="\n\tforeigner.create_workbook(path='./output/国外.xls', fmt='xls', sheet_name='国外')";
+      code +="\n\tforeignerTable = []";
+      code +="\n\tfor row in srcTable:"
+      code +="\n\t\tif int(row['劳务收入_劳务税非居民']) != 0 or int(row['劳务税率_劳务税非居民']) != 0 or \\\
+              \n\t\t\tint(row['劳务实发_劳务税非居民']) != 0 or int(row['劳务税_劳务税非居民']) != 0 or \\\
+              \n\t\t\tint(row['劳务应扣税_劳务税非居民']) != 0: ";
+      code +="\n\t\t\tnoneResidentTable.append(row)";
+      code +="\n\t\t\tcontinue";
+      code +="\n\n\t\tid = str(row['证件号'])";
+      code +="\n\t\tif len(id) == 18 and not id.startswith('83'):";
+      code +="\n\t\t\tlocalTable.append(row)";
+      code +="\n\t\t\tcontinue";
+      code +="\n\n\t\tforeignerTable.append(row)";
+      code +="\n\n\tnoneResident.append_rows_to_worksheet(content=noneResidentTable, header=True)";
+      code +="\n\tnoneResident.save_workbook()";
+      code +="\n\tlocal.append_rows_to_worksheet(content=localTable, header=True)";
+      code +="\n\tlocal.save_workbook()";
+      code +="\n\tforeigner.append_rows_to_worksheet(content=foreignerTable, header=True)";
+      code +="\n\tforeigner.save_workbook()";
+      // Return code.
+      return code;
+    }
+}
+function registerFetechRow(){
+  var fectechRow ={
+    "message0":"fectech Row %1",
+    "args0": [
+      {
+        "type": "field_number",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['fectechRow']=
+    {
+      init: function() {
+        this.jsonInit(fectechRow);
+      } 
+    };
+}
+function registerFetechCol(){
+  var fectechCol ={
+    "message0":"fectech Col %1",
+    "args0": [
+      {
+        "type": "field_number",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['fectechCol']=
+    {
+      init: function() {
+        this.jsonInit(fectechCol);
+      } 
+    };
 }
 function registerHelpOption() {
   const helpItem = {
