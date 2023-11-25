@@ -4,11 +4,14 @@ let workspace = null;
 function start() {
   registerFirstContextMenuOptions();
 
-  registerOpenExcel();
-  registerSaveExcel();
+  registerOpenWorkbook();
+  registerSaveWorkbook();
 
-  registerFetechRow();
-  registerFetechCol();
+  registerMoveActiveCell();
+  registerSetActiveCell();
+  registerFetchCell();
+  registerFetchRow();
+  registerFetchCol();
 
   workspace = Blockly.inject('blocklyDiv',
     {
@@ -51,14 +54,19 @@ function registerFirstContextMenuOptions() {
   blockItem.id = 'hello_world_block';
   Blockly.ContextMenuRegistry.registry.register(blockItem);
 }
-function registerOpenExcel()
+function registerOpenWorkbook()
 { 
-  var openExcel = {
-    "message0": "openExcel %1",
+  var openWorkbook = {
+    "message0": "open Workbook %1 as %2",
     "args0": [
       {
-        "type": "field_variable",
+        "type": "field_input",
         "name": "FILE",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
         "variable": "item",
         "variableTypes": [""],
         "check":"String"
@@ -67,110 +75,223 @@ function registerOpenExcel()
     "nextStatement": null,
     "colour":160
   };
-  Blockly.Blocks['openExcel']=
+  Blockly.Blocks['openWorkbook']=
     {
       init: function() {
-        this.jsonInit(openExcel);
+        this.jsonInit(openWorkbook);
       } 
     };
-    python.pythonGenerator.forBlock['openExcel'] = function(block, generator) {
+    python.pythonGenerator.forBlock['openWorkbook'] = function(block, generator) {
       // Collect argument strings.
-      const fieldValue = block.getFieldValue('MY_FIELD');
-      const value = '\'' + block.getFieldValue('VALUE') + '\'';
+      const VAR = block.getFieldValue('VAR');
+      const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="from robocorp import browser\nfrom robocorp.tasks import task\n\nfrom RPA.Excel.Files import Files as Excel\nfrom RPA.HTTP import HTTP";
-      code +="\n@task";
-      code +="\ndef solve_challenge():"
-      code +="\n\tsrc = Excel()\n\tsrc.open_workbook(path='./data/2023.07 劳务税.xls')\n\tsrcTable = src.read_worksheet_as_table(name='3413', header=True)"
-      code +="\n\tnoneResident = Excel()";
-      code +="\n\tnoneResident.create_workbook(path='./output/非居民.xls', fmt='xls', sheet_name='非居民')";
-      code +="\n\tnoneResidentTable = []";
-      code +="\n\tlocal = Excel()";
-      code +="\n\tlocal.create_workbook(path='./output/国内.xls', fmt='xls', sheet_name='国内')";
-      code +="\n\tlocalTable = []";
-      code +="\n\tforeigner = Excel()";
-      code +="\n\tforeigner.create_workbook(path='./output/国外.xls', fmt='xls', sheet_name='国外')";
-      code +="\n\tforeignerTable = []";
-      code +="\n\tfor row in srcTable:"
-      code +="\n\t\tif int(row['劳务收入_劳务税非居民']) != 0 or int(row['劳务税率_劳务税非居民']) != 0 or \\\
-              \n\t\t\tint(row['劳务实发_劳务税非居民']) != 0 or int(row['劳务税_劳务税非居民']) != 0 or \\\
-              \n\t\t\tint(row['劳务应扣税_劳务税非居民']) != 0: ";
-      code +="\n\t\t\tnoneResidentTable.append(row)";
-      code +="\n\t\t\tcontinue";
-      code +="\n\n\t\tid = str(row['证件号'])";
-      code +="\n\t\tif len(id) == 18 and not id.startswith('83'):";
-      code +="\n\t\t\tlocalTable.append(row)";
-      code +="\n\t\t\tcontinue";
-      code +="\n\n\t\tforeignerTable.append(row)";
-      code +="\n\n\tnoneResident.append_rows_to_worksheet(content=noneResidentTable, header=True)";
-      code +="\n\tnoneResident.save_workbook()";
-      code +="\n\tlocal.append_rows_to_worksheet(content=localTable, header=True)";
-      code +="\n\tlocal.save_workbook()";
-      code +="\n\tforeigner.append_rows_to_worksheet(content=foreignerTable, header=True)";
-      code +="\n\tforeigner.save_workbook()";
-      // Return code.
+      var code ="\n\t"+VAR+"=ExcelApplication()";
+      code +="\n\t"+VAR+".open_application(visible=True)";
+      code +="\n\t"+VAR+".open_workbook("+FILEPATH+")";
       return code;
-    }
+    }       
+          
 }
-function registerSaveExcel(){
-  var saveExcel ={
-    "message0":" and SaveExcel",
+function registerSaveWorkbook(){
+  var saveWorkbook ={
+    "message0":" and Save Workbook",
     "previousStatement": null,
     "nextStatement": null,
     "colour":200,
   }
-  Blockly.Blocks['saveExcel']=
+  Blockly.Blocks['saveWorkbook']=
     {
       init: function() {
-        this.jsonInit(saveExcel);
+        this.jsonInit(saveWorkbook);
       } 
     };
-    python.pythonGenerator.forBlock['SaveExcel'] = function(block, generator) {
+    python.pythonGenerator.forBlock['saveWorkbook'] = function(block, generator) {
       // Collect argument strings.
-      const fieldValue = block.getFieldValue('MY_FIELD');
-      const value = '\'' + block.getFieldValue('VALUE') + '\'';
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="from robocorp import browser\nfrom robocorp.tasks import task\n\nfrom RPA.Excel.Files import Files as Excel\nfrom RPA.HTTP import HTTP";
-      code +="\n@task";
-      code +="\ndef solve_challenge():"
-      code +="\n\tsrc = Excel()\n\tsrc.open_workbook(path='./data/2023.07 劳务税.xls')\n\tsrcTable = src.read_worksheet_as_table(name='3413', header=True)"
-      code +="\n\tnoneResident = Excel()";
-      code +="\n\tnoneResident.create_workbook(path='./output/非居民.xls', fmt='xls', sheet_name='非居民')";
-      code +="\n\tnoneResidentTable = []";
-      code +="\n\tlocal = Excel()";
-      code +="\n\tlocal.create_workbook(path='./output/国内.xls', fmt='xls', sheet_name='国内')";
-      code +="\n\tlocalTable = []";
-      code +="\n\tforeigner = Excel()";
-      code +="\n\tforeigner.create_workbook(path='./output/国外.xls', fmt='xls', sheet_name='国外')";
-      code +="\n\tforeignerTable = []";
-      code +="\n\tfor row in srcTable:"
-      code +="\n\t\tif int(row['劳务收入_劳务税非居民']) != 0 or int(row['劳务税率_劳务税非居民']) != 0 or \\\
-              \n\t\t\tint(row['劳务实发_劳务税非居民']) != 0 or int(row['劳务税_劳务税非居民']) != 0 or \\\
-              \n\t\t\tint(row['劳务应扣税_劳务税非居民']) != 0: ";
-      code +="\n\t\t\tnoneResidentTable.append(row)";
-      code +="\n\t\t\tcontinue";
-      code +="\n\n\t\tid = str(row['证件号'])";
-      code +="\n\t\tif len(id) == 18 and not id.startswith('83'):";
-      code +="\n\t\t\tlocalTable.append(row)";
-      code +="\n\t\t\tcontinue";
-      code +="\n\n\t\tforeignerTable.append(row)";
-      code +="\n\n\tnoneResident.append_rows_to_worksheet(content=noneResidentTable, header=True)";
-      code +="\n\tnoneResident.save_workbook()";
-      code +="\n\tlocal.append_rows_to_worksheet(content=localTable, header=True)";
-      code +="\n\tlocal.save_workbook()";
-      code +="\n\tforeigner.append_rows_to_worksheet(content=foreignerTable, header=True)";
-      code +="\n\tforeigner.save_workbook()";
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      var code ="\n\t"+VAR+".save_workbook()";
       // Return code.
       return code;
     }
 }
-function registerFetechRow(){
-  var fectechRow ={
-    "message0":"fectech Row %1",
+function registerMoveActiveCell(){
+  var MoveActiveCell ={
+    "message0":"MoveActiveCell(%1,%2)",
+    "args0": [
+      {
+        "type": "field_number",
+        "name":"N1",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    
+  }
+  Blockly.Blocks['MoveActiveCell']=
+    {
+      init: function() {
+        this.jsonInit(MoveActiveCell);
+      } 
+    };
+    python.pythonGenerator.forBlock['MoveActiveCell'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".move_active_cell("+number1+","+number2+")";
+      return code;
+    }   
+}
+function registerSetActiveCell(){
+  var MoveActiveCell ={
+    "message0":"SetActiveCell(%1,%2)",
+    "args0": [
+      {
+        "type": "field_number",
+        "name":"N1",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    
+  }
+  Blockly.Blocks['SetActiveCell']=
+    {
+      init: function() {
+        this.jsonInit(MoveActiveCell);
+      } 
+    };
+    python.pythonGenerator.forBlock['SetActiveCell'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      return code;
+    }   
+}
+function registerFetchCell(){
+  var fetchCell ={
+    "message0":"fetch Cell (%1,%2)",
+    "args0": [
+      {
+        "type": "field_number",
+        "name":"N1",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    
+  }
+  Blockly.Blocks['fetchCell']=
+    {
+      init: function() {
+        this.jsonInit(fetchCell);
+      } 
+    };
+    python.pythonGenerator.forBlock['fetchCell'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".read_cell("+number1+","+number2+")";
+      return code;
+    }   
+}
+function registerFetchRow(){
+  var fetchRow ={
+    "message0":"fetch Row %1 to %2",
+    "args0": [
+      {
+        "type": "field_number",
+        "name":"N1",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    
+  }
+  Blockly.Blocks['fetchRow']=
+    {
+      init: function() {
+        this.jsonInit(fetchRow);
+      } 
+    };
+    python.pythonGenerator.forBlock['fetchRow'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+     var code ="\n\tfor i in range("+number1+","+number2+"):";
+     code +="\n\t\tr = "+VAR+".read_row(header=True)";
+     code +="\n\t\tprint(r)";
+     code +="\n\t\tapp.move_active_cell(1, 0)";
+      return code;
+    }   
+}
+function registerFetchCol(){
+  var fetchCol ={
+    "message0":"fetch Col %1 to %2",
     "args0": [
       {
         "type": "field_number",
         "check":"number",
+        "name":"N1",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
         "value": 100,
         "min":1,
       }
@@ -179,34 +300,25 @@ function registerFetechRow(){
     "nextStatement": null,
     "colour":200,
   }
-  Blockly.Blocks['fectechRow']=
+  Blockly.Blocks['fetchCol']=
     {
       init: function() {
-        this.jsonInit(fectechRow);
+        this.jsonInit(fetchCol);
       } 
     };
-}
-function registerFetechCol(){
-  var fectechCol ={
-    "message0":"fectech Col %1",
-    "args0": [
-      {
-        "type": "field_number",
-        "check":"number",
-        "value": 100,
-        "min":1,
-      }
-    ],
-    "previousStatement": null,
-    "nextStatement": null,
-    "colour":200,
-  }
-  Blockly.Blocks['fectechCol']=
-    {
-      init: function() {
-        this.jsonInit(fectechCol);
-      } 
-    };
+    python.pythonGenerator.forBlock['fetchCol'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+     var code ="\n\tfor i in range("+number1+","+number2+"):";
+     code +="\n\t\tr = "+VAR+".read_col(header=True)";
+     code +="\n\t\tprint(r)";
+     code +="\n\t\tapp.move_active_cell(1, 0)";
+      return code;
+    }   
+
 }
 function registerHelpOption() {
   const helpItem = {

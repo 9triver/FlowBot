@@ -40,17 +40,20 @@
   <!-- Toolbox Definition -->
   <xml  id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
-    <category name="Basic Excel" categorystyle="logic_category">
+    <category name="Basic Workbook" categorystyle="logic_category">
       <block type="text"></block>
-      <block type="openExcel"></block>
-      <block type="saveExcel"></block>
+      <block type="openWorkbook"></block>
+      <block type="saveWorkbook"></block>
     </category>
-    <category name="Row and Col" categorystyle="loop_category">
+    <category name="Row and Col and Cell" categorystyle="loop_category">
       <block type="math_number" gap="32">
         <field name="NUM">0</field>
       </block>
-      <block type="fectechRow"></block>
-      <block type="fectechCol"></block>
+      <block type="MoveActiveCell"></block>
+      <block type="SetActiveCell"></block>
+      <block type="fetchCell"></block>
+      <block type="fetchRow"></block>
+      <block type="fetchCol"></block>
     </category>
     <category name="Verify" categorystyle="math_category">
       <block type="math_number" gap="32">
