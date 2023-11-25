@@ -12,6 +12,14 @@ function start() {
   registerFetchCell();
   registerFetchRow();
   registerFetchCol();
+  registerFetchArea();
+  registerInsertRow();
+  registerInsertCol();
+  registerSetCellValue();
+
+  registerCreateSheet();
+  registerSetActiveSheet();
+  registerMergeSheet();
 
   workspace = Blockly.inject('blocklyDiv',
     {
@@ -155,7 +163,7 @@ function registerMoveActiveCell(){
     }   
 }
 function registerSetActiveCell(){
-  var MoveActiveCell ={
+  var SetActiveCell ={
     "message0":"SetActiveCell(%1,%2)",
     "args0": [
       {
@@ -181,7 +189,7 @@ function registerSetActiveCell(){
   Blockly.Blocks['SetActiveCell']=
     {
       init: function() {
-        this.jsonInit(MoveActiveCell);
+        this.jsonInit(SetActiveCell);
       } 
     };
     python.pythonGenerator.forBlock['SetActiveCell'] = function(block, generator) {
@@ -315,10 +323,255 @@ function registerFetchCol(){
      var code ="\n\tfor i in range("+number1+","+number2+"):";
      code +="\n\t\tr = "+VAR+".read_col(header=True)";
      code +="\n\t\tprint(r)";
-     code +="\n\t\tapp.move_active_cell(1, 0)";
+     code +="\n\t\tapp.move_active_cell(1, 0)"; 
       return code;
     }   
 
+}
+function registerFetchArea(){
+  var fetchArea ={
+    "message0":"fetch Area %1 to %2",
+    "args0": [
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N1",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['fetchArea']=
+    {
+      init: function() {
+        this.jsonInit(fetchArea);
+      } 
+    };
+    python.pythonGenerator.forBlock['fetchArea'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+     var code ="\n\tfor i in range("+number1+","+number2+"):";
+     code +="\n\t\tr = "+VAR+".read_area(header=True)";
+     code +="\n\t\tprint(r)";
+     code +="\n\t\tapp.move_active_cell(1, 0)"; 
+      return code;
+    }   
+
+}
+function registerInsertCol(){
+  var InsertCol ={
+    "message0":"Insert Col to %1",
+    "args0": [
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N1",
+        "value": 100,
+        "min":1,
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['InsertCol']=
+    {
+      init: function() {
+        this.jsonInit(InsertCol);
+      } 
+    };
+    python.pythonGenerator.forBlock['InsertCol'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+     var code ="\n\tfor i in range("+number1+","+number2+"):";
+     code +="\n\t\tr = "+VAR+".read_col(header=True)";
+     code +="\n\t\tprint(r)";
+     code +="\n\t\tapp.move_active_cell(1, 0)"; 
+      return code;
+    }   
+
+}
+function registerInsertRow(){
+  var InsertRow ={
+    "message0":"Insert Row to %1",
+    "args0": [
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N1",
+        "value": 100,
+        "min":1,
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['InsertRow']=
+    {
+      init: function() {
+        this.jsonInit(InsertRow);
+      } 
+    };
+    python.pythonGenerator.forBlock['InsertRow'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+     var code ="\n\tfor i in range("+number1+","+number2+"):";
+     code +="\n\t\tr = "+VAR+".read_row(header=True)";
+     code +="\n\t\tprint(r)";
+     code +="\n\t\tapp.move_active_cell(1, 0)"; 
+      return code;
+    }   
+
+}
+function registerSetCellValue(){
+  var SetCellValue ={
+    "message0":"SetCellValue(%1,%2)",
+    "args0": [
+      {
+        "type": "field_number",
+        "name":"N1",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"N2",
+        "value": 100,
+        "min":1,
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    
+  }
+  Blockly.Blocks['SetCellValue']=
+    {
+      init: function() {
+        this.jsonInit(SetCellValue);
+      } 
+    };
+    python.pythonGenerator.forBlock['SetCellValue'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      return code;
+    }   
+}
+function registerCreateSheet(){
+  var CreateSheet ={
+    "message0":"CreateSheet %1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "FILE",
+        "check":"String"
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    
+  }
+  Blockly.Blocks['CreateSheet']=
+    {
+      init: function() {
+        this.jsonInit(CreateSheet);
+      } 
+    };
+    python.pythonGenerator.forBlock['CreateSheet'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".open_workbook("+FILEPATH+")";
+      return code;
+    }   
+}
+function registerSetActiveSheet(){
+  var SetActiveSheet ={
+    "message0":"SetActiveSheet %1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "FILE",
+        "check":"String"
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":300,
+    
+  }
+  Blockly.Blocks['SetActiveSheet']=
+    {
+      init: function() {
+        this.jsonInit(SetActiveSheet);
+      } 
+    };
+    python.pythonGenerator.forBlock['SetActiveSheet'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const number1= block.getFieldValue('N1');
+      const number2=block.getFieldValue('N2');
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      return code;
+    }   
+}
+function registerMergeSheet(){
+  var MergeSheet ={
+    "message0":"MergeSheet %1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "FILE",
+
+        "check":"String"
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":300,
+    
+  }
+  Blockly.Blocks['MergeSheet']=
+    {
+      init: function() {
+        this.jsonInit(MergeSheet);
+      } 
+    };
+    python.pythonGenerator.forBlock['MergeSheet'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
+      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      return code;
+    }   
 }
 function registerHelpOption() {
   const helpItem = {
