@@ -81,7 +81,7 @@ function registerOpenWorkbook()
       }
     ],
     "nextStatement": null,
-    "colour":160
+    "colour":200,
   };
   Blockly.Blocks['openWorkbook']=
     {
@@ -143,7 +143,7 @@ function registerMoveActiveCell(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
     
   }
   Blockly.Blocks['MoveActiveCell']=
@@ -183,7 +183,7 @@ function registerSetActiveCell(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
     
   }
   Blockly.Blocks['SetActiveCell']=
@@ -223,7 +223,7 @@ function registerFetchCell(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
     
   }
   Blockly.Blocks['fetchCell']=
@@ -263,7 +263,7 @@ function registerFetchRow(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
     
   }
   Blockly.Blocks['fetchRow']=
@@ -306,7 +306,7 @@ function registerFetchCol(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
   }
   Blockly.Blocks['fetchCol']=
     {
@@ -349,7 +349,7 @@ function registerFetchArea(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
   }
   Blockly.Blocks['fetchArea']=
     {
@@ -385,7 +385,7 @@ function registerInsertCol(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
   }
   Blockly.Blocks['InsertCol']=
     {
@@ -420,7 +420,7 @@ function registerInsertRow(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
   }
   Blockly.Blocks['InsertRow']=
     {
@@ -462,7 +462,7 @@ function registerSetCellValue(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
     
   }
   Blockly.Blocks['SetCellValue']=
@@ -493,7 +493,7 @@ function registerCreateSheet(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":240,
     
   }
   Blockly.Blocks['CreateSheet']=
@@ -523,7 +523,7 @@ function registerSetActiveSheet(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":300,
+    "colour":240,
     
   }
   Blockly.Blocks['SetActiveSheet']=
@@ -555,7 +555,7 @@ function registerMergeSheet(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":300,
+    "colour":240,
     
   }
   Blockly.Blocks['MergeSheet']=
