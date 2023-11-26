@@ -9,35 +9,49 @@
     html,
     body {
       height: 100%;
+      margin: 0px;
     }
-
     body {
-      background-color:  blueviolet;
       font-family: sans-sevrif;
       overflow: hidden;
     }
-
-    h1 {
-      font-weight: normal;
-      font-size: 140%;
-      margin: 10px;
-      background-color: blueviolet;
+    #header p{
+      font-size: 150%;
       text-align: center;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      margin: 0px;
     }
-
+    #header #button {
+      float:right;
+      background-color: #008CBA;
+      color: white;
+      margin-right: 100px;
+      font-size:100%;
+      text-align: center;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    }
     #blocklyDiv {
-      float: bottom;
+      float: left;
       height: 90%;
-      width: 100%;
+      width: 70%;
     }
+    #header {
+      background-color: purple;
+      padding-bottom: 30px;
+      padding-top: 20px;
+    }
+  div textarea
+  {
+    resize: none;
+    float: left;
+  }
   </style>
 </head>
 <body onload="start()">
-  <h1 >财务部数据处理</h1>
-  <input  id="button" type="button" value="运行" >
-  <div><textarea id="generatedCodeContainer" readonly placeholder="Generated python will go here..."></textarea></div>
-  <div id="blocklyDiv"></div> 
-  <!-- Toolbox Definition -->
+  <div id="header">
+    <p>财务部数据处理<input  id="button" type="button" value="运行" ></p>
+  </div>
   <xml  id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
     <category name="Basic Workbook" categorystyle="logic_category">
@@ -160,6 +174,11 @@
     <category name="Variables" categorystyle="variable_category" custom="VARIABLE"></category>
     <category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></category>
   </xml>
+  <div id="blocklyDiv" >
+  </div >
+  <div><textarea id="generatedCodeContainer" rows="10" cols="60" readonly placeholder="Generated python will go here..."></textarea></div>
+  <!-- Toolbox Definition -->
+  
 </body>
 <script src="https://unpkg.com/blockly/blockly.min.js"></script>
 <script src="https://unpkg.com/@blockly/dev-tools"></script>
