@@ -17,6 +17,7 @@
     }
     #header p{
       font-size: 150%;
+      color: white;
       text-align: center;
       padding-top: 10px;
       padding-bottom: 10px;
@@ -24,12 +25,13 @@
     }
     #header #button {
       float:right;
-      background-color: #008CBA;
+      border-color: white;
+      background-color: #a700ba;
       color: white;
       margin-right: 100px;
       font-size:100%;
       text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
     }
     #blocklyDiv {
       float: left;
@@ -40,11 +42,15 @@
       background-color: purple;
       padding-bottom: 30px;
       padding-top: 20px;
+      border: solid;
+      border-color:white;
     }
   div textarea
-  {
+  { 
+    
     resize: none;
     float: left;
+
   }
   </style>
 </head>
@@ -80,99 +86,6 @@
     </category>
     <category name="Statistic" categorystyle="text_category">
     </category>
-    <category name="Lists" categorystyle="list_category">
-      <block type="lists_create_with">
-        <mutation items="0"></mutation>
-      </block>
-      <block type="lists_create_with"></block>
-      <block type="lists_repeat">
-        <value name="NUM">
-          <shadow type="math_number">
-            <field name="NUM">5</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="lists_length"></block>
-      <block type="lists_isEmpty"></block>
-      <block type="lists_indexOf">
-        <value name="VALUE">
-          <block type="variables_get">
-            <field name="VAR">list</field>
-          </block>
-        </value>
-      </block>
-      <block type="lists_getIndex">
-        <value name="VALUE">
-          <block type="variables_get">
-            <field name="VAR">list</field>
-          </block>
-        </value>
-      </block>
-      <block type="lists_setIndex">
-        <value name="LIST">
-          <block type="variables_get">
-            <field name="VAR">list</field>
-          </block>
-        </value>
-      </block>
-      <block type="lists_getSublist">
-        <value name="LIST">
-          <block type="variables_get">
-            <field name="VAR">list</field>
-          </block>
-        </value>
-      </block>
-      <block type="lists_split">
-        <value name="DELIM">
-          <shadow type="text">
-            <field name="TEXT">,</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="lists_sort"></block>
-      <block type="lists_reverse"></block>
-    </category>
-    <category name="Colour" categorystyle="colour_category">
-      <block type="colour_picker"></block>
-      <block type="colour_random"></block>
-      <block type="colour_rgb">
-        <value name="RED">
-          <shadow type="math_number">
-            <field name="NUM">100</field>
-          </shadow>
-        </value>
-        <value name="GREEN">
-          <shadow type="math_number">
-            <field name="NUM">50</field>
-          </shadow>
-        </value>
-        <value name="BLUE">
-          <shadow type="math_number">
-            <field name="NUM">0</field>
-          </shadow>
-        </value>
-      </block>
-      <block type="colour_blend">
-        <value name="COLOUR1">
-          <shadow type="colour_picker">
-            <field name="COLOUR">#ff0000</field>
-          </shadow>
-        </value>
-        <value name="COLOUR2">
-          <shadow type="colour_picker">
-            <field name="COLOUR">#3333ff</field>
-          </shadow>
-        </value>
-        <value name="RATIO">
-          <shadow type="math_number">
-            <field name="NUM">0.5</field>
-          </shadow>
-        </value>
-      </block>
-    </category>
-    <sep></sep>
-    <category name="Variables" categorystyle="variable_category" custom="VARIABLE"></category>
-    <category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></category>
   </xml>
   <div id="blocklyDiv" >
   </div >
