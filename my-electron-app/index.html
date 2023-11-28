@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title >财务部数据处理</title>
+  <link rel="stylesheet" href="toolbox_style.css">
+  <style>
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      background-color:  blueviolet;
+      font-family: sans-sevrif;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+      margin: 10px;
+      background-color: blueviolet;
+      text-align: center;
+    }
+
+    #blocklyDiv {
+      float: bottom;
+      height: 90%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body onload="start()">
+  <h1 >财务部数据处理</h1>
+  <input  id="button" type="button" value="运行" >
+  <div><textarea id="generatedCodeContainer" readonly placeholder="Generated python will go here..."></textarea></div>
+  <div id="blocklyDiv"></div> 
+  <!-- Toolbox Definition -->
+  <xml  id="toolbox-categories" style="display: none">
+    <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
+    <category name="Basic Workbook" categorystyle="logic_category">
+      <!-- <block type="text"></block> -->
+      <block type="openWorkbook"></block>
+      <block type="saveWorkbook"></block>
+    </category>
+    <category name="Row and Col and Cell" categorystyle="loop_category">
+      <!-- <block type="math_number" gap="32">
+        <field name="NUM">0</field>
+      </block> -->
+      <block type="MoveActiveCell"></block>
+      <block type="SetActiveCell"></block>
+      <block type="fetchCell"></block>
+      <block type="fetchRow"></block>
+      <block type="fetchCol"></block>
+      <block type="fetchArea"></block>
+      <block type="InsertRow"></block>
+      <block type="InsertCol"></block>
+      <block type="SetCellValue"></block>
+    </category>
+    <category name="Sheet" categorystyle="math_category">
+      <block type="CreateSheet"></block>
+      <block type="SetActiveSheet"></block>
+      <block type="MergeSheet"></block>
+    </category>
+    <category name="Statistic" categorystyle="text_category">
+    </category>
+    <category name="Lists" categorystyle="list_category">
+      <block type="lists_create_with">
+        <mutation items="0"></mutation>
+      </block>
+      <block type="lists_create_with"></block>
+      <block type="lists_repeat">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">5</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_length"></block>
+      <block type="lists_isEmpty"></block>
+      <block type="lists_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_getIndex">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_setIndex">
+        <value name="LIST">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_getSublist">
+        <value name="LIST">
+          <block type="variables_get">
+            <field name="VAR">list</field>
+          </block>
+        </value>
+      </block>
+      <block type="lists_split">
+        <value name="DELIM">
+          <shadow type="text">
+            <field name="TEXT">,</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="lists_sort"></block>
+      <block type="lists_reverse"></block>
+    </category>
+    <category name="Colour" categorystyle="colour_category">
+      <block type="colour_picker"></block>
+      <block type="colour_random"></block>
+      <block type="colour_rgb">
+        <value name="RED">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+        <value name="GREEN">
+          <shadow type="math_number">
+            <field name="NUM">50</field>
+          </shadow>
+        </value>
+        <value name="BLUE">
+          <shadow type="math_number">
+            <field name="NUM">0</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="colour_blend">
+        <value name="COLOUR1">
+          <shadow type="colour_picker">
+            <field name="COLOUR">#ff0000</field>
+          </shadow>
+        </value>
+        <value name="COLOUR2">
+          <shadow type="colour_picker">
+            <field name="COLOUR">#3333ff</field>
+          </shadow>
+        </value>
+        <value name="RATIO">
+          <shadow type="math_number">
+            <field name="NUM">0.5</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+    <sep></sep>
+    <category name="Variables" categorystyle="variable_category" custom="VARIABLE"></category>
+    <category name="Functions" categorystyle="procedure_category" custom="PROCEDURE"></category>
+  </xml>
+</body>
+<script src="https://unpkg.com/blockly/blockly.min.js"></script>
+<script src="https://unpkg.com/@blockly/dev-tools"></script>
+<script src="https://unpkg.com/blockly/python_compressed"></script>
+<script src="https://unpkg.com/blockly/javascript_compressed"></script>
+<script src="CustomCategory.js"></script>
+<script src="./index.js"></script>
+<script src="./btn.js">  </script>
+</html>

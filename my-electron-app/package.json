@@ -1,0 +1,26 @@
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "description": "electron测试",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/9triver/FlowBot.git"
+  },
+  "keywords": [
+    "123456"
+  ],
+  "author": "hdw",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/9triver/FlowBot/issues"
+  },
+  "homepage": "https://github.com/9triver/FlowBot#readme",
+  "devDependencies": {
+    "electron": "^27.1.2"
+  }
+}
