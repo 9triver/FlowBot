@@ -24,6 +24,12 @@ function start() {
   workspace = Blockly.inject('blocklyDiv',
     {
         toolbox:document.getElementById('toolbox-categories'),
+        grid:
+         {spacing: 20,
+          length: 5,
+          colour: "#000",
+          snap: true},
+      trashcan: true
     });
   // workspace.addChangeListener(event => {
   //     const code = python.pythonGenerator.workspaceToCode(workspace);
@@ -82,6 +88,7 @@ function registerOpenWorkbook()
     ],
     "nextStatement": null,
     "colour":200,
+    "tooltip":'打开一个Excel表单作为操作对象，必须放在所有语句的顶部,空格第一项为表单路径，第二项为要生成的变量名'
   };
   Blockly.Blocks['openWorkbook']=
     {
@@ -107,6 +114,7 @@ function registerSaveWorkbook(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":200,
+    "tooltip":'保存Excel工作表，上层必须连接语句块，一般放在结尾'
   }
   Blockly.Blocks['saveWorkbook']=
     {
@@ -144,7 +152,7 @@ function registerMoveActiveCell(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    
+    "tooltip":'将活跃单元格(光标位置)移动到指定位置，变量对应(行,列)'
   }
   Blockly.Blocks['MoveActiveCell']=
     {
