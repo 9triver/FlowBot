@@ -88,7 +88,9 @@ function registerOpenWorkbook()
     ],
     "nextStatement": null,
     "colour":200,
-    "tooltip":'打开一个Excel表单作为操作对象，必须放在所有语句的顶部,空格第一项为表单路径，第二项为要生成的变量名'
+    "tooltip":'Open Workbook {path} As {var} : 打开Excel文档 \
+    \npath: Excel 文档路径，为空表示新建文档 \
+    \nvar: 表示文档的变量名'
   };
   Blockly.Blocks['openWorkbook']=
     {
@@ -99,22 +101,35 @@ function registerOpenWorkbook()
     python.pythonGenerator.forBlock['openWorkbook'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getFieldValue('VAR');
-      const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
+      var FILE =block.getFieldValue('FILE');
+      var FILEPATH;
+      if(FILE!='')
+      FILEPATH = '\'' + FILE + '\'';
+      else
+        FILEPATH=FILE;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       var code ="\n\t"+VAR+"=ExcelApplication()";
       code +="\n\t"+VAR+".open_application(visible=True)";
-      code +="\n\t"+VAR+".open_workbook("+FILEPATH+")";
+        code +="\n\t"+VAR+".open_workbook("+FILEPATH+")";
       return code;
     }       
           
 }
 function registerSaveWorkbook(){
   var saveWorkbook ={
-    "message0":" and Save Workbook",
+    "message0":" and Save Workbook %1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "FILE",
+        "check":"String"
+      }],
     "previousStatement": null,
     "nextStatement": null,
     "colour":200,
-    "tooltip":'保存Excel工作表，上层必须连接语句块，一般放在结尾'
+    "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
+    \nworkbook: Excel 文档变量名 \
+    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
   }
   Blockly.Blocks['saveWorkbook']=
     {
@@ -125,7 +140,13 @@ function registerSaveWorkbook(){
     python.pythonGenerator.forBlock['saveWorkbook'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getRootBlock().getFieldValue('VAR');
-      var code ="\n\t"+VAR+".save_workbook()";
+      var FILE =block.getFieldValue('FILE');
+      var FILEPATH;
+      if(FILE!='')
+        FILEPATH = 'filename='+'\'' + FILE + '\'';
+      else
+        FILEPATH=FILE;
+      var code ="\n\t"+VAR+".save_workbook("+FILEPATH+")";
       // Return code.
       return code;
     }
@@ -136,23 +157,23 @@ function registerMoveActiveCell(){
     "args0": [
       {
         "type": "field_number",
-        "name":"N1",
+        "name":"row_change",
         "check":"number",
-        "value": 100,
-        "min":1,
+
       },
       {
         "type": "field_number",
         "check":"number",
-        "name":"N2",
-        "value": 100,
-        "min":1,
+        "name":"column_change",
       }
     ],
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    "tooltip":'将活跃单元格(光标位置)移动到指定位置，变量对应(行,列)'
+    "tooltip":'{workbook} Set Active Cell {row} {column} : 设置活跃单元格\
+    \nworkbook: Excel 文档变量名\
+    \nrow: 行号\
+    \ncolumn: 列号'
   }
   Blockly.Blocks['MoveActiveCell']=
     {
@@ -163,8 +184,10 @@ function registerMoveActiveCell(){
     python.pythonGenerator.forBlock['MoveActiveCell'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      var number1= block.getFieldValue('row_change');
+        number1='row_change='+number1;
+      var number2=block.getFieldValue('column_change');
+        number2='column_change='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       var code ="\n\t"+VAR+".move_active_cell("+number1+","+number2+")";
       return code;
@@ -176,14 +199,14 @@ function registerSetActiveCell(){
     "args0": [
       {
         "type": "field_number",
-        "name":"N1",
+        "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
       },
       {
         "type": "field_number",
-        "check":"number",
+        "check":"column",
         "name":"N2",
         "value": 100,
         "min":1,
@@ -203,8 +226,10 @@ function registerSetActiveCell(){
     python.pythonGenerator.forBlock['SetActiveCell'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      var number1= block.getFieldValue('row');
+      number1='row='+number1;
+      var number2=block.getFieldValue('column');
+      number2='column='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
       return code;
@@ -212,11 +237,11 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"fetch Cell (%1,%2)",
+    "message0":"fetch Cell (%1,%2) as %3",
     "args0": [
       {
         "type": "field_number",
-        "name":"N1",
+        "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
@@ -224,9 +249,16 @@ function registerFetchCell(){
       {
         "type": "field_number",
         "check":"number",
-        "name":"N2",
+        "name":"column",
         "value": 100,
         "min":1,
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
       }
     ],
     "previousStatement": null,
@@ -242,21 +274,24 @@ function registerFetchCell(){
     };
     python.pythonGenerator.forBlock['fetchCell'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      const VAR = block.getFieldValue('VAR');
+      var number1= block.getFieldValue('row');
+      number1='row='+number1;
+      var number2=block.getFieldValue('column');
+      number2='column='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".read_cell("+number1+","+number2+")";
+      var code ="\n\t"+VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")";
       return code;
     }   
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"fetch Row %1 to %2",
+    "message0":"Fetch Row %1 (%2,%3) As %4",
     "args0": [
       {
         "type": "field_number",
-        "name":"N1",
+        "name":"col",
         "check":"number",
         "value": 100,
         "min":1,
@@ -264,9 +299,23 @@ function registerFetchRow(){
       {
         "type": "field_number",
         "check":"number",
-        "name":"N2",
+        "name":"columnF",
         "value": 100,
         "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"columnT",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
       }
     ],
     "previousStatement": null,
@@ -282,34 +331,50 @@ function registerFetchRow(){
     };
     python.pythonGenerator.forBlock['fetchRow'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      var number1= block.getFieldValue('row');
+      number1+='row='+number1;
+      var number2=block.getFieldValue('columnF');
+      number2+='column_from='+number2;
+      var number3=block.getFieldValue('columnT');
+      number3+='column_to='+number3;
+      var VAR=block.getFieldValue('VAR');
+      var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\n\tfor i in range("+number1+","+number2+"):";
-     code +="\n\t\tr = "+VAR+".read_row(header=True)";
-     code +="\n\t\tprint(r)";
-     code +="\n\t\tapp.move_active_cell(1, 0)";
       return code;
     }   
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"fetch Col %1 to %2",
+    "message0":"Fetch Column %1 (%2,%3) As %4",
     "args0": [
       {
         "type": "field_number",
+        "name":"col",
         "check":"number",
-        "name":"N1",
         "value": 100,
         "min":1,
       },
       {
         "type": "field_number",
         "check":"number",
-        "name":"N2",
+        "name":"rowF",
         "value": 100,
         "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"rowT",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
       }
     ],
     "previousStatement": null,
@@ -324,35 +389,65 @@ function registerFetchCol(){
     };
     python.pythonGenerator.forBlock['fetchCol'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      var number1= block.getFieldValue('col');
+      number1+='column='+number1;
+      var number2=block.getFieldValue('rowF');
+      number2+='row_from='+number2;
+      var number3=block.getFieldValue('rowT');
+      number3+='row_to='+number3;
+      var VAR=block.getFieldValue('VAR');
+      var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\n\tfor i in range("+number1+","+number2+"):";
-     code +="\n\t\tr = "+VAR+".read_col(header=True)";
-     code +="\n\t\tprint(r)";
-     code +="\n\t\tapp.move_active_cell(1, 0)"; 
       return code;
     }   
 
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"fetch Area %1 to %2",
+    "message0":"Fetch Area (%1,%2), (%3,%4)  %5 As %6",
     "args0": [
       {
         "type": "field_number",
         "check":"number",
-        "name":"N1",
+        "name":"rowF",
         "value": 100,
         "min":1,
       },
       {
         "type": "field_number",
         "check":"number",
-        "name":"N2",
+        "name":"rowT",
         "value": 100,
         "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"colF",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"colT",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"colT",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
       }
     ],
     "previousStatement": null,
@@ -367,14 +462,20 @@ function registerFetchArea(){
     };
     python.pythonGenerator.forBlock['fetchArea'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      var number1= block.getFieldValue('rowF');
+      number1+='row_from='+number1;
+      var number2=block.getFieldValue('rowT');
+      number2+='row_to='+number2;
+      var number3=block.getFieldValue('colT');
+      number3+='column_from='+number3;
+      var number4=block.getFieldValue('colF');
+      number4+='column_to='+number4;
+      var header=block.getFieldValue('header');
+      header+='header='+header;
+      var VAR=block.getFieldValue('VAR');
+      var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+","+number4+","+header+")";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\n\tfor i in range("+number1+","+number2+"):";
-     code +="\n\t\tr = "+VAR+".read_area(header=True)";
-     code +="\n\t\tprint(r)";
-     code +="\n\t\tapp.move_active_cell(1, 0)"; 
       return code;
     }   
 
