@@ -71,7 +71,7 @@ function registerFirstContextMenuOptions() {
 function registerOpenWorkbook()
 { 
   var openWorkbook = {
-    "message0": "open Workbook %1 as %2",
+    "message0": "open Workbook %1 As %2",
     "args0": [
       {
         "type": "field_input",
@@ -206,8 +206,8 @@ function registerSetActiveCell(){
       },
       {
         "type": "field_number",
-        "check":"column",
-        "name":"N2",
+        "check":"number",
+        "name":"column",
         "value": 100,
         "min":1,
       }
@@ -237,7 +237,7 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"fetch Cell (%1,%2) as %3",
+    "message0":"fetch Cell (%1,%2) As %3",
     "args0": [
       {
         "type": "field_number",
@@ -291,7 +291,7 @@ function registerFetchRow(){
     "args0": [
       {
         "type": "field_number",
-        "name":"col",
+        "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
@@ -333,11 +333,11 @@ function registerFetchRow(){
       // Collect argument strings.
       const Workbook = block.getRootBlock().getFieldValue('VAR');
       var number1= block.getFieldValue('row');
-      number1+='row='+number1;
+      number1='row='+number1;
       var number2=block.getFieldValue('columnF');
-      number2+='column_from='+number2;
+      number2='column_from='+number2;
       var number3=block.getFieldValue('columnT');
-      number3+='column_to='+number3;
+      number3='column_to='+number3;
       var VAR=block.getFieldValue('VAR');
       var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
@@ -391,13 +391,13 @@ function registerFetchCol(){
       // Collect argument strings.
       const Workbook = block.getRootBlock().getFieldValue('VAR');
       var number1= block.getFieldValue('col');
-      number1+='column='+number1;
+      number1='column='+number1;
       var number2=block.getFieldValue('rowF');
-      number2+='row_from='+number2;
+      number2='row_from='+number2;
       var number3=block.getFieldValue('rowT');
-      number3+='row_to='+number3;
+      number3='row_to='+number3;
       var VAR=block.getFieldValue('VAR');
-      var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")";
+      var code ="\n\t"+VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       return code;
     }   
@@ -464,17 +464,17 @@ function registerFetchArea(){
       // Collect argument strings.
       const Workbook = block.getRootBlock().getFieldValue('VAR');
       var number1= block.getFieldValue('rowF');
-      number1+='row_from='+number1;
+      number1='row_from='+number1;
       var number2=block.getFieldValue('rowT');
-      number2+='row_to='+number2;
+      number2='row_to='+number2;
       var number3=block.getFieldValue('colT');
-      number3+='column_from='+number3;
+      number3='column_from='+number3;
       var number4=block.getFieldValue('colF');
-      number4+='column_to='+number4;
+      number4='column_to='+number4;
       var header=block.getFieldValue('header');
-      header+='header='+header;
+      header='header='+header;
       var VAR=block.getFieldValue('VAR');
-      var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+","+number4+","+header+")";
+      var code ="\n\t"+VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       return code;
     }   
@@ -552,11 +552,11 @@ function registerInsertRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"SetCellValue(%1,%2)",
+    "message0":"SetCellValue(%1,%2)%3",
     "args0": [
       {
         "type": "field_number",
-        "name":"N1",
+        "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
@@ -564,7 +564,14 @@ function registerSetCellValue(){
       {
         "type": "field_number",
         "check":"number",
-        "name":"N2",
+        "name":"column",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "name":"value",
+        "check":"number",
         "value": 100,
         "min":1,
       }
@@ -583,10 +590,14 @@ function registerSetCellValue(){
     python.pythonGenerator.forBlock['SetCellValue'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
+      var number1= block.getFieldValue('row');
+      number1='row='+number1;
+      var number2=block.getFieldValue('column');
+      number2='column='+number2;
+      var value=block.getFieldValue('value');
+      value='value='+value;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+","+value+")";
       return code;
     }   
 }
