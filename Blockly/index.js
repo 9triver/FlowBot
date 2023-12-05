@@ -215,7 +215,10 @@ function registerSetActiveCell(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    
+    "tooltip":"{workbook} Set Active Cell {row} {column} : 设置活跃单元格\
+    \nworkbook: Excel 文档变量名\
+    \nrow: 行号\
+    \ncolumn: 列号",
   }
   Blockly.Blocks['SetActiveCell']=
     {
@@ -264,7 +267,11 @@ function registerFetchCell(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    
+    "tooltip":"{workbook} Fetch Cell {row} {column} As {var} : 获取单元格\
+    \nworkbook: Excel 文档变量名\
+    \nrow: 行号，为空则采用当前获取行\
+    \ncolumn: 列号，为空则采用当前活跃列\
+    \nvar: 表示获取结果的变量名"
   }
   Blockly.Blocks['fetchCell']=
     {
@@ -321,7 +328,12 @@ function registerFetchRow(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    
+    "tooltip":"{workbook} Fetch Row {row} {column_from} {column_to} As {var} : 获取一行\
+    \nworkbook: Excel 文档变量名\
+    \nrow: 行号，为空则采用当前活跃行\
+    \ncolumn_from: 起点列号，为空则采用第一列\
+    \ncolumn_to: 终点列号，为空则读取到空值为止\
+    \nvar: 表示获取结果的变量名"
   }
   Blockly.Blocks['fetchRow']=
     {
@@ -380,6 +392,12 @@ function registerFetchCol(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
+    "tooltip":"{workbook} Fetch Column {column} {row_from} {row_to} As {var} : 获取一列\
+    \nworkbook: Excel 文档变量名\
+    \ncolumn: 列号，为空则采用当前活跃列\
+    \nrow_from: 起点行号，为空则采用第一行\
+    \nrow_to: 终点行号，为空则读取到空值为止\
+    \nvar: 表示获取结果的变量名"
   }
   Blockly.Blocks['fetchCol']=
     {
@@ -453,6 +471,14 @@ function registerFetchArea(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
+    "tooltip":"{workbook} Fetch area {row_from} {row_to} {column_from} {column_to} {header} As {var} : 获取一个区域\
+    \nworkbook: Excel 文档变量名\
+    \nrow_from: 起点行号\
+    \nrow_to: 终点行号\
+    \ncolumn_from: 起点列号\
+    \ncolumn_to: 终点列号\
+    \nheader: 是否将第一行作为列名\
+    \nvar: 表示获取结果的变量名"
   }
   Blockly.Blocks['fetchArea']=
     {
@@ -579,6 +605,11 @@ function registerSetCellValue(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
+    "tooltip":"{workbook} Set Cell {row} {column} {value} : 设置单元格的值\
+    workbook: Excel 文档变量名\
+    row: 行号，为空则采用当前获取行\
+    column: 列号，为空则采用当前活跃列\
+    value: 待写入的值"
     
   }
   Blockly.Blocks['SetCellValue']=
