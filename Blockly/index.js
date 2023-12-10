@@ -21,6 +21,15 @@ function start() {
   registerSetActiveSheet();
   registerMergeSheet();
 
+  registerIfBlock();
+  registerElifBlock();
+  registerElseBlock();
+
+  registerForBlock();
+  registerForeachBlock();
+  
+  registerCompareBlock();
+
   workspace = Blockly.inject('blocklyDiv',
     {
         toolbox:document.getElementById('toolbox-categories'),
@@ -724,6 +733,243 @@ function registerMergeSheet(){
       return code;
     }   
 }
+function registerIfBlock(){{
+  var IF ={
+    "message0":"if %1 : %2",
+    "args0": [
+      {
+        "type": "input_statement",
+        "name":"condition",
+        "check":"string",
+      },
+      {
+        "type": "input_statement",
+        "name":"content",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['IF']=
+    {
+      init: function() {
+        this.jsonInit(IF);
+      } 
+    };
+    python.pythonGenerator.forBlock['IF'] = function(block, generator) {
+      // Collect argument strings.
+      var condition= block.getChildren(true)[0];
+      var content =block.getChildren(true)[1];
+      var code ="\n\t"+"if "+condition+":";
+      code +="\n\t\t"+content;
+      return code;
+    }   
+
+}}
+function registerElifBlock(){{
+  var Elif ={
+    "message0":"Else if %1 : %2",
+    "args0": [
+      {
+        "type": "input_statement",
+        "name":"condition",
+        "check":"string",
+      },
+      {
+        "type": "input_statement",
+        "name":"content",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['Elif']=
+    {
+      init: function() {
+        this.jsonInit(Elif);
+      } 
+    };
+    python.pythonGenerator.forBlock['Elif'] = function(block, generator) {
+      // Collect argument strings.
+      var condition= block.getChildren(true)[0];
+      var code ="\n\t"+"else if "+condition+":";
+      return code;
+    }   
+
+}}
+function registerElseBlock(){{
+  var Else ={
+    "message0":"Else %1",
+    "args0": [
+      {
+        "type": "input_statement",
+        "name":"condition",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['Else']=
+    {
+      init: function() {
+        this.jsonInit(Else);
+      } 
+    };
+    python.pythonGenerator.forBlock['Else'] = function(block, generator) {
+      // Collect argument strings.
+      var condition= block.getChildren(true)[0];
+      var code ="\n\t"+"else "+condition+":";
+      return code;
+    }   
+
+}}
+function registerForBlock(){{
+  var For ={
+    "message0":"for %1 from %2 to %3 : %4",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String"
+      },
+      {
+        "type": "field_number",
+        "name":"start",
+        "check":"number",
+
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"end",
+      },
+      {
+        "type": "input_statement",
+        "name":"condition",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['For']=
+    {
+      init: function() {
+        this.jsonInit(For);
+      } 
+    };
+    python.pythonGenerator.forBlock['For'] = function(block, generator) {
+      // Collect argument strings.
+      var VAR = block.getFieldValue('VAR');
+      var start = block.getFieldValue('start');
+      var end = block.getFieldValue('end');
+      var condition =block.getChildren(true);
+      var code ="\n\t"+"for "+VAR+"in range"+"("+start+","+end+"):";
+      code+="\n\t\t"+condition[0];
+      return code;
+    }   
+
+}}
+function registerForeachBlock(){{
+  var Foreach ={
+    "message0":"for each %1  in %2 :%3",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name":"iterable_var",
+        "check":"string",
+
+      },
+      {
+        "type": "input_statement",
+        "name":"condition",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['Foreach']=
+    {
+      init: function() {
+        this.jsonInit(Foreach);
+      } 
+    };
+    python.pythonGenerator.forBlock['Foreach'] = function(block, generator) {
+      // Collect argument strings.
+      var VAR = block.getFieldValue('VAR');
+      var iterableVar = block.getFieldValue('iterable_var');
+      var condition =block.getChildren(true);
+      var code ="\n\t"+"for "+VAR+"in"+iterableVar+":";
+      code+="\n\t\t"+condition[0];
+      return code;
+    }   
+
+}}
+function registerCompareBlock(){{
+  var Compare ={
+    "message0":"%1 %2 %3 %4",
+    "args0": [
+      {
+        "type": "field_dropdown",
+        "name": "value_type",
+        "options": [
+          [ "int", "integer" ],
+          [ "float", "float" ],
+          ["str","String"],
+        ]
+      },
+      {
+        "type": "field_input",
+        "name":"exp1",
+        "check":"string",
+      },
+      {
+        "type": "field_dropdown",
+        "name": "comparation",
+        "options": [
+          [ "<", "小于" ],
+          [ "<=", "小于等于" ],
+          ["==","等于"],
+          [">=","大于等于"],
+          [">","大于"],
+        ]
+      },
+      {
+        "type": "field_input",
+        "name":"exp2",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['Compare']=
+    {
+      init: function() {
+        this.jsonInit(Compare);
+      } 
+    };
+    python.pythonGenerator.forBlock['Compare'] = function(block, generator) {
+      // Collect argument strings.
+      var valueType = block.getFieldValue('value_type');
+      var exp1 =block.getFieldValue('exp1');
+      var exp2 =block.getFieldValue('exp2');
+      var code ="\n\t"+valueType+" "+exp1+" "+comparation+" "+valueType+" "+exp2;
+      return code;
+    }   
+
+}}
 function registerHelpOption() {
   const helpItem = {
     displayText: 'Help! There are no blocks',
