@@ -116,10 +116,9 @@ function registerOpenWorkbook()
       FILEPATH = '\'' + FILE + '\'';
       else
         FILEPATH=FILE;
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+"=ExcelApplication()";
-      code +="\n\t"+VAR+".open_application(visible=True)";
-        code +="\n\t"+VAR+".open_workbook("+FILEPATH+")";
+      var code ="\t"+VAR+"=ExcelApplication()\n";
+      code +="\t"+VAR+".open_application(visible=True)\n";
+        code +="\t"+VAR+".open_workbook("+FILEPATH+")\n";
       return code;
     }       
           
@@ -155,7 +154,7 @@ function registerSaveWorkbook(){
         FILEPATH = 'filename='+'\'' + FILE + '\'';
       else
         FILEPATH=FILE;
-      var code ="\n\t"+VAR+".save_workbook("+FILEPATH+")";
+      var code ="\t"+VAR+".save_workbook("+FILEPATH+")\n";
       // Return code.
       return code;
     }
@@ -198,7 +197,7 @@ function registerMoveActiveCell(){
       var number2=block.getFieldValue('column_change');
         number2='column_change='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".move_active_cell("+number1+","+number2+")";
+      var code ="\t"+VAR+".move_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -243,7 +242,7 @@ function registerSetActiveCell(){
       var number2=block.getFieldValue('column');
       number2='column='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -297,7 +296,7 @@ function registerFetchCell(){
       var number2=block.getFieldValue('column');
       number2='column='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")";
+      var code ="\t"+VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -360,8 +359,7 @@ function registerFetchRow(){
       var number3=block.getFieldValue('columnT');
       number3='column_to='+number3;
       var VAR=block.getFieldValue('VAR');
-      var code ="\n\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")";
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
       return code;
     }   
 }
@@ -424,7 +422,7 @@ function registerFetchCol(){
       var number3=block.getFieldValue('rowT');
       number3='row_to='+number3;
       var VAR=block.getFieldValue('VAR');
-      var code ="\n\t"+VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")";
+      var code ="\t"+VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       return code;
     }   
@@ -509,8 +507,7 @@ function registerFetchArea(){
       var header=block.getFieldValue('header');
       header='header='+header;
       var VAR=block.getFieldValue('VAR');
-      var code ="\n\t"+VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")";
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      var code ="\t"+VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")\n";
       return code;
     }   
 
@@ -542,10 +539,10 @@ function registerInsertCol(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const number1= block.getFieldValue('N1');
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\n\tfor i in range("+number1+","+number2+"):";
-     code +="\n\t\tr = "+VAR+".read_col(header=True)";
-     code +="\n\t\tprint(r)";
-     code +="\n\t\tapp.move_active_cell(1, 0)"; 
+     var code ="\tfor i in range("+number1+","+number2+"):\n";
+     code +="\t\tr = "+VAR+".read_col(header=True)\n";
+     code +="\t\tprint(r)\n";
+     code +="\t\tapp.move_active_cell(1, 0)\n"; 
       return code;
     }   
 
@@ -577,10 +574,10 @@ function registerInsertRow(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const number1= block.getFieldValue('N1');
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\n\tfor i in range("+number1+","+number2+"):";
-     code +="\n\t\tr = "+VAR+".read_row(header=True)";
-     code +="\n\t\tprint(r)";
-     code +="\n\t\tapp.move_active_cell(1, 0)"; 
+     var code ="\tfor i in range("+number1+","+number2+"):\n";
+     code +="\t\tr = "+VAR+".read_row(header=True)\n";
+     code +="\t\tprint(r)\n";
+     code +="\t\tapp.move_active_cell(1, 0)\n"; 
       return code;
     }   
 
@@ -637,7 +634,7 @@ function registerSetCellValue(){
       var value=block.getFieldValue('value');
       value='value='+value;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+","+value+")";
+      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+","+value+")\n";
       return code;
     }   
 }
@@ -667,7 +664,7 @@ function registerCreateSheet(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".open_workbook("+FILEPATH+")";
+      var code ="\t"+VAR+".open_workbook("+FILEPATH+")\n";
       return code;
     }   
 }
@@ -698,7 +695,7 @@ function registerSetActiveSheet(){
       const number1= block.getFieldValue('N1');
       const number2=block.getFieldValue('N2');
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -729,10 +726,65 @@ function registerMergeSheet(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\n\t"+VAR+".set_active_cell("+number1+","+number2+")";
+      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
+function registerCompareBlock(){{
+  var Compare ={
+    "message0":"%1 %2 %3 %4",
+    "args0": [
+      {
+        "type": "field_dropdown",
+        "name": "value_type",
+        "options": [
+          [ "int", "int" ],
+          [ "float", "float" ],
+          ["str","string"],
+        ]
+      },
+      {
+        "type": "field_input",
+        "name":"exp1",
+        "check":"string",
+      },
+      {
+        "type": "field_dropdown",
+        "name": "comparation",
+        "options": [
+          [ "<", "<" ],
+          [ "<=", "<=" ],
+          ["==","=="],
+          [">=",">="],
+          [">",">"],
+        ]
+      },
+      {
+        "type": "field_input",
+        "name":"exp2",
+        "check":"string",
+      },
+    ],
+    "previousStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['Compare']=
+    {
+      init: function() {
+        this.jsonInit(Compare);
+      } 
+    };
+    python.pythonGenerator.forBlock['Compare'] = function(block, generator) {
+      // Collect argument strings.
+      var valueType = block.getFieldValue('value_type');
+      var exp1 =block.getFieldValue('exp1');
+      var comparation =block.getFieldValue('comparation');
+      var exp2 =block.getFieldValue('exp2');
+      var code =valueType+" ("+exp1+") "+comparation+" "+valueType+" ("+exp2+")";
+      return code;
+    }   
+
+}}
 function registerIfBlock(){{
   var IF ={
     "message0":"if %1 : %2",
@@ -760,10 +812,10 @@ function registerIfBlock(){{
     };
     python.pythonGenerator.forBlock['IF'] = function(block, generator) {
       // Collect argument strings.
-      var condition= block.getChildren(true)[0];
-      var content =block.getChildren(true)[1];
-      var code ="\n\t"+"if "+condition+":";
-      code +="\n\t\t"+content;
+      var condition =generator.statementToCode(block,'condition');
+      var content ="\t"+generator.statementToCode(block,'content');
+      var code ="\t"+"if"+condition+" :\n";
+      code +=content;
       return code;
     }   
 
@@ -795,8 +847,10 @@ function registerElifBlock(){{
     };
     python.pythonGenerator.forBlock['Elif'] = function(block, generator) {
       // Collect argument strings.
-      var condition= block.getChildren(true)[0];
-      var code ="\n\t"+"else if "+condition+":";
+      var condition =generator.statementToCode(block,'condition');
+      var content ="\t"+generator.statementToCode(block,'content');
+      var code ="\t"+"elif"+condition+" :\n";
+      code +=content;
       return code;
     }   
 
@@ -807,7 +861,7 @@ function registerElseBlock(){{
     "args0": [
       {
         "type": "input_statement",
-        "name":"condition",
+        "name":"content",
         "check":"string",
       },
     ],
@@ -822,8 +876,9 @@ function registerElseBlock(){{
     };
     python.pythonGenerator.forBlock['Else'] = function(block, generator) {
       // Collect argument strings.
-      var condition= block.getChildren(true)[0];
-      var code ="\n\t"+"else "+condition+":";
+      var content ="\t"+generator.statementToCode(block,'content');
+      var code ="\t"+"else :\n";
+      code +=content;
       return code;
     }   
 
@@ -868,9 +923,9 @@ function registerForBlock(){{
       var VAR = block.getFieldValue('VAR');
       var start = block.getFieldValue('start');
       var end = block.getFieldValue('end');
-      var condition =block.getChildren(true);
-      var code ="\n\t"+"for "+VAR+"in range"+"("+start+","+end+"):";
-      code+="\n\t\t"+condition[0];
+      var condition ="\t"+generator.statementToCode(block,'condition');
+      var code ="\t"+"for "+VAR+"in range"+"("+start+","+end+"):\n";
+      code+=condition;
       return code;
     }   
 
@@ -909,63 +964,9 @@ function registerForeachBlock(){{
       // Collect argument strings.
       var VAR = block.getFieldValue('VAR');
       var iterableVar = block.getFieldValue('iterable_var');
-      var condition =block.getChildren(true);
-      var code ="\n\t"+"for "+VAR+"in"+iterableVar+":";
-      code+="\n\t\t"+condition[0];
-      return code;
-    }   
-
-}}
-function registerCompareBlock(){{
-  var Compare ={
-    "message0":"%1 %2 %3 %4",
-    "args0": [
-      {
-        "type": "field_dropdown",
-        "name": "value_type",
-        "options": [
-          [ "int", "integer" ],
-          [ "float", "float" ],
-          ["str","String"],
-        ]
-      },
-      {
-        "type": "field_input",
-        "name":"exp1",
-        "check":"string",
-      },
-      {
-        "type": "field_dropdown",
-        "name": "comparation",
-        "options": [
-          [ "<", "小于" ],
-          [ "<=", "小于等于" ],
-          ["==","等于"],
-          [">=","大于等于"],
-          [">","大于"],
-        ]
-      },
-      {
-        "type": "field_input",
-        "name":"exp2",
-        "check":"string",
-      },
-    ],
-    "previousStatement": null,
-    "colour":220,
-  }
-  Blockly.Blocks['Compare']=
-    {
-      init: function() {
-        this.jsonInit(Compare);
-      } 
-    };
-    python.pythonGenerator.forBlock['Compare'] = function(block, generator) {
-      // Collect argument strings.
-      var valueType = block.getFieldValue('value_type');
-      var exp1 =block.getFieldValue('exp1');
-      var exp2 =block.getFieldValue('exp2');
-      var code ="\n\t"+valueType+" "+exp1+" "+comparation+" "+valueType+" "+exp2;
+      var condition ="\t"+generator.statementToCode(block,'condition');
+      var code ="\t"+"for "+VAR+"in"+iterableVar+":\n";
+      code+=condition;
       return code;
     }   
 
