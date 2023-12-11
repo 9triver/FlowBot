@@ -24,6 +24,7 @@ class ExcelApplicationExtension(ExcelApplication):
         row: int = None,
         column_from: int = None,
         column_to: int = None,
+        header_row: int = None,
     ):
         if row is None:
             row = self.active_row
@@ -31,7 +32,10 @@ class ExcelApplicationExtension(ExcelApplication):
         column = column_from
         column_num = column_to - column + 1 if column_to is not None else None
 
-        contents = []
+        if header_row is not None:
+            contents = {}
+        else:
+            contents = []
         content = self.read_from_cells(row=row, column=column)
         while (
             column_num is None
@@ -39,22 +43,36 @@ class ExcelApplicationExtension(ExcelApplication):
             or column_num is not None
             and column - column_from < column_num  # read until reaching column_num
         ):
-            contents.append(content)
+            if header_row is not None:
+                header = str(self.read_from_cells(row=header_row, column=column))
+                contents[header] = str(content) if content is not None else None
+            else:
+                contents.append(str(content) if content is not None else None)
+            
             column += 1
             content = self.read_from_cells(row=row, column=column)
         return contents
 
-    def insert_row(self, row: int = None, row_content=None):
+    def insert_row(self, row: int = None, row_content = None, header_row: int = None):
         if row is None:
             row = self.active_row
-        for column in range(1, len(row_content) + 1):
-            self.write_to_cells(row=row, column=column, value=row_content[column - 1])
+
+        if header_row is not None:
+            headers = self.read_row(header_row)
+            header_to_column = {}
+            for i in range(0, len(headers)):
+                header_to_column[headers[i]] = i + 1
+            for header, content in row_content.items():
+                self.write_to_cells(row=row, column=header_to_column[header], value=content, number_format='@')
+        else:    
+            for column in range(1, len(row_content) + 1):
+                self.write_to_cells(row=row, column=column, value=row_content[column - 1], number_format='@')
 
     def insert_column(self, column: int = None, column_content=None):
         if column is None:
             column = self.active_column
         for row in range(1, len(column_content) + 1):
-            self.write_to_cells(row=row, column=column, value=column_content[row - 1])
+            self.write_to_cells(row=row, column=column, value=column_content[row - 1], number_format='@')
 
     def read_column(
         self,
@@ -76,9 +94,9 @@ class ExcelApplicationExtension(ExcelApplication):
             or row_num is not None
             and row - row_from < row_num  # read until reaching column_num
         ):
-            contents.append(content)
+            contents.append(str(content) if content is not None else None)
             row += 1
-            content = self.read_from_cells(row=row, column=column)
+            content = str(self.read_from_cells(row=row, column=column))
         return contents
 
     def read_area(
@@ -87,13 +105,13 @@ class ExcelApplicationExtension(ExcelApplication):
         row_to: int = None,
         column_from: int = None,
         column_to: int = None,
-        header: bool = False,
+        with_header: bool = False,
     ):
         row_from = row_from if row_from is not None else 1
         column_from = column_from if column_from is not None else 1
 
-        if header:
-            column_names = self.read_row(
+        if with_header:
+            headers = self.read_row(
                 row=row_from, column_from=column_from, column_to=column_to
             )
             row_from += 1
@@ -103,10 +121,10 @@ class ExcelApplicationExtension(ExcelApplication):
             row_content = self.read_row(
                 row=row, column_from=column_from, column_to=column_to
             )
-            if header:
+            if with_header:
                 row_dict = {}
-                for i in range(0, len(column_names)):
-                    row_dict[column_names[i]] = row_content[i]
+                for i in range(0, len(headers)):
+                    row_dict[headers[i]] = row_content[i]
                 row_contents.append(row_dict)
             else:
                 row_contents.append(row_content)
