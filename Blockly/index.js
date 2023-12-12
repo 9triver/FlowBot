@@ -25,11 +25,15 @@ function start() {
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
+  
+  registerSettoBlock();
 
   registerForBlock();
   registerForeachBlock();
-  
- 
+
+  registerAndBlock();
+  registerOrBlock();
+  registerNotBlock();
 
   workspace = Blockly.inject('blocklyDiv',
     {
@@ -98,6 +102,7 @@ function registerOpenWorkbook()
       }
     ],
     "nextStatement": null,
+    "previousStatement":null,
     "colour":200,
     "tooltip":'Open Workbook {path} As {var} : 打开Excel文档 \
     \npath: Excel 文档路径，为空表示新建文档 \
@@ -141,8 +146,13 @@ function registerOpenWorkbook()
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
-    "message0":"Save Workbook %1",
+    "message0":"%1 Save Workbook %2",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_input",
         "name": "FILE",
@@ -163,7 +173,7 @@ function registerSaveWorkbook(){
     };
     python.pythonGenerator.forBlock['saveWorkbook'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const VAR = block.getFieldValue('Workbook');
       var FILE =block.getFieldValue('FILE');
       var FILEPATH;
         var code='';
@@ -187,8 +197,13 @@ function registerSaveWorkbook(){
 }
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"MoveActiveCell(%1,%2)",
+    "message0":"%1 MoveActiveCell(%2,%3)",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "name":"row_change",
@@ -217,7 +232,7 @@ function registerMoveActiveCell(){
     };
     python.pythonGenerator.forBlock['MoveActiveCell'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const VAR = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('row_change');
         number1='row_change='+number1;
       var number2=block.getFieldValue('column_change');
@@ -233,8 +248,13 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"SetActiveCell(%1,%2)",
+    "message0":"%1 SetActiveCell(%2,%3)",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "name":"row",
@@ -266,7 +286,7 @@ function registerSetActiveCell(){
     };
     python.pythonGenerator.forBlock['SetActiveCell'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const VAR = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('row');
       number1='row='+number1;
       var number2=block.getFieldValue('column');
@@ -283,8 +303,13 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"fetch Cell (%1,%2) As %3",
+    "message0":"%1 fetch Cell (%2,%3) As %4",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "name":"row",
@@ -324,7 +349,7 @@ function registerFetchCell(){
     };
     python.pythonGenerator.forBlock['fetchCell'] = function(block, generator) {
       // Collect argument strings.
-      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      const Workbook = block.getFieldValue('Workbook');
       const VAR = block.getFieldValue('VAR');
       var number1= block.getFieldValue('row');
       number1='row='+number1;
@@ -347,8 +372,13 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"Fetch Row %1 (%2,%3) As %4",
+    "message0":"%1 Fetch Row %2 (%3,%4) %5 As %6",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "name":"row",
@@ -380,8 +410,6 @@ function registerFetchRow(){
       {
         "type": "field_input",
         "name": "VAR",
-        "variable": "item",
-        "variableTypes": [""],
         "check":"String"
       }
     ],
@@ -404,7 +432,7 @@ function registerFetchRow(){
     };
     python.pythonGenerator.forBlock['fetchRow'] = function(block, generator) {
       // Collect argument strings.
-      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      const Workbook = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('row');
       number1='row='+number1;
       var number2=block.getFieldValue('columnF');
@@ -425,8 +453,13 @@ function registerFetchRow(){
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"Fetch Column %1 (%2,%3) As %4",
+    "message0":"%1 Fetch Column %2 (%3,%4) As %5",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "name":"col",
@@ -474,7 +507,7 @@ function registerFetchCol(){
     };
     python.pythonGenerator.forBlock['fetchCol'] = function(block, generator) {
       // Collect argument strings.
-      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      const Workbook = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('col');
       number1='column='+number1;
       var number2=block.getFieldValue('rowF');
@@ -488,15 +521,19 @@ function registerFetchCol(){
           code+='    ';
         }
       code +=VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       return code;
     }   
 
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"Fetch Area (%1,%2), (%3,%4)  %5 As %6",
+    "message0":"%1 Fetch Area (%2,%3), (%4,%5)  %6 As %7",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "check":"number",
@@ -561,7 +598,7 @@ function registerFetchArea(){
     };
     python.pythonGenerator.forBlock['fetchArea'] = function(block, generator) {
       // Collect argument strings.
-      const Workbook = block.getRootBlock().getFieldValue('VAR');
+      const Workbook = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('rowF');
       number1='row_from='+number1;
       var number2=block.getFieldValue('rowT');
@@ -687,8 +724,13 @@ function registerInsertRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"SetCellValue(%1,%2)%3",
+    "message0":"%1 SetCellValue(%2,%3) %4",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
       {
         "type": "field_number",
         "name":"row",
@@ -729,7 +771,7 @@ function registerSetCellValue(){
     };
     python.pythonGenerator.forBlock['SetCellValue'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
+      const VAR = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('row');
       number1='row='+number1;
       var number2=block.getFieldValue('column');
@@ -745,6 +787,47 @@ function registerSetCellValue(){
       code +=VAR+".set_active_cell("+number1+","+number2+","+value+"number_format='@'"+")\n";
       return code;
     }   
+}
+function registerSettoBlock(){
+  var setto ={
+    "message0":"Set %1 to %2",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name": "exp",
+        "check":"String"
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
+    \nworkbook: Excel 文档变量名 \
+    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
+  }
+  Blockly.Blocks['setto']=
+    {
+      init: function() {
+        this.jsonInit(setto);
+      } 
+    };
+    python.pythonGenerator.forBlock['setto'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var exp =block.getFieldValue('exp');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+"="+exp;
+      // Return code.
+      return code;
+    }
 }
 function registerCreateSheet(){
   var CreateSheet ={
@@ -782,11 +865,16 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"SetActiveSheet %1",
+    "message0":"%1 SetActiveSheet %2",
     "args0": [
       {
         "type": "field_input",
-        "name": "FILE",
+        "name": "Workbook",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name": "name",
         "check":"String"
       },
     ],
@@ -803,27 +891,29 @@ function registerSetActiveSheet(){
     };
     python.pythonGenerator.forBlock['SetActiveSheet'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const number2=block.getFieldValue('N2');
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      const Workbook = block.getFieldValue('Workbook');
+      const name= block.getFieldValue('name');
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code +=VAR+".set_active_cell("+number1+","+number2+")\n";
+      code +=Workbook+".add_new_sheet("+name+")\n";
       return code;
     }   
 }
 function registerMergeSheet(){
   var MergeSheet ={
-    "message0":"MergeSheet %1",
+    "message0":"%1 MergeSheet %2",
     "args0": [
       {
         "type": "field_input",
-        "name": "FILE",
-
+        "name": "Workbook",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name": "name",
         "check":"String"
       },
     ],
@@ -840,15 +930,14 @@ function registerMergeSheet(){
     };
     python.pythonGenerator.forBlock['MergeSheet'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      const Workbook = block.getFieldValue('Workbook');
+      const name =block.getFieldValue('name');
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code +=VAR+".set_active_cell("+number1+","+number2+")\n";
+      code +=Workbook+".set_active_worksheet("+name+")\n";
       return code;
     }   
 }
@@ -1133,6 +1222,90 @@ function registerForeachBlock(){{
         }
       code +="for "+VAR+"in"+iterableVar+":\n";
       code+=condition;
+      return code;
+    }   
+
+}}
+function registerAndBlock(){{
+  var and ={
+    "message0":"and %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name":"condition1",
+      },
+    ],
+    "output": null,
+    "colour":220,
+  }
+  Blockly.Blocks['and']=
+    {
+      init: function() {
+        this.jsonInit(and);
+      } 
+    };
+    python.pythonGenerator.forBlock['and'] = function(block, generator) {
+      // Collect argument strings.
+      var iterableVar = block.getFieldValue('iterable_var');
+      var condition1 =generator.statementToCode(block,'condition1');
+      var code='';
+      code +="and"+condition1;
+      return code;
+    }   
+
+}}
+
+function registerOrBlock(){{
+  var or ={
+    "message0":"or %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name":"condition1",
+      },
+    ],
+    "output": null,
+    "colour":220,
+  }
+  Blockly.Blocks['or']=
+    {
+      init: function() {
+        this.jsonInit(or);
+      } 
+    };
+    python.pythonGenerator.forBlock['or'] = function(block, generator) {
+      // Collect argument strings.
+      var condition1 =generator.statementToCode(block,'condition1');
+      var code='';
+      code +="or"+condition1;
+      return code;
+    }   
+
+}}
+function registerNotBlock(){{
+  var not ={
+    "message0":"not %1",
+    "args0": [
+      {
+        "type": "input_value",
+        "name":"condition1",
+      },
+    ],
+    "colour":220,
+    "output":null,
+  }
+  Blockly.Blocks['not']=
+    {
+      init: function() {
+        this.jsonInit(not);
+      } 
+    };
+    python.pythonGenerator.forBlock['not'] = function(block, generator) {
+      // Collect argument strings.
+      var iterableVar = block.getFieldValue('iterable_var');
+      var condition1 =generator.statementToCode(block,'condition1');
+      var code='';
+      code +="not"+condition1;
       return code;
     }   
 
