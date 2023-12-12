@@ -25,7 +25,7 @@ function start() {
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
-  
+
   registerSettoBlock();
 
   registerForBlock();
@@ -831,11 +831,16 @@ function registerSettoBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"CreateSheet %1",
+    "message0":"%1 CreateSheet %2",
     "args0": [
       {
         "type": "field_input",
-        "name": "FILE",
+        "name": "Workbook",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "name": "name",
         "check":"String",
       },
     ],
@@ -851,15 +856,14 @@ function registerCreateSheet(){
       } 
     };
     python.pythonGenerator.forBlock['CreateSheet'] = function(block, generator) {
-      // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
+      const Workbook = block.getFieldValue('Workbook');
+      const name= block.getFieldValue('name');
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code +=VAR+".open_workbook("+FILEPATH+")\n";
+      code +=Workbook+".add_new_sheet("+name+")\n";
       return code;
     }   
 }
@@ -890,15 +894,14 @@ function registerSetActiveSheet(){
       } 
     };
     python.pythonGenerator.forBlock['SetActiveSheet'] = function(block, generator) {
-      // Collect argument strings.
       const Workbook = block.getFieldValue('Workbook');
-      const name= block.getFieldValue('name');
+      const name =block.getFieldValue('name');
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code +=Workbook+".add_new_sheet("+name+")\n";
+      code +=Workbook+".set_active_worksheet("+name+")\n";
       return code;
     }   
 }
