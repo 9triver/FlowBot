@@ -43,9 +43,7 @@ def solve_challenge():
         # or 
         # Compare {float} {src_row['劳务收入_劳务税非居民']} {>} {0}
         # 另外四个 condition block
-        if float(src_row['劳务收入_劳务税非居民']) > 0 or float(src_row['劳务税率_劳务税非居民']) > 0 or \
-            float(src_row['劳务实发_劳务税非居民']) > 0 or float(src_row['劳务税_劳务税非居民']) > 0 or \
-            float(src_row['劳务应扣税_劳务税非居民']) > 0:
+        if float(src_row['劳务收入_劳务税非居民']) > 0 or float(src_row['劳务税率_劳务税非居民']) > 0 or float(src_row['劳务实发_劳务税非居民']) > 0 or float(src_row['劳务税_劳务税非居民']) > 0 or float(src_row['劳务应扣税_劳务税非居民']) > 0:
             # {none_resident} Insert Row {none_resident_row_index} {src_row} {1}
             none_resident.insert_row(row=none_resident_row_index, row_content=src_row, header_row=1)
             # Set {none_resident_row_index} to {none_resident_row_index + 1}
