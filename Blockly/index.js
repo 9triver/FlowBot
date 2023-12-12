@@ -6,6 +6,7 @@ function start() {
 
  
   registerOpenWorkbook();
+  registerAddWorkbook();
   registerSaveWorkbook();
 
   registerMoveActiveCell();
@@ -195,6 +196,51 @@ function registerSaveWorkbook(){
       return code;
     }
 }
+function registerAddWorkbook(){
+  var addWorkbook ={
+    "type":"saveWorkbook",
+    "message0":"Add Workbook as %1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String"
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    "tooltip":'Add Workbook as {var} : 保存 Excel 文档 \
+    \nworkbook: Excel 文档变量名 \
+    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
+  }
+  Blockly.Blocks['addWorkbook']=
+    {
+      init: function() {
+        this.jsonInit(addWorkbook);
+      } 
+    };
+    python.pythonGenerator.forBlock['addWorkbook'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+"=ExcelApplication()\n";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".open_application(visible=True)\n";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+        code +=VAR+".add_new_workbook()\n";
+      return code;
+    }
+}
 function registerMoveActiveCell(){
   var MoveActiveCell ={
     "message0":"%1 MoveActiveCell(%2,%3)",
@@ -205,14 +251,14 @@ function registerMoveActiveCell(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"row_change",
-        "check":"number",
+        "check":"String",
 
       },
       {
-        "type": "field_number",
-        "check":"number",
+        "type": "field_input",
+        "check":"string",
         "name":"column_change",
       }
     ],
@@ -256,14 +302,14 @@ function registerSetActiveCell(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"column",
         "value": 100,
@@ -311,14 +357,14 @@ function registerFetchCell(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"column",
         "value": 100,
@@ -380,28 +426,28 @@ function registerFetchRow(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"columnF",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"columnT",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"header_row",
         "value": 100,
@@ -461,21 +507,21 @@ function registerFetchCol(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"col",
         "check":"number",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"rowF",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"rowT",
         "value": 100,
@@ -535,28 +581,28 @@ function registerFetchArea(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"rowF",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"rowT",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"colF",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"colT",
         "value": 100,
@@ -566,8 +612,8 @@ function registerFetchArea(){
         "type": "field_dropdown",
         "name": "with_header",
         "options": [
-          [ "false", "false" ],
-          ["true","true"]
+          [ "False", "False" ],
+          ["True","True"]
         ]
       },
       {
@@ -630,14 +676,14 @@ function registerInsertCol(){
         "check":"String",
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"column",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"string",
         "name":"col_content",
       },
@@ -677,19 +723,19 @@ function registerInsertRow(){
         "check":"String",
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"row",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"string",
         "name":"row_content",
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"header",
         "value": 100,
@@ -732,21 +778,21 @@ function registerSetCellValue(){
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"row",
         "check":"number",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"column",
         "value": 100,
         "min":1,
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"value",
         "check":"number",
         "value": 100,
@@ -824,7 +870,7 @@ function registerSettoBlock(){
         {
           code+='    ';
         }
-        code +=VAR+"="+exp;
+        code +=VAR+"="+exp+"\n";
       // Return code.
       return code;
     }
@@ -947,7 +993,7 @@ function registerMergeSheet(){
 function registerCompareBlock(){{
   var Compare ={
     "type":"condition",
-    "message0":"Compare %1 %2 %3 %4 %5",
+    "message0":" %1 %2 %3 %4 %5",
     "args0": [
       {
         "type": "field_dropdown",
@@ -955,7 +1001,7 @@ function registerCompareBlock(){{
         "options": [
           [ "int", "int" ],
           [ "float", "float" ],
-          ["str","string"],
+          ["str","str"],
         ]
       },
       {
@@ -1000,7 +1046,7 @@ function registerCompareBlock(){{
       var comparation =block.getFieldValue('comparation');
       var exp2 =block.getFieldValue('exp2');
       var prolong=generator.statementToCode(block,'prolong');
-      var code =valueType+" ("+exp1+") "+comparation+" "+valueType+" ("+exp2+")"+prolong;
+      var code =valueType+"("+exp1+") "+comparation+" "+valueType+"("+exp2+")"+prolong;
       return code;
     }   
 
@@ -1137,13 +1183,13 @@ function registerForBlock(){{
         "check":"String"
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "name":"start",
         "check":"number",
 
       },
       {
-        "type": "field_number",
+        "type": "field_input",
         "check":"number",
         "name":"end",
       },
@@ -1175,7 +1221,7 @@ function registerForBlock(){{
         {
           code+='    ';
         }
-      code +="for "+VAR+"in range"+"("+start+","+end+"):\n";
+      code +="for "+VAR+" in range"+"("+start+","+end+"):\n";
       code+=content;
       return code;
     }   
