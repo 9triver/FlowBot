@@ -909,7 +909,7 @@ function registerCreateSheet(){
       {
         code+='    ';
       }
-      code +=Workbook+".add_new_sheet("+name+")\n";
+      code +=Workbook+".add_new_sheet('"+name+"')\n";
       return code;
     }   
 }
