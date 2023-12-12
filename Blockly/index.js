@@ -1,6 +1,6 @@
 'use strict';
 let workspace = null;
-
+var depth=1;
 function start() {
   registerFirstContextMenuOptions();
 
@@ -118,9 +118,22 @@ function registerOpenWorkbook()
       FILEPATH = '\'' + FILE + '\'';
       else
         FILEPATH=FILE;
-      var code ="\t"+VAR+"=ExcelApplication()\n";
-      code +="\t"+VAR+".open_application(visible=True)\n";
-        code +="\t"+VAR+".open_workbook("+FILEPATH+")\n";
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+"=ExcelApplication()\n";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".open_application(visible=True)\n";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+        code +=VAR+".open_workbook("+FILEPATH+")\n";
       return code;
     }       
           
@@ -128,7 +141,7 @@ function registerOpenWorkbook()
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
-    "message0":"and Save Workbook %1",
+    "message0":"Save Workbook %1",
     "args0": [
       {
         "type": "field_input",
@@ -157,7 +170,12 @@ function registerSaveWorkbook(){
         FILEPATH = 'filename='+'\'' + FILE + '\'';
       else
         FILEPATH=FILE;
-      var code ="\t"+VAR+".save_workbook("+FILEPATH+")\n";
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+".save_workbook(" + FILEPATH + ")\n";
       // Return code.
       return code;
     }
@@ -199,8 +217,12 @@ function registerMoveActiveCell(){
         number1='row_change='+number1;
       var number2=block.getFieldValue('column_change');
         number2='column_change='+number2;
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+".move_active_cell("+number1+","+number2+")\n";
+        var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+".move_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -245,7 +267,12 @@ function registerSetActiveCell(){
       var number2=block.getFieldValue('column');
       number2='column='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+")\n";
+      var code ="";
+      for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+".set_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -299,7 +326,12 @@ function registerFetchCell(){
       var number2=block.getFieldValue('column');
       number2='column='+number2;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -362,7 +394,12 @@ function registerFetchRow(){
       var number3=block.getFieldValue('columnT');
       number3='column_to='+number3;
       var VAR=block.getFieldValue('VAR');
-      var code ="\t"+VAR+"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
       return code;
     }   
 }
@@ -425,7 +462,12 @@ function registerFetchCol(){
       var number3=block.getFieldValue('rowT');
       number3='row_to='+number3;
       var VAR=block.getFieldValue('VAR');
-      var code ="\t"+VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       return code;
     }   
@@ -510,7 +552,12 @@ function registerFetchArea(){
       var header=block.getFieldValue('header');
       header='header='+header;
       var VAR=block.getFieldValue('VAR');
-      var code ="\t"+VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")\n";
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")\n";
       return code;
     }   
 
@@ -542,10 +589,29 @@ function registerInsertCol(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const number1= block.getFieldValue('N1');
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\tfor i in range("+number1+","+number2+"):\n";
-     code +="\t\tr = "+VAR+".read_col(header=True)\n";
-     code +="\t\tprint(r)\n";
-     code +="\t\tapp.move_active_cell(1, 0)\n"; 
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+     code +="for i in range("+number1+","+number2+"):\n";
+     depth+=1;
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+     code +="r = "+VAR+".read_col(header=True)\n";
+     for(var i=0;i<depth;i++)
+     {
+       code+='    ';
+     }
+     code +="print(r)\n";
+     for(var i=0;i<depth;i++)
+     {
+       code+='    ';
+     }
+     depth-=1;
+     code +="app.move_active_cell(1, 0)\n"; 
       return code;
     }   
 
@@ -576,11 +642,29 @@ function registerInsertRow(){
       // Collect argument strings.
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const number1= block.getFieldValue('N1');
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-     var code ="\tfor i in range("+number1+","+number2+"):\n";
-     code +="\t\tr = "+VAR+".read_row(header=True)\n";
-     code +="\t\tprint(r)\n";
-     code +="\t\tapp.move_active_cell(1, 0)\n"; 
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+     code +="for i in range("+number1+","+number2+"):\n";
+     depth+=1;
+     for(var i=0;i<depth;i++)
+     {
+       code+='    ';
+     }
+     code +="r = "+VAR+".read_row(header=True)\n";
+     for(var i=0;i<depth;i++)
+     {
+       code+='    ';
+     }
+     code +="print(r)\n";
+     for(var i=0;i<depth;i++)
+     {
+       code+='    ';
+     }
+     code +="app.move_active_cell(1, 0)\n"; 
+     depth -=1;
       return code;
     }   
 
@@ -637,7 +721,12 @@ function registerSetCellValue(){
       var value=block.getFieldValue('value');
       value='value='+value;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+","+value+")\n";
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".set_active_cell("+number1+","+number2+","+value+")\n";
       return code;
     }   
 }
@@ -666,8 +755,12 @@ function registerCreateSheet(){
       // Collect argument strings.
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+".open_workbook("+FILEPATH+")\n";
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".open_workbook("+FILEPATH+")\n";
       return code;
     }   
 }
@@ -698,7 +791,12 @@ function registerSetActiveSheet(){
       const number1= block.getFieldValue('N1');
       const number2=block.getFieldValue('N2');
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+")\n";
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".set_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -729,7 +827,12 @@ function registerMergeSheet(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       const FILEPATH = '\'' + block.getFieldValue('FILE') + '\'';
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
-      var code ="\t"+VAR+".set_active_cell("+number1+","+number2+")\n";
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".set_active_cell("+number1+","+number2+")\n";
       return code;
     }   
 }
@@ -822,11 +925,19 @@ function registerIfBlock(){{
     };
     python.pythonGenerator.forBlock['IF'] = function(block, generator) {
       // Collect argument strings.
+      
       var condition =generator.statementToCode(block,'condition');
-      var content ="\t"+generator.statementToCode(block,'content');
-      var code ="\t"+"if"+condition+" :\n";
+      depth+=1;
+      var content =generator.statementToCode(block,'content');
+      depth-=1;
+      var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="if"+condition+" :\n";
       code +=content;
-      var test=block.getStyleName();
+      
       return code;
     }   
 
@@ -859,8 +970,15 @@ function registerElifBlock(){{
     python.pythonGenerator.forBlock['Elif'] = function(block, generator) {
       // Collect argument strings.
       var condition =generator.statementToCode(block,'condition');
-      var content ="\t"+generator.statementToCode(block,'content');
-      var code ="\t"+"elif"+condition+" :\n";
+      depth+=1;
+      var content =generator.statementToCode(block,'content');
+      depth-=1;
+      var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="elif"+condition+" :\n";
       code +=content;
       return code;
     }   
@@ -887,8 +1005,15 @@ function registerElseBlock(){{
     };
     python.pythonGenerator.forBlock['Else'] = function(block, generator) {
       // Collect argument strings.
-      var content ="\t"+generator.statementToCode(block,'content');
-      var code ="\t"+"else :\n";
+      depth+=1;
+      var content =generator.statementToCode(block,'content');
+      depth-=1;
+      var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="else :\n";
       code +=content;
       return code;
     }   
@@ -916,7 +1041,7 @@ function registerForBlock(){{
       },
       {
         "type": "input_statement",
-        "name":"condition",
+        "name":"content",
         "check":"string",
       },
     ],
@@ -934,9 +1059,16 @@ function registerForBlock(){{
       var VAR = block.getFieldValue('VAR');
       var start = block.getFieldValue('start');
       var end = block.getFieldValue('end');
-      var condition ="\t"+generator.statementToCode(block,'condition');
-      var code ="\t"+"for "+VAR+"in range"+"("+start+","+end+"):\n";
-      code+=condition;
+      depth+=1;
+      var content =generator.statementToCode(block,'content');
+      depth-=1;
+      var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="for "+VAR+"in range"+"("+start+","+end+"):\n";
+      code+=content;
       return code;
     }   
 
@@ -958,7 +1090,7 @@ function registerForeachBlock(){{
       },
       {
         "type": "input_statement",
-        "name":"condition",
+        "name":"content",
         "check":"string",
       },
     ],
@@ -975,8 +1107,15 @@ function registerForeachBlock(){{
       // Collect argument strings.
       var VAR = block.getFieldValue('VAR');
       var iterableVar = block.getFieldValue('iterable_var');
-      var condition ="\t"+generator.statementToCode(block,'condition');
-      var code ="\t"+"for "+VAR+"in"+iterableVar+":\n";
+      depth+=1;
+      var content =generator.statementToCode(block,'content');
+      depth-=1;
+      var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="for "+VAR+"in"+iterableVar+":\n";
       code+=condition;
       return code;
     }   
