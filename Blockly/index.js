@@ -4,6 +4,7 @@ let workspace = null;
 function start() {
   registerFirstContextMenuOptions();
 
+ 
   registerOpenWorkbook();
   registerSaveWorkbook();
 
@@ -20,7 +21,7 @@ function start() {
   registerCreateSheet();
   registerSetActiveSheet();
   registerMergeSheet();
-
+  registerCompareBlock();
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
@@ -28,7 +29,7 @@ function start() {
   registerForBlock();
   registerForeachBlock();
   
-  registerCompareBlock();
+ 
 
   workspace = Blockly.inject('blocklyDiv',
     {
@@ -80,6 +81,7 @@ function registerFirstContextMenuOptions() {
 function registerOpenWorkbook()
 { 
   var openWorkbook = {
+    "type":"openWorkbook",
     "message0": "open Workbook %1 As %2",
     "args0": [
       {
@@ -125,7 +127,8 @@ function registerOpenWorkbook()
 }
 function registerSaveWorkbook(){
   var saveWorkbook ={
-    "message0":" and Save Workbook %1",
+    "type":"saveWorkbook",
+    "message0":"and Save Workbook %1",
     "args0": [
       {
         "type": "field_input",
@@ -645,7 +648,7 @@ function registerCreateSheet(){
       {
         "type": "field_input",
         "name": "FILE",
-        "check":"String"
+        "check":"String",
       },
     ],
     "previousStatement": null,
@@ -732,7 +735,8 @@ function registerMergeSheet(){
 }
 function registerCompareBlock(){{
   var Compare ={
-    "message0":"%1 %2 %3 %4",
+    "type":"condition",
+    "message0":"Compare %1 %2 %3 %4 %5",
     "args0": [
       {
         "type": "field_dropdown",
@@ -764,9 +768,13 @@ function registerCompareBlock(){{
         "name":"exp2",
         "check":"string",
       },
+      {
+        "type": "input_value",
+        "name": "prolong",
+      }
     ],
-    "previousStatement": null,
     "colour":220,
+    "output": null,
   }
   Blockly.Blocks['Compare']=
     {
@@ -780,7 +788,8 @@ function registerCompareBlock(){{
       var exp1 =block.getFieldValue('exp1');
       var comparation =block.getFieldValue('comparation');
       var exp2 =block.getFieldValue('exp2');
-      var code =valueType+" ("+exp1+") "+comparation+" "+valueType+" ("+exp2+")";
+      var prolong=generator.statementToCode(block,'prolong');
+      var code =valueType+" ("+exp1+") "+comparation+" "+valueType+" ("+exp2+")"+prolong;
       return code;
     }   
 
@@ -790,19 +799,20 @@ function registerIfBlock(){{
     "message0":"if %1 : %2",
     "args0": [
       {
-        "type": "input_statement",
+        "type": "input_value",
         "name":"condition",
-        "check":"string",
+        
       },
       {
         "type": "input_statement",
         "name":"content",
-        "check":"string",
+        "check":null,
       },
     ],
     "previousStatement": null,
     "nextStatement": null,
     "colour":220,
+    "returns":"loop",
   }
   Blockly.Blocks['IF']=
     {
@@ -816,6 +826,7 @@ function registerIfBlock(){{
       var content ="\t"+generator.statementToCode(block,'content');
       var code ="\t"+"if"+condition+" :\n";
       code +=content;
+      var test=block.getStyleName();
       return code;
     }   
 
