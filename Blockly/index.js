@@ -1149,6 +1149,7 @@ function registerElseBlock(){{
       },
     ],
     "previousStatement": null,
+    "nextStatement": null,
     "colour":220,
   }
   Blockly.Blocks['Else']=
@@ -1200,6 +1201,7 @@ function registerForBlock(){{
       },
     ],
     "previousStatement": null,
+    "nextStatement": null,
     "colour":220,
   }
   Blockly.Blocks['For']=
@@ -1249,6 +1251,7 @@ function registerForeachBlock(){{
       },
     ],
     "previousStatement": null,
+    "nextStatement": null,
     "colour":220,
   }
   Blockly.Blocks['Foreach']=
