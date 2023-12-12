@@ -166,16 +166,21 @@ function registerSaveWorkbook(){
       const VAR = block.getRootBlock().getFieldValue('VAR');
       var FILE =block.getFieldValue('FILE');
       var FILEPATH;
-      if(FILE!='')
-        FILEPATH = 'filename='+'\'' + FILE + '\'';
-      else
-        FILEPATH=FILE;
         var code='';
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-        code +=VAR+".save_workbook(" + FILEPATH + ")\n";
+        if(FILE!='')
+        {
+          FILEPATH = 'filename='+'\'' + FILE + '\'';
+          code +=VAR+".save_excel_as(" + FILEPATH + "file_format=56)\n";
+        }
+        else
+          {
+            FILEPATH=FILE;
+            code +=VAR+".save_excel(" + FILEPATH + ")\n";
+          }
       // Return code.
       return code;
     }
@@ -332,6 +337,11 @@ function registerFetchCell(){
           code+='    ';
         }
       code +=VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
+      for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="str"+VAR +"if" +VAR+"is not None else None\n";
       return code;
     }   
 }
@@ -361,6 +371,13 @@ function registerFetchRow(){
         "min":1,
       },
       {
+        "type": "field_number",
+        "check":"number",
+        "name":"header_row",
+        "value": 100,
+        "min":1,
+      },
+      {
         "type": "field_input",
         "name": "VAR",
         "variable": "item",
@@ -371,11 +388,12 @@ function registerFetchRow(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    "tooltip":"{workbook} Fetch Row {row} {column_from} {column_to} As {var} : 获取一行\
+    "tooltip":"{workbook} Fetch Row {row} {column_from} {column_to}{header_row} As {var} : 获取一行\
     \nworkbook: Excel 文档变量名\
     \nrow: 行号，为空则采用当前活跃行\
     \ncolumn_from: 起点列号，为空则采用第一列\
     \ncolumn_to: 终点列号，为空则读取到空值为止\
+    \nheader_row: header 所在行号，为空表示不需要 header\
     \nvar: 表示获取结果的变量名"
   }
   Blockly.Blocks['fetchRow']=
@@ -393,13 +411,15 @@ function registerFetchRow(){
       number2='column_from='+number2;
       var number3=block.getFieldValue('columnT');
       number3='column_to='+number3;
+      var number4=block.getFieldValue('header_row');
+      number4='header_row='+number4;
       var VAR=block.getFieldValue('VAR');
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-      code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
+      code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+","+number4+")\n";
       return code;
     }   
 }
@@ -506,11 +526,12 @@ function registerFetchArea(){
         "min":1,
       },
       {
-        "type": "field_number",
-        "check":"number",
-        "name":"colT",
-        "value": 100,
-        "min":1,
+        "type": "field_dropdown",
+        "name": "with_header",
+        "options": [
+          [ "false", "false" ],
+          ["true","true"]
+        ]
       },
       {
         "type": "field_input",
@@ -549,7 +570,7 @@ function registerFetchArea(){
       number3='column_from='+number3;
       var number4=block.getFieldValue('colF');
       number4='column_to='+number4;
-      var header=block.getFieldValue('header');
+      var header=block.getFieldValue('with_header');
       header='header='+header;
       var VAR=block.getFieldValue('VAR');
       var code ="";
@@ -564,14 +585,24 @@ function registerFetchArea(){
 }
 function registerInsertCol(){
   var InsertCol ={
-    "message0":"Insert Col to %1",
+    "message0":"%1 Insert Col to %2 %3",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+      },
       {
         "type": "field_number",
         "check":"number",
-        "name":"N1",
+        "name":"column",
         "value": 100,
         "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"string",
+        "name":"col_content",
       },
     ],
     "previousStatement": null,
@@ -586,44 +617,44 @@ function registerInsertCol(){
     };
     python.pythonGenerator.forBlock['InsertCol'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
+      const workbook = block.getFieldValue('Workbook');
+      const column= block.getFieldValue('column');
+      const col_content=block.getFieldValue('col_content');
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-     code +="for i in range("+number1+","+number2+"):\n";
-     depth+=1;
-        for(var i=0;i<depth;i++)
-        {
-          code+='    ';
-        }
-     code +="r = "+VAR+".read_col(header=True)\n";
-     for(var i=0;i<depth;i++)
-     {
-       code+='    ';
-     }
-     code +="print(r)\n";
-     for(var i=0;i<depth;i++)
-     {
-       code+='    ';
-     }
-     depth-=1;
-     code +="app.move_active_cell(1, 0)\n"; 
+        code+=workbook+".insert_column(column="+column+","+" column_content="+col_content+")\n";
       return code;
     }   
 
 }
 function registerInsertRow(){
   var InsertRow ={
-    "message0":"Insert Row to %1",
+    "message0":"%1 Insert Row to %2 %3 %4",
     "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+      },
       {
         "type": "field_number",
         "check":"number",
-        "name":"N1",
+        "name":"row",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_number",
+        "check":"string",
+        "name":"row_content",
+      },
+      {
+        "type": "field_number",
+        "check":"number",
+        "name":"header",
         "value": 100,
         "min":1,
       },
@@ -640,31 +671,16 @@ function registerInsertRow(){
     };
     python.pythonGenerator.forBlock['InsertRow'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getRootBlock().getFieldValue('VAR');
-      const number1= block.getFieldValue('N1');
+      const workbook = block.getFieldValue('Workbook');
+      const row= block.getFieldValue('row');
+      const row_content=block.getFieldValue('row_content');
+      const header_row=block.getFieldValue('header');
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-     code +="for i in range("+number1+","+number2+"):\n";
-     depth+=1;
-     for(var i=0;i<depth;i++)
-     {
-       code+='    ';
-     }
-     code +="r = "+VAR+".read_row(header=True)\n";
-     for(var i=0;i<depth;i++)
-     {
-       code+='    ';
-     }
-     code +="print(r)\n";
-     for(var i=0;i<depth;i++)
-     {
-       code+='    ';
-     }
-     code +="app.move_active_cell(1, 0)\n"; 
-     depth -=1;
+      code+=workbook+".insert_row(row="+row+","+"row_content="+row_content+",header_row="+header_row+")\n";
       return code;
     }   
 
@@ -726,7 +742,7 @@ function registerSetCellValue(){
       {
         code+='    ';
       }
-      code +=VAR+".set_active_cell("+number1+","+number2+","+value+")\n";
+      code +=VAR+".set_active_cell("+number1+","+number2+","+value+"number_format='@'"+")\n";
       return code;
     }   
 }
