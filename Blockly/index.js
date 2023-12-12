@@ -185,7 +185,7 @@ function registerSaveWorkbook(){
         if(FILE!='')
         {
           FILEPATH = 'filename='+'\'' + FILE + '\'';
-          code +=VAR+".save_excel_as(" + FILEPATH + "file_format=56)\n";
+          code +=VAR+".save_excel_as(" + FILEPATH + ",file_format=56)\n";
         }
         else
           {
