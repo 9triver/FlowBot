@@ -1,4 +1,5 @@
 var btn = document.getElementById("button");
+var fs = require('fs');
     btn.onclick  =function(){
         var code ="from robocorp.tasks import task";
         code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
@@ -6,6 +7,7 @@ var btn = document.getElementById("button");
         code +="\ndef solve_challenge():\n";
         code += python.pythonGenerator.workspaceToCode(workspace);
         document.getElementById('generatedCodeContainer').value = code;
+        fs.writeFile('./../RPA/test/hello.py',code);
         const blob = new Blob([code], {
             type: "text/plain;charset=utf-8",
         })
