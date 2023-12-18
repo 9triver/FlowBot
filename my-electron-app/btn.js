@@ -5,7 +5,6 @@ var btn = document.getElementById("button");
         code +="\n\n@task";
         code +="\ndef solve_challenge():\n";
         code += python.pythonGenerator.workspaceToCode(workspace);
-        document.getElementById('generatedCodeContainer').value = code;
         const blob = new Blob([code], {
             type: "text/plain;charset=utf-8",
         })
