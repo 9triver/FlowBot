@@ -1,20 +1,64 @@
 'use strict';
 let workspace = null;
 var depth=1;
-const { app, BrowserWindow } = require('electron')
-
+const exec = require('child_process').exec
+const { app, BrowserWindow,shell} = require('electron')
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600
   })
-
+function start () {
+  // 任何你期望执行的cmd命令，ls都可以
+  
+}
   win.loadFile('index.html')
+// 在主进程中.
+win.webContents.session.on('will-download', (event, item, webContents) => {
+  // 无需对话框提示， 直接将文件保存到路径
+  item.setSavePath(__dirname+"\\RPA\\test\\tasks.py")
+  item.on('updated', (event, state) => {
+    if (state === 'interrupted') {
+      console.log('Download is interrupted but can be resumed')
+    } else if (state === 'progressing') {
+      if (item.isPaused()) {
+        console.log('Download is paused')
+      } else {
+        console.log(`Received bytes: ${item.getReceivedBytes()}`)
+      }
+    }
+  })
+  item.once('done', (event, state) => {
+    if (state === 'completed') {
+      console.log('Download successfully')
+    } else {
+      console.log(`Download failed: ${state}`)
+    }
+  })
+  let myPath = "//RPA//test"
+  let cmdStr1 = 'rcc.exe run';
+  let cmdPath = __dirname+myPath
+  // 子进程名称
+  let workerProcess
+  runExec(cmdStr1)
+  function runExec (cmdStr) {
+    workerProcess = exec(cmdStr, { cwd: cmdPath })
+    // 打印正常的后台可执行程序输出
+    workerProcess.stdout.on('data', function (data) {
+      console.log('stdout: ' + data)
+    })
+    // 打印错误的后台可执行程序输出
+    workerProcess.stderr.on('data', function (data) {
+      console.log('stderr: ' + data)
+    })
+    // 退出之后的输出
+  }
+})
 }
 
 app.whenReady().then(() => {
   createWindow()
-
+  // shell.openPath(".\\tasks.py")
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
