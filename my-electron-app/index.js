@@ -1,21 +1,24 @@
 'use strict';
 let workspace = null;
 var depth=1;
-const exec = require('child_process').exec
-const { app, BrowserWindow,shell} = require('electron')
+const fs=require('fs');
+const exec = require('child_process').exec;
+const path = require('node:path');
+const { app, BrowserWindow,shell,ipcMain} = require('electron');
+const { dialog } = require('electron');
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
+    }
   })
-function start () {
-  // 任何你期望执行的cmd命令，ls都可以
-  
-}
   win.loadFile('index.html')
 // 在主进程中.
 win.webContents.session.on('will-download', (event, item, webContents) => {
   // 无需对话框提示， 直接将文件保存到路径
+  if(item.getFilename()=='tasks.py'){
   item.setSavePath(__dirname+"\\RPA\\test\\tasks.py")
   item.on('updated', (event, state) => {
     if (state === 'interrupted') {
@@ -53,17 +56,38 @@ win.webContents.session.on('will-download', (event, item, webContents) => {
     })
     // 退出之后的输出
   }
+  }
+  else if(item.getFilename()=='myBlock.json')
+  {
+    
+  }
 })
 }
-
+async function handleFileOpen () {
+  const { canceled, filePaths } = await dialog.showOpenDialog({})
+  if (!canceled) {
+    let file=fs.readFileSync(filePaths[0]);
+    let ob= JSON.parse(file);
+    //let cur =JSON.stringify(ob);
+    return ob
+}
+}
 app.whenReady().then(() => {
-  createWindow()
+  ipcMain.handle('dialog:openFile',handleFileOpen);
+  createWindow();
   // shell.openPath(".\\tasks.py")
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
     }
   })
+    //  let file;
+    //console.log(path);
+    //file=fs.readFileSync(path[0]);
+    //console.log(file.toString());
+    //let ob= JSON.parse(file);
+    //console.log(Blockly);
+    //this.Blockly.serialization.workspaces.load(ob,workspace,true);
 })
 
 app.on('window-all-closed', () => {

@@ -1,7 +1,8 @@
 
-var btn = document.getElementById("button");
-
-    btn.onclick  =function(){
+var btnRun = document.getElementById("run");
+var btnSave = document.getElementById("save");
+var btnLoad =document.getElementById('load');
+    btnRun.onclick  =function(){
         var code ="from robocorp.tasks import task";
         code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
         code +="\n\n@task";
@@ -19,3 +20,25 @@ var btn = document.getElementById("button");
         aTag.click();
         URL.revokeObjectURL(objectURL);
     }
+    btnSave.onclick  =function(){
+        var blockcontent=Blockly.serialization.workspaces.save(workspace);
+        var myblock=JSON.stringify(blockcontent);
+        const blob = new Blob([myblock], {
+            type: "text/plain;charset=utf-8",
+        })
+        const objectURL = URL.createObjectURL(blob);
+        const aTag = document.createElement('a');
+        aTag.href = objectURL;
+        aTag.download = "myBlock.json";
+        aTag.click();
+        URL.revokeObjectURL(objectURL);
+        //alert("save success");
+    }
+    btnLoad.addEventListener('click', async () => {
+        const file = await window.electronAPI.openFile()
+        //alert(file.toString());
+        //let ob= JSON.parse(file);
+        //alert(file);
+        Blockly.serialization.workspaces.load(file,workspace);
+        //alert(file);
+})

@@ -23,7 +23,7 @@
       padding-bottom: 10px;
       margin: 0px;
     }
-    #header #button {
+    #header input {
       float:right;
       border-color: white;
       background-color: #a700ba;
@@ -56,7 +56,8 @@
 </head>
 <body onload="start()">
   <div id="header">
-    <p>财务部数据处理<input  id="button" type="button" value="运行" ></p>
+    <p><input  id="load" type="button" value="加载" >
+      <input  id="save" type="button" value="保存" >财务部数据处理<input  id="run" type="button" value="运行" ></p>
   </div>
   <xml  id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
@@ -116,4 +117,6 @@
 <script src="CustomCategory.js"></script>
 <script src="./index.js"></script>
 <script src="./btn.js">  </script>
+<script>
+ </script>
 </html>
