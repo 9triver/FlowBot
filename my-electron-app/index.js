@@ -1,6 +1,7 @@
 'use strict';
 let workspace = null;
 var depth=1;
+var logicOperator =null;
 const fs=require('fs');
 const exec = require('child_process').exec;
 const path = require('node:path');
@@ -1086,8 +1087,7 @@ function registerMergeSheet(){
 }
 function registerCompareBlock(){{
   var Compare ={
-    "type":"condition",
-    "message0":" %1 %2 %3 %4 %5",
+    "message0":" %1 %2 %3 %4",
     "args0": [
       {
         "type": "field_dropdown",
@@ -1119,13 +1119,11 @@ function registerCompareBlock(){{
         "name":"exp2",
         "check":"string",
       },
-      {
-        "type": "input_value",
-        "name": "prolong",
-      }
     ],
+    "output":null,
+    "previousStatement": null,
+    "nextStatement":null,
     "colour":220,
-    "output": null,
   }
   Blockly.Blocks['Compare']=
     {
@@ -1139,8 +1137,15 @@ function registerCompareBlock(){{
       var exp1 =block.getFieldValue('exp1');
       var comparation =block.getFieldValue('comparation');
       var exp2 =block.getFieldValue('exp2');
-      var prolong=generator.statementToCode(block,'prolong');
-      var code =valueType+"("+exp1+") "+comparation+" "+valueType+"("+exp2+")"+prolong;
+      var nextBlock = block.getNextBlock();
+      if(nextBlock!=null && logicOperator!=null)
+      {
+        alert(nextBlock);
+        var code =valueType+"("+exp1+") "+comparation+" "+valueType+"("+exp2+")"+logicOperator;
+      }
+      //var prolong=generator.statementToCode(block,'prolong');
+      else 
+        var code =valueType+"("+exp1+") "+comparation+" "+valueType+"("+exp2+")";
       return code;
     }   
 
@@ -1377,11 +1382,13 @@ function registerAndBlock(){{
     "message0":"and %1",
     "args0": [
       {
-        "type": "input_value",
+        "type": "input_statement",
         "name":"condition1",
       },
     ],
     "output": null,
+    "previousStatement":null,
+    "nextStatement":null,
     "colour":220,
   }
   Blockly.Blocks['and']=
@@ -1392,10 +1399,15 @@ function registerAndBlock(){{
     };
     python.pythonGenerator.forBlock['and'] = function(block, generator) {
       // Collect argument strings.
-      var iterableVar = block.getFieldValue('iterable_var');
+      logicOperator=" and ";
       var condition1 =generator.statementToCode(block,'condition1');
+      logicOperator= null;
       var code='';
-      code +="and"+condition1;
+      var previousBlock = block.getPreviousBlock();
+      if(previousBlock==null)
+      code +=condition1;
+      else
+      code+=" and "+condition1;
       return code;
     }   
 
@@ -1406,11 +1418,13 @@ function registerOrBlock(){{
     "message0":"or %1",
     "args0": [
       {
-        "type": "input_value",
+        "type": "input_statement",
         "name":"condition1",
       },
     ],
     "output": null,
+    "previousStatement":null,
+    "nextStatement":null,
     "colour":220,
   }
   Blockly.Blocks['or']=
@@ -1421,9 +1435,15 @@ function registerOrBlock(){{
     };
     python.pythonGenerator.forBlock['or'] = function(block, generator) {
       // Collect argument strings.
+      logicOperator=" or ";
       var condition1 =generator.statementToCode(block,'condition1');
+      logicOperator= null;
       var code='';
-      code +="or"+condition1;
+      var previousBlock = block.getPreviousBlock();
+      if(previousBlock==null)
+      code +=condition1;
+      else
+      code+=" or "+condition1;
       return code;
     }   
 
@@ -1438,7 +1458,9 @@ function registerNotBlock(){{
       },
     ],
     "colour":220,
-    "output":null,
+    "output": null,
+    "previousStatement":null,
+    "nextStatement":null,
   }
   Blockly.Blocks['not']=
     {
@@ -1448,9 +1470,12 @@ function registerNotBlock(){{
     };
     python.pythonGenerator.forBlock['not'] = function(block, generator) {
       // Collect argument strings.
-      var iterableVar = block.getFieldValue('iterable_var');
       var condition1 =generator.statementToCode(block,'condition1');
       var code='';
+      var nextBlock =block.getNextBlock();
+      if(logicOperator!=null&&nextBlock!=null)
+      code +="not"+condition1+logicOperator;
+      else 
       code +="not"+condition1;
       return code;
     }   
