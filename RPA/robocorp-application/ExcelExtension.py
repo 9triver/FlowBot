@@ -149,7 +149,6 @@ class WorkbookDict:
         self.workbook_contents = {}
         self.headers = None
         self.header_row = None
-        self.path = './'
 
     def contains_name(self, name: str):
         return name in self.workbook_contents
@@ -166,7 +165,7 @@ class WorkbookDict:
             self.add_workbook(name)
         self.workbook_contents[name].append(row_content)
 
-    def generate_workbook_files(self):
+    def generate_workbook_files(self, path='./'):
         for name, row_contents in self.workbook_contents.items():
             app = ExcelApplicationExtension()
             app.open_application(visible=True)
@@ -187,5 +186,5 @@ class WorkbookDict:
                     app.insert_row(row=i, row_content=row_content, header_row=self.header_row)
                     i += 1
 
-            app.save_excel_as(filename=self.path + name+ '.xls', file_format=56)
+            app.save_excel_as(filename=path + name+ '.xls', file_format=56)
             app.close_document()
