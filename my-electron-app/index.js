@@ -1545,7 +1545,7 @@ function registerAndBlock(){{
       var code='';
       var NextBlock = block.getNextBlock();
       var previousBlock=block.getPreviousBlock();
-      if(logicOperator!=" null ")
+      if(logicOperator!=" null "&&NextBlock!=null)
       code+="("+condition1+")"+logicOperator;
       else
       code+="("+condition1+")";
@@ -1583,7 +1583,7 @@ function registerOrBlock(){{
       var code='';
       var previousBlock = block.getPreviousBlock();
       var NextBlock = block.getNextBlock();
-      if(logicOperator!=" null ")
+      if(logicOperator!=" null "&&NextBlock!=null)
       code+="("+condition1+")"+logicOperator;
       else
       code+="("+condition1+")";
