@@ -492,21 +492,33 @@ function registerFetchCell(){
       const Workbook = block.getFieldValue('Workbook');
       const VAR = block.getFieldValue('VAR');
       var number1= block.getFieldValue('row');
+      if(number1!='')
       number1='row='+number1;
       var number2=block.getFieldValue('column');
+      if(number2!='')
       number2='column='+number2;
-      const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-      code +=VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
+        if(number1==''&&number2!='')
+        {
+          code +=VAR+"="+Workbook+".read_form_cells("+number2+")\n";
+        }
+        else if(number2==''&&number1!='')
+        {
+          code +=VAR+"="+Workbook+".read_form_cells("+number1+")\n";
+        }
+        else if(number1!=''&&number2!='')
+          code +=VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
+        else
+        code +=VAR+"="+Workbook+".read_form_cells()\n";
       for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-      code +="str"+VAR +"if" +VAR+"is not None else None\n";
+      code +="str("+VAR +")if " +VAR+" is not None else None\n";
       return code;
     }   
 }
@@ -574,12 +586,16 @@ function registerFetchRow(){
       // Collect argument strings.
       const Workbook = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('row');
+      if(number1!='')
       number1='row='+number1;
       var number2=block.getFieldValue('columnF');
+      if(number2!='')
       number2='column_from='+number2;
       var number3=block.getFieldValue('columnT');
+      if(number3!='')
       number3='column_to='+number3;
       var number4=block.getFieldValue('header_row');
+      if(number4!='')
       number4='header_row='+number4;
       var VAR=block.getFieldValue('VAR');
       var code ="";
@@ -587,6 +603,70 @@ function registerFetchRow(){
         {
           code+='    ';
         }
+      if(number4=='')
+      { 
+        if(number3=='')
+        {
+          if(number2=='')
+            {
+            if(number1=='')
+            code += VAR +"="+Workbook+".read_row()\n"; 
+            else
+            code += VAR +"="+Workbook+".read_row("+number1+")\n";
+            }
+          else if(number1=='')
+          {
+            code += VAR +"="+Workbook+".read_row("+number2+")\n";
+          }
+          else
+            code += VAR +"="+Workbook+".read_row("+number1+","+number2+")\n";
+        }
+        else if(number2=='')
+        { 
+          if(number1=='')
+            {
+              code += VAR +"="+Workbook+".read_row("+number3+")\n";
+            }
+          else 
+          code += VAR +"="+Workbook+".read_row("+number1+","+","+number3+")\n";
+        }
+        else if(number1=='')
+        code += VAR +"="+Workbook+".read_row("+number2+","+number3+")\n";
+        else
+        code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
+      }
+      else if(number3=='')
+      {
+        if(number2=='')
+        {
+          if(number1=='')
+          {
+            code += VAR +"="+Workbook+".read_row("+number4+")\n";
+          }
+          else
+          code += VAR +"="+Workbook+".read_row("+number1+","+number4+")\n";
+        }
+        else if(number1=='')
+        {
+          code += VAR +"="+Workbook+".read_row("+number3+")\n";
+        }
+        else
+        code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number4+")\n";
+      }
+      else if(number2=='')
+      { 
+        if(number1=='')
+        {
+          code += VAR +"="+Workbook+".read_row("+number3+","+number4+")\n";
+        }
+        else
+        code += VAR +"="+Workbook+".read_row("+number1+","+number3+","+number4+")\n";
+      }
+      else if(number1=='')
+      { 
+        code += VAR +"="+Workbook+".read_row("+number2+","+number3+","+number4+")\n";
+      }
+      else
       code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+","+number4+")\n";
       return code;
     }   
@@ -649,10 +729,13 @@ function registerFetchCol(){
       // Collect argument strings.
       const Workbook = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('col');
+      if(number1!='')
       number1='column='+number1;
       var number2=block.getFieldValue('rowF');
+      if(number2!='')
       number2='row_from='+number2;
       var number3=block.getFieldValue('rowT');
+      if(number3!='')
       number3='row_to='+number3;
       var VAR=block.getFieldValue('VAR');
       var code ="";
@@ -660,7 +743,39 @@ function registerFetchCol(){
         {
           code+='    ';
         }
-      code +=VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
+      if(number3=='')
+        {
+          if(number2=='')
+          {
+            if(number1=='')
+            {
+              code +=VAR+"="+Workbook+".read_col()\n";
+            }
+            else
+            code +=VAR+"="+Workbook+".read_col("+number1+")\n";
+          }
+          else if(number1=='')
+          {
+            code +=VAR+"="+Workbook+".read_col("+number2+")\n";
+          }
+          else
+          code +=VAR+"="+Workbook+".read_col("+number1+","+number2+")\n";
+        }
+      else if(number2=='')
+      {
+        if(number1=='')
+        {
+          code +=VAR+"="+Workbook+".read_col("+number3+")\n";
+        }
+        else 
+        code +=VAR+"="+Workbook+".read_col("+number1+","+number3+")\n";
+      }
+      else if(number1=='')
+      {
+        code +=VAR+"="+Workbook+".read_col("+number2+","+number3+")\n";
+      }
+      else
+        code +=VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
       return code;
     }   
 
@@ -748,6 +863,7 @@ function registerFetchArea(){
       var number4=block.getFieldValue('colF');
       number4='column_to='+number4;
       var header=block.getFieldValue('with_header');
+      if(header!='')
       header='header='+header;
       var VAR=block.getFieldValue('VAR');
       var code ="";
@@ -755,6 +871,9 @@ function registerFetchArea(){
         {
           code+='    ';
         }
+      if(header=='')
+      code +=VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+")\n";
+      else
       code +=VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")\n";
       return code;
     }   
@@ -857,7 +976,10 @@ function registerInsertRow(){
       {
         code+='    ';
       }
+      if(header!='')
       code+=workbook+".insert_row(row="+row+","+"row_content="+row_content+",header_row="+header_row+")\n";
+      else
+      code+=workbook+".insert_row(row="+row+","+"row_content="+row_content+")\n";
       return code;
     }   
 
@@ -913,8 +1035,10 @@ function registerSetCellValue(){
       // Collect argument strings.
       const VAR = block.getFieldValue('Workbook');
       var number1= block.getFieldValue('row');
+      if(number1!='')
       number1='row='+number1;
       var number2=block.getFieldValue('column');
+      if(number2!='')
       number2='column='+number2;
       var value=block.getFieldValue('value');
       value='value='+value;
@@ -924,7 +1048,21 @@ function registerSetCellValue(){
       {
         code+='    ';
       }
-      code +=VAR+".set_active_cell("+number1+","+number2+","+value+"number_format='@'"+")\n";
+      
+      if(number2=='')
+        {
+          if(number1=='')
+          {
+            code +=VAR+".set_active_cell("+value+","+"number_format='@'"+")\n";
+          }
+          else
+          code +=VAR+".set_active_cell("+number1+","+value+","+"number_format='@'"+")\n";
+        }
+      else if(number1=='')
+        {
+          code +=VAR+".set_active_cell("+number2+","+value+","+"number_format='@'"+")\n";
+        }
+      code +=VAR+".set_active_cell("+number1+","+number2+","+value+","+"number_format='@'"+")\n";
       return code;
     }   
 }
