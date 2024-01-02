@@ -1,7 +1,8 @@
 'use strict';
 let workspace = null;
 var depth=1;
-var logicOperator =null;
+var logicOperator =" null ";
+var connectioncount=0;
 const fs=require('fs');
 const exec = require('child_process').exec;
 const path = require('node:path');
@@ -1275,9 +1276,9 @@ function registerCompareBlock(){{
       var comparation =block.getFieldValue('comparation');
       var exp2 =block.getFieldValue('exp2');
       var nextBlock = block.getNextBlock();
-      if(nextBlock!=null && logicOperator!=null)
+      if(nextBlock!=null && logicOperator!=" null ")
       {
-        alert(nextBlock);
+        //alert(nextBlock);
         var code =valueType+"("+exp1+") "+comparation+" "+valueType+"("+exp2+")"+logicOperator;
       }
       //var prolong=generator.statementToCode(block,'prolong');
@@ -1516,6 +1517,7 @@ function registerForeachBlock(){{
 }}
 function registerAndBlock(){{
   var and ={
+    "type":"conditionconnective",
     "message0":"and %1",
     "args0": [
       {
@@ -1536,15 +1538,17 @@ function registerAndBlock(){{
     };
     python.pythonGenerator.forBlock['and'] = function(block, generator) {
       // Collect argument strings.
+      var cur=logicOperator.toString();
       logicOperator=" and ";
       var condition1 =generator.statementToCode(block,'condition1');
-      logicOperator= null;
+      logicOperator=cur.toString();
       var code='';
-      var previousBlock = block.getPreviousBlock();
-      if(previousBlock==null)
-      code +=condition1;
+      var NextBlock = block.getNextBlock();
+      var previousBlock=block.getPreviousBlock();
+      if(logicOperator!=" null ")
+      code+="("+condition1+")"+logicOperator;
       else
-      code+=" and "+condition1;
+      code+="("+condition1+")";
       return code;
     }   
 
@@ -1572,15 +1576,17 @@ function registerOrBlock(){{
     };
     python.pythonGenerator.forBlock['or'] = function(block, generator) {
       // Collect argument strings.
+      var cur=logicOperator.toString();
       logicOperator=" or ";
       var condition1 =generator.statementToCode(block,'condition1');
-      logicOperator= null;
+      logicOperator=cur.toString();
       var code='';
       var previousBlock = block.getPreviousBlock();
-      if(previousBlock==null)
-      code +=condition1;
+      var NextBlock = block.getNextBlock();
+      if(logicOperator!=" null ")
+      code+="("+condition1+")"+logicOperator;
       else
-      code+=" or "+condition1;
+      code+="("+condition1+")";
       return code;
     }   
 
