@@ -182,7 +182,7 @@ function registerOpenWorkbook()
 { 
   var openWorkbook = {
     "type":"openWorkbook",
-    "message0": "open Workbook %1 As %2",
+    "message0": "打开指定目录(%1)下的Workbook，将其命名为%2",
     "args0": [
       {
         "type": "field_input",
@@ -242,7 +242,7 @@ function registerOpenWorkbook()
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
-    "message0":"%1 Save Workbook %2",
+    "message0":"将名为%1的Workbook保存到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -293,8 +293,7 @@ function registerSaveWorkbook(){
 }
 function registerAddWorkbook(){
   var addWorkbook ={
-    "type":"saveWorkbook",
-    "message0":"Add Workbook as %1",
+    "message0":"新增一个Workbook，将其命名为%1",
     "args0": [
       {
         "type": "field_input",
@@ -338,7 +337,7 @@ function registerAddWorkbook(){
 }
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"%1 MoveActiveCell(%2,%3)",
+    "message0":"移动名为%1的Workbook中的活跃单元格到坐标(%2,%3)",
     "args0": [
       {
         "type": "field_input",
@@ -389,7 +388,7 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"%1 SetActiveCell(%2,%3)",
+    "message0":"设置名为%1的Workbook中的活跃单元格到坐标(%2,%3)",
     "args0": [
       {
         "type": "field_input",
@@ -444,7 +443,7 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"%1 fetch Cell (%2,%3) As %4",
+    "message0":"获取名为%1的Workbook中的坐标(%2,%3)单元格，将其命名为%4",
     "args0": [
       {
         "type": "field_input",
@@ -513,7 +512,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"%1 Fetch Row %2 (%3,%4) %5 As %6",
+    "message0":"获取名为%1的Workbook中的一行 %2(哪一行) (%3,%4)(从哪一列到哪一列) %5(头部行) ，将该变量命名为 %6",
     "args0": [
       {
         "type": "field_input",
@@ -594,7 +593,7 @@ function registerFetchRow(){
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"%1 Fetch Column %2 (%3,%4) As %5",
+    "message0":"获取名为%1的Workbook中的一列 %2(哪一列) (%3,%4)(从哪一行到哪一行)，将该变量命名为 %5",
     "args0": [
       {
         "type": "field_input",
@@ -668,7 +667,7 @@ function registerFetchCol(){
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"%1 Fetch Area (%2,%3), (%4,%5)  %6 As %7",
+    "message0":"获取名为%1的Workbook的区域 (%2,%3)(行范围)(%4,%5)(列范围)%6(头部)，将其变量命名为%7",
     "args0": [
       {
         "type": "field_input",
@@ -763,7 +762,7 @@ function registerFetchArea(){
 }
 function registerInsertCol(){
   var InsertCol ={
-    "message0":"%1 Insert Col to %2 %3",
+    "message0":"往名为%1的Workbook之中插入新列(%2,%3)(列号,列值)",
     "args0": [
       {
         "type": "field_input",
@@ -810,7 +809,7 @@ function registerInsertCol(){
 }
 function registerInsertRow(){
   var InsertRow ={
-    "message0":"%1 Insert Row to %2 %3 %4",
+    "message0":"往名为%1的Workbook中插入新行(%2,%3)(行号,行值)%4(行头)",
     "args0": [
       {
         "type": "field_input",
@@ -865,7 +864,7 @@ function registerInsertRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"%1 SetCellValue(%2,%3) %4",
+    "message0":"设置名为%1的Workbook的单元格(%2,%3)新值%4",
     "args0": [
       {
         "type": "field_input",
@@ -931,7 +930,7 @@ function registerSetCellValue(){
 }
 function registerSettoBlock(){
   var setto ={
-    "message0":"Set %1 to %2",
+    "message0":"将变量%1设置为%2",
     "args0": [
       {
         "type": "field_input",
@@ -972,7 +971,7 @@ function registerSettoBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"%1 CreateSheet %2",
+    "message0":"在%1Workbook里创建新的sheet %2",
     "args0": [
       {
         "type": "field_input",
@@ -1010,7 +1009,7 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"%1 SetActiveSheet %2",
+    "message0":"在%1Workbook里设置活跃sheet%2",
     "args0": [
       {
         "type": "field_input",
@@ -1048,7 +1047,7 @@ function registerSetActiveSheet(){
 }
 function registerMergeSheet(){
   var MergeSheet ={
-    "message0":"%1 MergeSheet %2",
+    "message0":"在%1Workbook里合并%2和sheet",
     "args0": [
       {
         "type": "field_input",
