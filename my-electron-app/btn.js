@@ -2,7 +2,17 @@
 var btnRun = document.getElementById("run");
 var btnSave = document.getElementById("save");
 var btnLoad =document.getElementById('load');
-    btnRun.onclick  =function(){
+var btnTest =document.getElementById('test');
+btnTest.onclick  =function(){
+    var code ="from robocorp.tasks import task";
+    code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
+    code +="\n\n@task";
+    code +="\ndef solve_challenge():\n";
+    code += python.pythonGenerator.workspaceToCode(workspace);
+    document.getElementById('generatedCodeContainer').value = code;
+}
+
+btnRun.onclick  =function(){
         var code ="from robocorp.tasks import task";
         code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
         code +="\n\n@task";
