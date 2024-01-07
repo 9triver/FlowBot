@@ -390,7 +390,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "设置workbook集合%1的第%2行表头%3",
+    "message0": "设置workbook集合%1的第 %2行表头%3",
     "args0": [
       {
         "type": "field_input",
@@ -454,7 +454,7 @@ function registerSetDictHeaders()
 function registerAddRowDict()
 { 
   var AddRowDict = {
-    "message0": "为Workbook%1新增一行\n行号:%2\n内容:%3\n",
+    "message0": "在WorkbookDict%1中的Workbook%2新增一行,内容为:%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -487,7 +487,7 @@ function registerAddRowDict()
     python.pythonGenerator.forBlock['AddRowDict'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getFieldValue('VAR');
-      var number1= block.getFieldValue('row');
+      var number1= block.getFieldValue('name');
       if(number1!='')
       number1='name='+number1;
       var number2=block.getFieldValue('row_content');
@@ -518,7 +518,7 @@ function registerAddRowDict()
 function registerGenerateFile()
 { 
   var GenerateFile = {
-    "message0": "为Workbook%1在%2路径生成一个excel文件",
+    "message0": "为Workbook%1在%2路径生成excel文件",
     "args0": [
       {
         "type": "field_input",
