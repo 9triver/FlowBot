@@ -93,6 +93,7 @@ btnLoadFolder.addEventListener('click', async () => {
         else
             changePath+=path[i];
     }
+    changePath+='/';
     document.getElementById('generatedFilePath').value = changePath;
     //alert(file);
 })
