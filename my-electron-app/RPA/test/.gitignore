@@ -1,5 +1,6 @@
 # 保密需求，测试数据需要自行添加到data目录
 data/
+tasks.py
 
 output/
 venv/
