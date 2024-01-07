@@ -151,8 +151,12 @@ class ExcelApplicationExtension(ExcelApplication):
                     for row_content in row_contents:
                         if i == self.header_row:
                             i += 1
+                        row_value = []
+                        for header in self.headers:
+                            if header in row_content.keys():
+                                row_value.append(row_content[header])
                         app.insert_row(
-                            row=i, row_content=row_content, header_row=self.header_row
+                            row=i, row_content=row_value
                         )
                         i += 1
 

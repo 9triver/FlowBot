@@ -131,3 +131,5 @@ dist
 
 *.xls
 *.xlsx
+
+*output
