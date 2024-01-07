@@ -240,7 +240,7 @@ function registerOpenWorkbook()
       var FILE =block.getFieldValue('FILE');
       var FILEPATH;
       if(FILE!='')
-      FILEPATH = '\'' + FILE + '\'';
+      FILEPATH = FILE;
       else
         FILEPATH=FILE;
         var code='';
@@ -303,7 +303,7 @@ function registerSaveWorkbook(){
         }
         if(FILE!='')
         {
-          FILEPATH = 'filename='+'\'' + FILE + '\'';
+          FILEPATH = 'filename=' + FILE ;
           code +=VAR+".save_excel_as(" + FILEPATH + ",file_format=56)\n";
         }
         else

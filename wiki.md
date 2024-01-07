@@ -21,7 +21,7 @@ def solve_challenge():
     * ```
         {var} = ExcelApplication()
         {var}.open_application(visible=True)
-        {var}.open_workbook('{path}')
+        {var}.open_workbook({path})
         ```
     
 * Add Workbook As {var} : 新建Excel文档
@@ -57,7 +57,7 @@ def solve_challenge():
     * name: 新建的表名
 
     * ```
-        {workbook}.add_new_sheet('{name}')
+        {workbook}.add_new_sheet({name})
         ```
 
 * {workbook} Set Active Sheet {name} : 改变活跃中的表
@@ -67,7 +67,7 @@ def solve_challenge():
     * name: 将要设为活跃的表名
 
     * ```
-        {workbook}.set_active_worksheet('{name}')
+        {workbook}.set_active_worksheet({name})
         ```
 
 * merge sheet (合并表)
