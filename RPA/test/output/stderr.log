@@ -1,0 +1,5 @@
+Windows fatal exception: code 0x800706be
+
+Current thread 0x00002cfc (most recent call first):
+  Garbage-collecting
+  <no Python frame>
