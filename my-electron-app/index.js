@@ -1220,13 +1220,13 @@ function registerInsertRow(){
       const workbook = block.getFieldValue('Workbook');
       var row= block.getFieldValue('row');
       if(row!='')
-      row=''+row;
+      row='row='+row;
       var row_content=block.getFieldValue('row_content');
       if(row_content!='')
-      row_content=''+row_content;
+      row_content='row_content='+row_content;
       var header_row=block.getFieldValue('header_row');
       if(header_row!='')
-      header_row=''+header_row;
+      header_row='header_row='+header_row;
       var code ="";
       for(var i=0;i<depth;i++)
       {
