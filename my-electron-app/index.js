@@ -111,10 +111,14 @@ function start() {
 
  
   registerOpenWorkbook();
-  registerWorkbookDict();
+  
   registerAddWorkbook();
   registerSaveWorkbook();
 
+  registerSetDictHeaders();
+  registerMakeWorkbookDict();
+  registerAddRowDict();
+  registerGenerateFile();
 
   registerMoveActiveCell();
   registerSetActiveCell();
@@ -251,42 +255,6 @@ function registerOpenWorkbook()
     }       
           
 }
-function registerWorkbookDict()
-{ 
-  var WorkbookDict = {
-    "message0": "创建名为%1的Workbook集合",
-    "args0": [
-      {
-        "type": "field_input",
-        "name": "VAR",
-        "variable": "item",
-        "variableTypes": [""],
-        "check":"String"
-      }
-    ],
-    "nextStatement": null,
-    "previousStatement":null,
-    "colour":200,
-  };
-  Blockly.Blocks['WorkbookDict']=
-    {
-      init: function() {
-        this.jsonInit(WorkbookDict);
-      } 
-    };
-    python.pythonGenerator.forBlock['WorkbookDict'] = function(block, generator) {
-      // Collect argument strings.
-      const VAR = block.getFieldValue('VAR');
-      var code='';
-      for(var i=0;i<depth;i++)
-      {
-        code+='    ';
-      }
-        code +=VAR+"=ExcelApplication.WorkbookDict()\n";
-      return code;
-    }       
-          
-}
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
@@ -383,6 +351,216 @@ function registerAddWorkbook(){
       return code;
     }
 }
+function registerMakeWorkbookDict()
+{ 
+  var MakeWorkbookDict = {
+    "message0": "创建名为%1的Workbook集合",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
+      }
+    ],
+    "nextStatement": null,
+    "previousStatement":null,
+    "colour":300,
+  };
+  Blockly.Blocks['MakeWorkbookDict']=
+    {
+      init: function() {
+        this.jsonInit(MakeWorkbookDict);
+      } 
+    };
+    python.pythonGenerator.forBlock['MakeWorkbookDict'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var code='';
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+        code +=VAR+"=ExcelApplication.WorkbookDict()\n";
+      return code;
+    }       
+          
+}
+function registerSetDictHeaders()
+{ 
+  var SetDictHeaders = {
+    "message0": "设置workbook集合%1的第%2行表头%3",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"headers",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"header_row",
+      },
+    ],
+    "nextStatement": null,
+    "previousStatement":null,
+    "colour":300,
+  };
+  Blockly.Blocks['SetDictHeaders']=
+    {
+      init: function() {
+        this.jsonInit(SetDictHeaders);
+      } 
+    };
+    python.pythonGenerator.forBlock['SetDictHeaders'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var number1= block.getFieldValue('headers');
+      if(number1!='')
+      number1='headers='+number1;
+      var number2=block.getFieldValue('header_row');
+      if(number2!='')
+      number2='header_row='+number2;
+      var code='';
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      if(number2=='')
+      {
+        if(number1=='')
+        code +=VAR+".set_headers()\n";
+        else
+        code +=VAR+".set_headers("+number1+")\n";
+      }
+      else if(number1=='')
+      {
+        code+=VAR+".set_headers("+number2+")\n";
+      }
+      else
+        code +=VAR+".set_headers("+number1+","+number2+")\n";
+      return code;
+    }       
+          
+}
+function registerAddRowDict()
+{ 
+  var AddRowDict = {
+    "message0": "为Workbook%1新增一行\n行号:%2\n内容:%3\n",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"name",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"row_content",
+      },
+    ],
+    "nextStatement": null,
+    "previousStatement":null,
+    "colour":300,
+  };
+  Blockly.Blocks['AddRowDict']=
+    {
+      init: function() {
+        this.jsonInit(AddRowDict);
+      } 
+    };
+    python.pythonGenerator.forBlock['AddRowDict'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var number1= block.getFieldValue('row');
+      if(number1!='')
+      number1='name='+number1;
+      var number2=block.getFieldValue('row_content');
+      if(number2!='')
+      number2='row_content='+number2;
+      var code='';
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      if(number2=='')
+      {
+        if(number1=='')
+        code +=VAR+".add_row()\n";
+        else
+        code +=VAR+".sadd_row("+number1+")\n";
+      }
+      else if(number1=='')
+      {
+        code+=VAR+".add_row("+number2+")\n";
+      }
+      else
+        code +=VAR+".add_row("+number1+","+number2+")\n";
+      return code;
+    }       
+          
+}
+function registerGenerateFile()
+{ 
+  var GenerateFile = {
+    "message0": "为Workbook%1在%2路径生成一个excel文件",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name": "Path",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
+      },
+
+    ],
+    "nextStatement": null,
+    "previousStatement":null,
+    "colour":300,
+  };
+  Blockly.Blocks['GenerateFile']=
+    {
+      init: function() {
+        this.jsonInit(GenerateFile);
+      } 
+    };
+    python.pythonGenerator.forBlock['GenerateFile'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR=block.getFieldValue('VAR');
+      var Path=block.getFieldValue('Path');
+      if(Path!='')
+      Path='path='+Path;
+      var code='';
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code +=VAR+".generate_workbook_files("+Path+")\n";
+      return code;
+    }       
+          
+}
+
 function registerMoveActiveCell(){
   var MoveActiveCell ={
     "message0":"移动名为%1的Workbook中的\n活跃单元格到(第%2行,第%3列)",
