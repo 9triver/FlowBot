@@ -8,7 +8,7 @@ var btnLoad =document.getElementById('load');
         code +="\n\n@task";
         code +="\ndef solve_challenge():\n";
         code += python.pythonGenerator.workspaceToCode(workspace);
-        
+        document.getElementById('generatedCodeContainer').value = code;
         const blob = new Blob([code], {
             type: "text/plain;charset=utf-8",
         })
@@ -41,4 +41,13 @@ var btnLoad =document.getElementById('load');
         //alert(file);
         Blockly.serialization.workspaces.load(file,workspace);
         //alert(file);
+})//通过监听点击事件异步加载文件内容
+var btnLoadPath =document.getElementById('loadfilepath');
+btnLoadPath.addEventListener('click', async () => {
+    const path = await window.electronAPI.openFilePath();
+    //alert(file.toString());
+    //let ob= JSON.parse(file);
+    //alert(file);
+    document.getElementById('generatedFilePath').value = path;
+    //alert(file);
 })

@@ -2,7 +2,7 @@
 let workspace = null;
 var depth=1;
 var logicOperator =" null ";
-var connectioncount=0;
+
 const fs=require('fs');
 const exec = require('child_process').exec;
 const path = require('node:path');
@@ -74,8 +74,16 @@ async function handleFileOpen () {
     return ob
 }
 }
+async function handleFileOpenPath () {
+  const { canceled, filePaths } = await dialog.showOpenDialog({})
+  if (!canceled) {
+    //let cur =JSON.stringify(ob);
+    return filePaths[0]
+}
+}
 app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile',handleFileOpen);
+  ipcMain.handle('dialog:openFilePath',handleFileOpenPath);
   createWindow();
   // shell.openPath(".\\tasks.py")
   app.on('activate', () => {
@@ -83,20 +91,21 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
-    //  let file;
-    //console.log(path);
-    //file=fs.readFileSync(path[0]);
-    //console.log(file.toString());
-    //let ob= JSON.parse(file);
-    //console.log(Blockly);
-    //this.Blockly.serialization.workspaces.load(ob,workspace,true);
 })
-
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
+
+
+
+
+
+
+
+
+
 function start() {
   registerFirstContextMenuOptions();
 
@@ -136,8 +145,8 @@ function start() {
     {
         toolbox:document.getElementById('toolbox-categories'),
         grid:
-         {spacing: 20,
-          length: 5,
+         {spacing: 30,
+          length: 7,
           colour: "#000",
           snap: true},
       trashcan: true
@@ -338,7 +347,7 @@ function registerAddWorkbook(){
 }
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"移动名为%1的Workbook中的活跃单元格到坐标(%2,%3)",
+    "message0":"移动名为%1的Workbook中的\n活跃单元格到(第%2行,第%3列)",
     "args0": [
       {
         "type": "field_input",
@@ -389,7 +398,7 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"设置名为%1的Workbook中的活跃单元格到坐标(%2,%3)",
+    "message0":"设置名为%1的Workbook中的\n活跃单元格到坐标(第%2行,第%3列)",
     "args0": [
       {
         "type": "field_input",
@@ -444,7 +453,7 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"获取名为%1的Workbook中的坐标(%2,%3)单元格，将其命名为%4",
+    "message0":"获取名为%1的Workbook中的\n(第%2行,第%3列)单元格，将其命名为%4",
     "args0": [
       {
         "type": "field_input",
@@ -525,7 +534,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"获取名为%1的Workbook中的一行 %2(哪一行) (%3,%4)(从哪一列到哪一列) %5(头部行) ，将该变量命名为 %6",
+    "message0":"获取名为%1的Workbook中的\n第%2行(从第%3列到第%4列)(头部行:%5)，将该变量命名为 %6",
     "args0": [
       {
         "type": "field_input",
@@ -629,7 +638,7 @@ function registerFetchRow(){
               code += VAR +"="+Workbook+".read_row("+number3+")\n";
             }
           else 
-          code += VAR +"="+Workbook+".read_row("+number1+","+","+number3+")\n";
+          code += VAR +"="+Workbook+".read_row("+number1+","+number3+")\n";
         }
         else if(number1=='')
         code += VAR +"="+Workbook+".read_row("+number2+","+number3+")\n";
@@ -674,7 +683,7 @@ function registerFetchRow(){
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"获取名为%1的Workbook中的一列 %2(哪一列) (%3,%4)(从哪一行到哪一行)，将该变量命名为 %5",
+    "message0":"获取名为%1的Workbook中的\n第%2列(从哪%3行到哪%4行)，将该变量命名为 %5",
     "args0": [
       {
         "type": "field_input",
@@ -783,7 +792,7 @@ function registerFetchCol(){
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"获取名为%1的Workbook的区域 (%2,%3)(行范围)(%4,%5)(列范围)%6(头部)，将其变量命名为%7",
+    "message0":"获取名为%1的Workbook的区域\n(第%2行到第%3行)(第%4列到第%5列)(头部:%6)，将其变量命名为%7",
     "args0": [
       {
         "type": "field_input",
@@ -882,7 +891,7 @@ function registerFetchArea(){
 }
 function registerInsertCol(){
   var InsertCol ={
-    "message0":"往名为%1的Workbook之中插入新列(%2,%3)(列号,列值)",
+    "message0":"往名为%1的Workbook之中插入新列(列号:%2,列值:%3)",
     "args0": [
       {
         "type": "field_input",
@@ -929,7 +938,7 @@ function registerInsertCol(){
 }
 function registerInsertRow(){
   var InsertRow ={
-    "message0":"往名为%1的Workbook中插入新行(%2,%3)(行号,行值)%4(行头)",
+    "message0":"往名为%1的Workbook中插入新行(行号:%2,行值:%3)(行头:%4)",
     "args0": [
       {
         "type": "field_input",
@@ -987,7 +996,7 @@ function registerInsertRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"设置名为%1的Workbook的单元格(%2,%3)新值%4",
+    "message0":"设置名为%1的Workbook的单元格(第%2行,第%3列)新值:%4",
     "args0": [
       {
         "type": "field_input",
