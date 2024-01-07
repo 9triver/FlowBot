@@ -111,8 +111,10 @@ function start() {
 
  
   registerOpenWorkbook();
+  registerWorkbookDict();
   registerAddWorkbook();
   registerSaveWorkbook();
+
 
   registerMoveActiveCell();
   registerSetActiveCell();
@@ -245,6 +247,42 @@ function registerOpenWorkbook()
         code+='    ';
       }
         code +=VAR+".open_workbook("+FILEPATH+")\n";
+      return code;
+    }       
+          
+}
+function registerWorkbookDict()
+{ 
+  var WorkbookDict = {
+    "message0": "创建名为%1的Workbook集合",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "variable": "item",
+        "variableTypes": [""],
+        "check":"String"
+      }
+    ],
+    "nextStatement": null,
+    "previousStatement":null,
+    "colour":200,
+  };
+  Blockly.Blocks['WorkbookDict']=
+    {
+      init: function() {
+        this.jsonInit(WorkbookDict);
+      } 
+    };
+    python.pythonGenerator.forBlock['WorkbookDict'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var code='';
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+        code +=VAR+"=ExcelApplication.WorkbookDict()\n";
       return code;
     }       
           
