@@ -398,7 +398,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "设置workbook集合%1的第 %2行表头%3",
+    "message0": "设置workbook集合%1的表头\n行号:%2\n设置表头:%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -410,12 +410,12 @@ function registerSetDictHeaders()
       {
         "type": "field_input",
         "check":"number",
-        "name":"headers",
+        "name":"header_row",
       },
       {
         "type": "field_input",
         "check":"number",
-        "name":"header_row",
+        "name":"headers",
       },
     ],
     "nextStatement": null,
@@ -431,12 +431,12 @@ function registerSetDictHeaders()
     python.pythonGenerator.forBlock['SetDictHeaders'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getFieldValue('VAR');
-      var number1= block.getFieldValue('headers');
+      var number1= block.getFieldValue('header_row');
       if(number1!='')
-      number1='headers='+number1;
-      var number2=block.getFieldValue('header_row');
+      number1='header_row='+number1;
+      var number2=block.getFieldValue('headers');
       if(number2!='')
-      number2='header_row='+number2;
+      number2='headers='+number2;
       var code='';
       for(var i=0;i<depth;i++)
       {
