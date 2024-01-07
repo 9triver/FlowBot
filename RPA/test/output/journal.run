@@ -1,5 +1,0 @@
-{"when":1700568758,"controller":"rcc.user","event":"run","detail":"robot","comment":"task run"}
-{"when":1700568758,"controller":"rcc.user","event":"processes","detail":"updated","comment":"count from 0 to 1 ... map[16740:python.exe]"}
-{"when":1700568767,"controller":"rcc.user","event":"robot exit","detail":"From rcc point of view, \"actual main robot run\" was SUCCESS.","comment":"rcc point of view"}
-{"when":1700568767,"controller":"rcc.user","event":"processes","detail":"final","comment":"count: 0"}
-{"when":1700568768,"controller":"rcc.user","event":"stop","detail":"robot","comment":"done"}
