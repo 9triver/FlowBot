@@ -1,5 +1,16 @@
 FlowBot Blocks是面向FlowBot所支持的应用场景（例如Excel自动操作）在Blockly中的自定义[Block](https://developers.google.com/blockly/guides/create-custom-blocks/overview)。本项目中包括：
 
+**Script Header**
+
+```
+from robocorp.tasks import task
+
+from ExcelExtension import ExcelApplicationExtension as ExcelApplication
+
+@task
+def solve_challenge():
+```
+
 **Workbook operation**
 
 * Open Workbook {path} As {var} : 打开Excel文档
@@ -198,7 +209,7 @@ FlowBot Blocks是面向FlowBot所支持的应用场景（例如Excel自动操作
     - var: 生成的workbook集合变量名
 
     - ```
-        {var} = WorkbookDict()
+        {var} = ExcelApplication.WorkbookDict()
         ```
 
 - {workbook_dict} set headers {headers} {header_row}: 设置workbook集合的表头，设置后将会按照对应表头插入内容

@@ -148,47 +148,47 @@ class ExcelApplicationExtension(ExcelApplication):
         return row_contents
 
 
-class WorkbookDict:
-    def __init__(self):
-        self.workbook_contents = {}
-        self.headers = None
-        self.header_row = None
-
-    def contains_name(self, name: str):
-        return name in self.workbook_contents
-
-    def add_workbook(self, name: str):
-        self.workbook_contents[name] = []
-
-    def set_headers(self, headers: list[str], header_row: int):
-        self.headers = headers
-        self.header_row = header_row
-
-    def add_row(self, name: str, row_content=None):
-        if not self.contains_name(name):
-            self.add_workbook(name)
-        self.workbook_contents[name].append(row_content)
-
-    def generate_workbook_files(self, path='./'):
-        for name, row_contents in self.workbook_contents.items():
-            app = ExcelApplicationExtension()
-            app.open_application(visible=True)
-            app.add_new_workbook()
-            app.add_new_sheet(name)
-
-            if self.headers is None:
-                i = 1
-                for row_content in row_contents:
-                    app.insert_row(row=i, row_content=row_content)
-                    i += 1
-            else:
-                app.insert_row(row=self.header_row, row_content=self.headers)
-                i = 1
-                for row_content in row_contents:
-                    if i == self.header_row:
+    class WorkbookDict:
+        def __init__(self):
+            self.workbook_contents = {}
+            self.headers = None
+            self.header_row = None
+    
+        def contains_name(self, name: str):
+            return name in self.workbook_contents
+    
+        def add_workbook(self, name: str):
+            self.workbook_contents[name] = []
+    
+        def set_headers(self, headers: list[str], header_row: int):
+            self.headers = headers
+            self.header_row = header_row
+    
+        def add_row(self, name: str, row_content=None):
+            if not self.contains_name(name):
+                self.add_workbook(name)
+            self.workbook_contents[name].append(row_content)
+    
+        def generate_workbook_files(self, path='./'):
+            for name, row_contents in self.workbook_contents.items():
+                app = ExcelApplicationExtension()
+                app.open_application(visible=True)
+                app.add_new_workbook()
+                app.add_new_sheet(name)
+    
+                if self.headers is None:
+                    i = 1
+                    for row_content in row_contents:
+                        app.insert_row(row=i, row_content=row_content)
                         i += 1
-                    app.insert_row(row=i, row_content=row_content, header_row=self.header_row)
-                    i += 1
-
-            app.save_excel_as(filename=path + name+ '.xls', file_format=56)
-            app.close_document()
+                else:
+                    app.insert_row(row=self.header_row, row_content=self.headers)
+                    i = 1
+                    for row_content in row_contents:
+                        if i == self.header_row:
+                            i += 1
+                        app.insert_row(row=i, row_content=row_content, header_row=self.header_row)
+                        i += 1
+    
+                app.save_excel_as(filename=path + name+ '.xls', file_format=56)
+                app.close_document()
