@@ -1148,14 +1148,30 @@ function registerInsertCol(){
     python.pythonGenerator.forBlock['InsertCol'] = function(block, generator) {
       // Collect argument strings.
       const workbook = block.getFieldValue('Workbook');
-      const column= block.getFieldValue('column');
-      const col_content=block.getFieldValue('col_content');
+      var column= block.getFieldValue('column');
+      if(column!='')
+      column='column='+column;
+      var col_content=block.getFieldValue('col_content');
+      if(col_content!='')
+      col_content='column_content='+col_content;
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-        code+=workbook+".insert_column(column="+column+","+" column_content="+col_content+")\n";
+        if(col_content=='')
+      {
+        if(column=='')
+        code +=workbook+".insert_column()\n";
+        else
+        code +=workbook+".insert_column("+column+")\n";
+      }
+      else if(column=='')
+      {
+        code+=workbook+".insert_column("+col_content+")\n";
+      }
+      else
+        code+=workbook+".insert_column("+column+","+col_content+")\n";
       return code;
     }   
 
@@ -1184,7 +1200,7 @@ function registerInsertRow(){
       {
         "type": "field_input",
         "check":"number",
-        "name":"header",
+        "name":"header_row",
         "value": 100,
         "min":1,
       },
@@ -1202,18 +1218,24 @@ function registerInsertRow(){
     python.pythonGenerator.forBlock['InsertRow'] = function(block, generator) {
       // Collect argument strings.
       const workbook = block.getFieldValue('Workbook');
-      const row= block.getFieldValue('row');
-      const row_content=block.getFieldValue('row_content');
-      const header_row=block.getFieldValue('header');
+      var row= block.getFieldValue('row');
+      if(row!='')
+      row=''+row;
+      var row_content=block.getFieldValue('row_content');
+      if(row_content!='')
+      row_content=''+row_content;
+      var header_row=block.getFieldValue('header_row');
+      if(header_row!='')
+      header_row=''+header_row;
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      if(header!='')
-      code+=workbook+".insert_row(row="+row+","+"row_content="+row_content+",header_row="+header_row+")\n";
+      if(header_row=='')
+      code+=workbook+".insert_row("+row+","+row_content+")\n";
       else
-      code+=workbook+".insert_row(row="+row+","+"row_content="+row_content+")\n";
+      code+=workbook+".insert_row("+row+","+row_content+","+header_row+")\n";
       return code;
     }   
 
