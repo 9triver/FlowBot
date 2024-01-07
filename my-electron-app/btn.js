@@ -54,10 +54,45 @@ btnRun.onclick  =function(){
 })//通过监听点击事件异步加载文件内容
 var btnLoadPath =document.getElementById('loadfilepath');
 btnLoadPath.addEventListener('click', async () => {
-    const path = await window.electronAPI.openFilePath();
+    let path = await window.electronAPI.openFilePath();
     //alert(file.toString());
     //let ob= JSON.parse(file);
     //alert(file);
-    document.getElementById('generatedFilePath').value = path;
+    let changePath='';
+    var arr=new Array();
+    for(let i=0;i<path.length;i++)
+    {   
+        
+        if(path[i]=="\\")
+            {   
+                changePath+='/';
+                //alert(path[i]);
+            }
+        else
+            changePath+=path[i];
+    }
+    document.getElementById('generatedFilePath').value = changePath;
+    //alert(file);
+})
+var btnLoadFolder =document.getElementById('loadfilefolder');
+btnLoadFolder.addEventListener('click', async () => {
+    let path = await window.electronAPI.openFileFolder();
+    //alert(file.toString());
+    //let ob= JSON.parse(file);
+    //alert(file);
+    let changePath='';
+    var arr=new Array();
+    for(let i=0;i<path.length;i++)
+    {   
+        
+        if(path[i]=="\\")
+            {   
+                changePath+='/';
+                //alert(path[i]);
+            }
+        else
+            changePath+=path[i];
+    }
+    document.getElementById('generatedFilePath').value = changePath;
     //alert(file);
 })
