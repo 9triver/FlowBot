@@ -74,3 +74,25 @@ btnLoadPath.addEventListener('click', async () => {
     document.getElementById('generatedFilePath').value = changePath;
     //alert(file);
 })
+var btnLoadFolder =document.getElementById('loadfilefolder');
+btnLoadFolder.addEventListener('click', async () => {
+    let path = await window.electronAPI.openFileFolder();
+    //alert(file.toString());
+    //let ob= JSON.parse(file);
+    //alert(file);
+    let changePath='';
+    var arr=new Array();
+    for(let i=0;i<path.length;i++)
+    {   
+        
+        if(path[i]=="\\")
+            {   
+                changePath+='/';
+                //alert(path[i]);
+            }
+        else
+            changePath+=path[i];
+    }
+    document.getElementById('generatedFilePath').value = changePath;
+    //alert(file);
+})

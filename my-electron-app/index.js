@@ -75,7 +75,14 @@ async function handleFileOpen () {
 }
 }
 async function handleFileOpenPath () {
-  const { canceled, filePaths } = await dialog.showOpenDialog({})
+  const { canceled, filePaths } = await dialog.showOpenDialog({properties: ['openFile']})
+  if (!canceled) {
+    //let cur =JSON.stringify(ob);
+    return filePaths[0]
+}
+}
+async function handleFileOpenFolder () {
+  const { canceled, filePaths } = await dialog.showOpenDialog({properties: ['openDirectory']})
   if (!canceled) {
     //let cur =JSON.stringify(ob);
     return filePaths[0]
@@ -84,6 +91,7 @@ async function handleFileOpenPath () {
 app.whenReady().then(() => {
   ipcMain.handle('dialog:openFile',handleFileOpen);
   ipcMain.handle('dialog:openFilePath',handleFileOpenPath);
+  ipcMain.handle('dialog:openFileFolder',handleFileOpenFolder);
   createWindow();
   // shell.openPath(".\\tasks.py")
   app.on('activate', () => {
