@@ -28,67 +28,42 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         if row is None:
             row = self.active_row
-        column_from = column_from if column_from is not None else 1
-        column = column_from
-        column_num = column_to - column + 1 if column_to is not None else None
 
-        if header_row is not None:
-            contents = {}
+        index_from = column_from - 1 if column_from is not None else None
+        index_to = column_to if column_to is not None else None
+        contents = self.app.Rows(row).Value[0][index_from : index_to]
+        if header_row is None:
+            return contents
         else:
-            contents = []
-        content = self.read_from_cells(row=row, column=column)
-        while (
-            column_num is None
-            and content is not None  # read until None
-            or column_num is not None
-            and column - column_from < column_num  # read until reaching column_num
-        ):
-            if header_row is not None:
-                header = str(self.read_from_cells(row=header_row, column=column))
-                contents[header] = str(content) if content is not None else None
-            else:
-                contents.append(str(content) if content is not None else None)
-
-            column += 1
-            content = self.read_from_cells(row=row, column=column)
-        return contents
-
+            headers = self.app.Rows(header_row).Value[0][index_from : index_to]
+            contents_dict = {}
+            for header, content in zip(headers, contents):
+                contents_dict[header] = content
+            return contents_dict
+        
     def insert(self, row_content):
         self.app.Rows(1).Insert()
         self.app.Rows(1).Value = row_content
-    
+
     def insert_row(self, row: int = None, row_content=None, header_row: int = None):
         if row is None:
             row = self.active_row
 
         if header_row is not None:
             headers = self.read_row(header_row)
-            header_to_column = {}
-            for i in range(0, len(headers)):
-                header_to_column[headers[i]] = i + 1
-            for header, content in row_content.items():
-                self.write_to_cells(
-                    row=row,
-                    column=header_to_column[header],
-                    value=content,
-                    number_format="@",
-                )
+            row_value = []
+            for header in headers:
+                if header in row_content.keys():
+                    row_value.append(row_content[header])
         else:
-            for column in range(1, len(row_content) + 1):
-                self.write_to_cells(
-                    row=row,
-                    column=column,
-                    value=row_content[column - 1],
-                    number_format="@",
-                )
+            row_value = row_content
+        self.app.Rows(row).Value = row_value
 
     def insert_column(self, column: int = None, column_content=None):
         if column is None:
             column = self.active_column
-        for row in range(1, len(column_content) + 1):
-            self.write_to_cells(
-                row=row, column=column, value=column_content[row - 1], number_format="@"
-            )
+        value = [(content,) for content in column_content]
+        self.app.Columns(column).Value = value
 
     def read_column(
         self,
@@ -98,21 +73,11 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         if column is None:
             column = self.active_column
-        row_from = row_from if row_from is not None else 1
-        row = row_from
-        row_num = row_to - row + 1 if row_to is not None else None
 
-        contents = []
-        content = self.read_from_cells(row=row, column=column)
-        while (
-            row_num is None
-            and content is not None  # read until None
-            or row_num is not None
-            and row - row_from < row_num  # read until reaching column_num
-        ):
-            contents.append(str(content) if content is not None else None)
-            row += 1
-            content = str(self.read_from_cells(row=row, column=column))
+        index_from = row_from - 1 if row_from is not None else None
+        index_to = row_to if row_to is not None else None
+
+        contents = [content[0] for content in self.app.Columns(column).Value[index_from : index_to]]
         return contents
 
     def read_area(
@@ -147,35 +112,34 @@ class ExcelApplicationExtension(ExcelApplication):
 
         return row_contents
 
-
     class WorkbookDict:
         def __init__(self):
             self.workbook_contents = {}
             self.headers = None
             self.header_row = None
-    
+
         def contains_name(self, name: str):
             return name in self.workbook_contents
-    
+
         def add_workbook(self, name: str):
             self.workbook_contents[name] = []
-    
+
         def set_headers(self, headers: list[str], header_row: int):
             self.headers = headers
             self.header_row = header_row
-    
+
         def add_row(self, name: str, row_content=None):
             if not self.contains_name(name):
                 self.add_workbook(name)
             self.workbook_contents[name].append(row_content)
-    
-        def generate_workbook_files(self, path='./'):
+
+        def generate_workbook_files(self, path="./"):
             for name, row_contents in self.workbook_contents.items():
                 app = ExcelApplicationExtension()
                 app.open_application(visible=True)
                 app.add_new_workbook()
                 app.add_new_sheet(name)
-    
+
                 if self.headers is None:
                     i = 1
                     for row_content in row_contents:
@@ -187,8 +151,10 @@ class ExcelApplicationExtension(ExcelApplication):
                     for row_content in row_contents:
                         if i == self.header_row:
                             i += 1
-                        app.insert_row(row=i, row_content=row_content, header_row=self.header_row)
+                        app.insert_row(
+                            row=i, row_content=row_content, header_row=self.header_row
+                        )
                         i += 1
-    
-                app.save_excel_as(filename=path + name+ '.xls', file_format=56)
+
+                app.save_excel_as(filename=path + name + ".xls", file_format=56)
                 app.close_document()
