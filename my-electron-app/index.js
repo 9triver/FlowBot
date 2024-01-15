@@ -206,7 +206,7 @@ function registerOpenWorkbook()
 { 
   var openWorkbook = {
     "type":"openWorkbook",
-    "message0": "打开指定目录(%1)下的Workbook，将其命名为%2",
+    "message0": "打开目录(%1)下的工作表，将其命名为%2",
     "args0": [
       {
         "type": "field_input",
@@ -266,7 +266,7 @@ function registerOpenWorkbook()
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
-    "message0":"将名为%1的Workbook保存到路径%2",
+    "message0":"将名为%1的工作表保存到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -317,7 +317,7 @@ function registerSaveWorkbook(){
 }
 function registerAddWorkbook(){
   var addWorkbook ={
-    "message0":"新增一个Workbook，将其命名为%1",
+    "message0":"新增一个名为%1的工作表",
     "args0": [
       {
         "type": "field_input",
@@ -362,7 +362,7 @@ function registerAddWorkbook(){
 function registerMakeWorkbookDict()
 { 
   var MakeWorkbookDict = {
-    "message0": "创建名为%1的Workbook集合",
+    "message0": "创建名为%1的工作表集合",
     "args0": [
       {
         "type": "field_input",
@@ -398,7 +398,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "设置workbook集合%1的表头\n行号:%2\n设置表头:%3\n",
+    "message0": "为%1的工作表集合下的所有工作表设置表头：%2，插入到第%3行\n",
     "args0": [
       {
         "type": "field_input",
@@ -462,7 +462,7 @@ function registerSetDictHeaders()
 function registerAddRowDict()
 { 
   var AddRowDict = {
-    "message0": "在WorkbookDict%1中的Workbook%2新增一行,内容为:%3\n",
+    "message0": "在名为%1的工作表集合中找到名为%2的工作表，新增一行,内容为:%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -526,7 +526,7 @@ function registerAddRowDict()
 function registerGenerateFile()
 { 
   var GenerateFile = {
-    "message0": "为Workbook%1在%2路径生成excel文件",
+    "message0": "将名为%1的工作表导出到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -571,7 +571,7 @@ function registerGenerateFile()
 
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"移动名为%1的Workbook中的\n活跃单元格到(第%2行,第%3列)",
+    "message0":"将名为%1的工作表中的\n活跃单元格移动到第%2行,第%3列",
     "args0": [
       {
         "type": "field_input",
@@ -622,7 +622,7 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"设置名为%1的Workbook中的\n活跃单元格到坐标(第%2行,第%3列)",
+    "message0":"将名为%1的工作表中的\n活跃单元格设置到第%2行,第%3列",
     "args0": [
       {
         "type": "field_input",
@@ -677,7 +677,7 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"获取名为%1的Workbook中的\n(第%2行,第%3列)单元格，将其命名为%4",
+    "message0":"获取名为%1的Workbook的\n第%2行,第%3列，将内容存入%4中",
     "args0": [
       {
         "type": "field_input",
@@ -758,7 +758,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"获取名为%1的Workbook中的\n第%2行(从第%3列到第%4列)(头部行:%5)，将该变量命名为 %6",
+    "message0":"获取名为%1的工作表中\n第%2行，将内容存入%6中\n注：默认为该行全列，填写下列参数：起始列%3，结束列%4\n注：默认不需要头部行，如需指定头部行，填写下列参数：%5",
     "args0": [
       {
         "type": "field_input",
@@ -907,7 +907,7 @@ function registerFetchRow(){
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"获取名为%1的Workbook中的\n第%2列(从哪%3行到哪%4行)，将该变量命名为 %5",
+    "message0":"获取名为%1的Workbook中的\n第%2列，将内容存入%5\n注：默认为该列全行，填写下列参数：起始行%3，结束行%4\n",
     "args0": [
       {
         "type": "field_input",
@@ -1016,7 +1016,7 @@ function registerFetchCol(){
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"获取名为%1的Workbook的区域\n(第%2行到第%3行)(第%4列到第%5列)(头部:%6)，将其变量命名为%7",
+    "message0":"获取名为%1的Workbook中\n第%2行到第%3行，第%4列到第%5列的全部内容\n是否需要头部？%6\n存入%7",
     "args0": [
       {
         "type": "field_input",
@@ -1115,7 +1115,7 @@ function registerFetchArea(){
 }
 function registerInsertCol(){
   var InsertCol ={
-    "message0":"往名为%1的Workbook之中插入新列(列号:%2,列值:%3)",
+    "message0":"在名为%1的工作表之中插入新列，列号为%2，列值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1178,7 +1178,7 @@ function registerInsertCol(){
 }
 function registerInsertRow(){
   var InsertRow ={
-    "message0":"往名为%1的Workbook中插入新行(行号:%2,行值:%3)(行头:%4)",
+    "message0":"往名为%1的工作表中插入新行，行号为%2，行值为%3，行头为%4（不需要则为空）",
     "args0": [
       {
         "type": "field_input",
@@ -1242,7 +1242,7 @@ function registerInsertRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"设置名为%1的Workbook的单元格(第%2行,第%3列)新值:%4",
+    "message0":"为名为%1的工作表第%2行,第%3列的单元格设置新值%4",
     "args0": [
       {
         "type": "field_input",
@@ -1324,7 +1324,7 @@ function registerSetCellValue(){
 }
 function registerSettoBlock(){
   var setto ={
-    "message0":"将变量%1设置为%2",
+    "message0":"将%2赋值给%1",
     "args0": [
       {
         "type": "field_input",
@@ -1365,7 +1365,7 @@ function registerSettoBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"在%1Workbook里创建新的sheet %2",
+    "message0":"在名为%1的工作表里创建新的sheet%2",
     "args0": [
       {
         "type": "field_input",
@@ -1403,7 +1403,7 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"在%1Workbook里设置活跃sheet%2",
+    "message0":"在名为%1的工作表里设置活跃sheet%2",
     "args0": [
       {
         "type": "field_input",
@@ -1441,7 +1441,7 @@ function registerSetActiveSheet(){
 }
 function registerMergeSheet(){
   var MergeSheet ={
-    "message0":"在%1Workbook里合并%2和sheet",
+    "message0":"在%1Workbook里合并sheet%2和%3",
     "args0": [
       {
         "type": "field_input",
@@ -1451,6 +1451,11 @@ function registerMergeSheet(){
       {
         "type": "field_input",
         "name": "name",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name": "name2",
         "check":"String"
       },
     ],
