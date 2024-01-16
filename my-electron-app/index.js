@@ -375,6 +375,8 @@ function registerMakeWorkbookDict()
     "nextStatement": null,
     "previousStatement":null,
     "colour":300,
+    "tooltip":"Make workbook dictionary {var}: 生成一个workbook集合\
+    \nvar: 生成的workbook集合变量名"
   };
   Blockly.Blocks['MakeWorkbookDict']=
     {
@@ -398,7 +400,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "为%1的工作表集合下的所有工作表设置表头：%2，插入到第%3行\n",
+    "message0": "为%1的工作表集合下的所有工作表设置表头：%3，插入到第%2行\n",
     "args0": [
       {
         "type": "field_input",
@@ -421,6 +423,10 @@ function registerSetDictHeaders()
     "nextStatement": null,
     "previousStatement":null,
     "colour":300,
+    "tooltip":'{workbook_dict} set headers {headers} {header_row}: 设置workbook集合的表头，设置后将会按照对应表头插入内容 \
+    \nworkbook_dict: workbook集合\
+    \n headers: 设置的表头\
+    \nheader_row: headers所在行号'
   };
   Blockly.Blocks['SetDictHeaders']=
     {
@@ -485,6 +491,10 @@ function registerAddRowDict()
     "nextStatement": null,
     "previousStatement":null,
     "colour":300,
+    "tooltip":'{workbook_dict} add row {name} {row_content}: 向一个workbook新增一行\
+    \nworkbook_dict: workbook集合\
+    \nname: 需要新增一行的workbook名\
+    \nrow_content: 新增内容'
   };
   Blockly.Blocks['AddRowDict']=
     {
@@ -545,6 +555,9 @@ function registerGenerateFile()
     "nextStatement": null,
     "previousStatement":null,
     "colour":300,
+    "tooltip":'{workbook_dict} generate workbook files {path}: 生成excel文件\
+    \nworkbook_dict: workbook集合\
+    \npath: 生成目录，默认为 \'./\''
   };
   Blockly.Blocks['GenerateFile']=
     {
@@ -1138,6 +1151,9 @@ function registerInsertCol(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
+    "tooltip":'{workbook} Insert Column {column} {column_content} : 插入列\
+    \nworkbook: Excel 文档变量名\
+    \ncolumn_content: 待写入的列'
   }
   Blockly.Blocks['InsertCol']=
     {
@@ -1208,6 +1224,10 @@ function registerInsertRow(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
+    "tooltip":'{workbook} Insert Row {row} {row_content} {header_row} : 插入行\
+    \nworkbook: Excel 文档变量名\
+    \nrow_content: 待写入的行\
+    \nheader_row: header 所在行号，为空表示不需要 header'
   }
   Blockly.Blocks['InsertRow']=
     {
@@ -1381,7 +1401,9 @@ function registerCreateSheet(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":240,
-    
+    "tooltip":'{workbook} Create Sheet {name} : 新建表\
+    \nworkbook: Excel 文档变量名\
+    \nname: 新建的表名'
   }
   Blockly.Blocks['CreateSheet']=
     {
@@ -1419,7 +1441,9 @@ function registerSetActiveSheet(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":240,
-    
+    "tooltip":'{workbook} Set Active Sheet {name} : 改变活跃中的表\
+    \nworkbook: Excel 文档变量名\
+    \nname: 将要设为活跃的表名'
   }
   Blockly.Blocks['SetActiveSheet']=
     {
@@ -1522,6 +1546,10 @@ function registerCompareBlock(){{
     "previousStatement": null,
     "nextStatement":null,
     "colour":220,
+    "tooltip":'{value_type} {exp1} {comparation} {exp2} : 比较条件块\
+    \nvalue_type: 表达式数据类型，三种可选项为 int float str\
+    \nexp1, exp2: 参与比较的两个表达式\
+    \ncomparation: 比较运算符，五种可选项为 < <= == >= >'
   }
   Blockly.Blocks['Compare']=
     {
@@ -1567,6 +1595,7 @@ function registerIfBlock(){{
     "nextStatement": null,
     "colour":220,
     "returns":"loop",
+    "tooltip":' if {condition} : 分支控制块 if'
   }
   Blockly.Blocks['IF']=
     {
@@ -1611,6 +1640,7 @@ function registerElifBlock(){{
     "previousStatement": null,
     "nextStatement": null,
     "colour":220,
+    "tooltip":'else if {condition} : 分支控制块 else if'
   }
   Blockly.Blocks['Elif']=
     {
@@ -1648,6 +1678,7 @@ function registerElseBlock(){{
     "previousStatement": null,
     "nextStatement": null,
     "colour":220,
+    'tooltip':'分支控制块 else'
   }
   Blockly.Blocks['Else']=
     {
@@ -1700,6 +1731,7 @@ function registerForBlock(){{
     "previousStatement": null,
     "nextStatement": null,
     "colour":220,
+    'tooltip':'for {var} from {start} to {end} : 循环控制块，带int型循环变量，前闭后闭，start <= end'
   }
   Blockly.Blocks['For']=
     {
@@ -1750,6 +1782,7 @@ function registerForeachBlock(){{
     "previousStatement": null,
     "nextStatement": null,
     "colour":220,
+    'tooltip':'for each {var} in {iterable_var} : 循环控制块，for each 循环，针对可迭代容器'
   }
   Blockly.Blocks['Foreach']=
     {
@@ -1789,6 +1822,7 @@ function registerAndBlock(){{
     "previousStatement":null,
     "nextStatement":null,
     "colour":220,
+    'tooltip':'and {condition1} {condition2} ... : 与条件块'
   }
   Blockly.Blocks['and']=
     {
@@ -1827,6 +1861,7 @@ function registerOrBlock(){{
     "previousStatement":null,
     "nextStatement":null,
     "colour":220,
+    'tooltip':'or {condition1} {condition2} ... : 或条件块'
   }
   Blockly.Blocks['or']=
     {
@@ -1864,6 +1899,7 @@ function registerNotBlock(){{
     "output": null,
     "previousStatement":null,
     "nextStatement":null,
+    'tooltip':'not {condition} : 非条件块'
   }
   Blockly.Blocks['not']=
     {
