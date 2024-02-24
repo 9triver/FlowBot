@@ -521,7 +521,7 @@ function registerAddRowDict()
         if(number1=='')
         code +=VAR+".add_row()\n";
         else
-        code +=VAR+".sadd_row("+number1+")\n";
+        code +=VAR+".add_row("+number1+")\n";
       }
       else if(number1=='')
       {
