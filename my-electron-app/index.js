@@ -8,6 +8,7 @@ const exec = require('child_process').exec;
 const path = require('node:path');
 const { app, BrowserWindow,shell,ipcMain} = require('electron');
 const { dialog } = require('electron');
+const { Connection } = require('blockly');
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -111,9 +112,6 @@ app.on('window-all-closed', () => {
 
 
 
-
-
-
 function start() {
   registerFirstContextMenuOptions();
 
@@ -131,9 +129,11 @@ function start() {
   registerMoveActiveCell();
   registerSetActiveCell();
   registerFetchCell();
+  registerFetchRowNoheader();
   registerFetchRow();
   registerFetchCol();
   registerFetchArea();
+  registerInsertRowNoheader();
   registerInsertRow();
   registerInsertCol();
   registerSetCellValue();
@@ -169,6 +169,7 @@ function start() {
   //     const code = python.pythonGenerator.workspaceToCode(workspace);
   //     document.getElementById('generatedCodeContainer').value = code;
   //   });
+
   registerOutputOption();
   registerHelpOption();
   registerDisplayOption();
@@ -206,7 +207,7 @@ function registerOpenWorkbook()
 { 
   var openWorkbook = {
     "type":"openWorkbook",
-    "message0": "打开目录(%1)下的工作表，将其命名为%2",
+    "message0": "打开路径(%1)下的工作簿，将其命名为%2",
     "args0": [
       {
         "type": "field_input",
@@ -266,7 +267,7 @@ function registerOpenWorkbook()
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
-    "message0":"将名为%1的工作表保存到路径%2",
+    "message0":"将名为%1的工作簿保存到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -290,6 +291,7 @@ function registerSaveWorkbook(){
       init: function() {
         this.jsonInit(saveWorkbook);
       } 
+      
     };
     python.pythonGenerator.forBlock['saveWorkbook'] = function(block, generator) {
       // Collect argument strings.
@@ -317,7 +319,7 @@ function registerSaveWorkbook(){
 }
 function registerAddWorkbook(){
   var addWorkbook ={
-    "message0":"新增一个名为%1的工作表",
+    "message0":"新增一个名为%1的工作簿",
     "args0": [
       {
         "type": "field_input",
@@ -362,7 +364,7 @@ function registerAddWorkbook(){
 function registerMakeWorkbookDict()
 { 
   var MakeWorkbookDict = {
-    "message0": "创建名为%1的工作表集合",
+    "message0": "创建名为%1的工作簿集合",
     "args0": [
       {
         "type": "field_input",
@@ -400,7 +402,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "为%1的工作表集合下的所有工作表设置表头：%3，插入到第%2行\n",
+    "message0": "为名为%1的工作簿集合下的所有工作簿设置表头：%3，插入到第%2行\n",
     "args0": [
       {
         "type": "field_input",
@@ -436,7 +438,7 @@ function registerSetDictHeaders()
     };
     python.pythonGenerator.forBlock['SetDictHeaders'] = function(block, generator) {
       // Collect argument strings.
-      const VAR = block.getFieldValue('VAR');
+      var VAR = block.getFieldValue('VAR');
       var number1= block.getFieldValue('header_row');
       if(number1!='')
       number1='header_row='+number1;
@@ -468,7 +470,7 @@ function registerSetDictHeaders()
 function registerAddRowDict()
 { 
   var AddRowDict = {
-    "message0": "在名为%1的工作表集合中找到名为%2的工作表，新增一行,内容为:%3\n",
+    "message0": "在名为%1的工作簿集合中找到名为%2的工作簿，新增一行,内容为:%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -536,7 +538,7 @@ function registerAddRowDict()
 function registerGenerateFile()
 { 
   var GenerateFile = {
-    "message0": "将名为%1的工作表导出到路径%2",
+    "message0": "将名为%1的工作簿导出到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -584,7 +586,7 @@ function registerGenerateFile()
 
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"将名为%1的工作表中的\n活跃单元格移动到第%2行,第%3列",
+    "message0":"将名为%1的工作簿中的\n活跃单元格移动%2行,%3列",
     "args0": [
       {
         "type": "field_input",
@@ -606,10 +608,10 @@ function registerMoveActiveCell(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    "tooltip":'{workbook} Set Active Cell {row} {column} : 设置活跃单元格\
+    "tooltip":'{workbook} Move Active Cell {row_change} {column_change} : 移动活跃单元格\
     \nworkbook: Excel 文档变量名\
-    \nrow: 行号\
-    \ncolumn: 列号'
+    \nrow_change: 行变化，默认为0\
+    \ncolumn_change: 列变化，默认为0'
   }
   Blockly.Blocks['MoveActiveCell']=
     {
@@ -635,7 +637,7 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"将名为%1的工作表中的\n活跃单元格设置到第%2行,第%3列",
+    "message0":"将名为%1的工作簿中的\n活跃单元格设置为第%2行,第%3列",
     "args0": [
       {
         "type": "field_input",
@@ -690,7 +692,7 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"获取名为%1的Workbook的\n第%2行,第%3列，将内容存入%4中",
+    "message0":"获取名为%1的工作簿的\n第%2行 第%3列，将内容存入%4中",
     "args0": [
       {
         "type": "field_input",
@@ -771,7 +773,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"获取名为%1的工作表中\n第%2行，将内容存入%6中\n注：默认为该行全列，填写下列参数：起始列%3，结束列%4\n注：默认不需要头部行，如需指定头部行，填写下列参数：%5",
+    "message0":"获取名为%1的工作簿中\n第%2行的第%3-%4列，第%5行 为头部行，将内容存入%6中\n",
     "args0": [
       {
         "type": "field_input",
@@ -850,77 +852,155 @@ function registerFetchRow(){
         {
           code+='    ';
         }
-      if(number4=='')
-      { 
-        if(number3=='')
-        {
-          if(number2=='')
-            {
-            if(number1=='')
-            code += VAR +"="+Workbook+".read_row()\n"; 
-            else
-            code += VAR +"="+Workbook+".read_row("+number1+")\n";
-            }
-          else if(number1=='')
-          {
-            code += VAR +"="+Workbook+".read_row("+number2+")\n";
-          }
-          else
-            code += VAR +"="+Workbook+".read_row("+number1+","+number2+")\n";
-        }
-        else if(number2=='')
-        { 
-          if(number1=='')
-            {
-              code += VAR +"="+Workbook+".read_row("+number3+")\n";
-            }
-          else 
-          code += VAR +"="+Workbook+".read_row("+number1+","+number3+")\n";
-        }
-        else if(number1=='')
-        code += VAR +"="+Workbook+".read_row("+number2+","+number3+")\n";
-        else
-        code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
-      }
-      else if(number3=='')
-      {
-        if(number2=='')
-        {
-          if(number1=='')
-          {
-            code += VAR +"="+Workbook+".read_row("+number4+")\n";
-          }
-          else
-          code += VAR +"="+Workbook+".read_row("+number1+","+number4+")\n";
-        }
-        else if(number1=='')
-        {
-          code += VAR +"="+Workbook+".read_row("+number3+")\n";
-        }
-        else
-        code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number4+")\n";
-      }
-      else if(number2=='')
-      { 
-        if(number1=='')
-        {
-          code += VAR +"="+Workbook+".read_row("+number3+","+number4+")\n";
-        }
-        else
-        code += VAR +"="+Workbook+".read_row("+number1+","+number3+","+number4+")\n";
-      }
-      else if(number1=='')
-      { 
-        code += VAR +"="+Workbook+".read_row("+number2+","+number3+","+number4+")\n";
-      }
-      else
+      // if(number4=='')
+      // { 
+      //   if(number3=='')
+      //   {
+      //     if(number2=='')
+      //       {
+      //       if(number1=='')
+      //       code += VAR +"="+Workbook+".read_row()\n"; 
+      //       else
+      //       code += VAR +"="+Workbook+".read_row("+number1+")\n";
+      //       }
+      //     else if(number1=='')
+      //     {
+      //       code += VAR +"="+Workbook+".read_row("+number2+")\n";
+      //     }
+      //     else
+      //       code += VAR +"="+Workbook+".read_row("+number1+","+number2+")\n";
+      //   }
+      //   else if(number2=='')
+      //   { 
+      //     if(number1=='')
+      //       {
+      //         code += VAR +"="+Workbook+".read_row("+number3+")\n";
+      //       }
+      //     else 
+      //     code += VAR +"="+Workbook+".read_row("+number1+","+number3+")\n";
+      //   }
+      //   else if(number1=='')
+      //   code += VAR +"="+Workbook+".read_row("+number2+","+number3+")\n";
+      //   else
+      //   code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
+      // }
+      // else if(number3=='')
+      // {
+      //   if(number2=='')
+      //   {
+      //     if(number1=='')
+      //     {
+      //       code += VAR +"="+Workbook+".read_row("+number4+")\n";
+      //     }
+      //     else
+      //     code += VAR +"="+Workbook+".read_row("+number1+","+number4+")\n";
+      //   }
+      //   else if(number1=='')
+      //   {
+      //     code += VAR +"="+Workbook+".read_row("+number3+")\n";
+      //   }
+      //   else
+      //   code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number4+")\n";
+      // }
+      // else if(number2=='')
+      // { 
+      //   if(number1=='')
+      //   {
+      //     code += VAR +"="+Workbook+".read_row("+number3+","+number4+")\n";
+      //   }
+      //   else
+      //   code += VAR +"="+Workbook+".read_row("+number1+","+number3+","+number4+")\n";
+      // }
+      // else if(number1=='')
+      // { 
+      //   code += VAR +"="+Workbook+".read_row("+number2+","+number3+","+number4+")\n";
+      // }
+      // else
       code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+","+number4+")\n";
+      return code;
+    }   
+}
+function registerFetchRowNoheader(){
+  var fetchRowNoheader ={
+    "message0":"获取名为%1的工作簿中\n第%2行的第%3-%4列，将内容存入%5中\n",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String"
+      },
+      {
+        "type": "field_input",
+        "name":"row",
+        "check":"number",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"columnF",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"columnT",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String"
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":160,
+    "tooltip":"{workbook} Fetch Row {row} {column_from} {column_to}{header_row} As {var} : 获取一行\
+    \nworkbook: Excel 文档变量名\
+    \nrow: 行号，为空则采用当前活跃行\
+    \ncolumn_from: 起点列号，为空则采用第一列\
+    \ncolumn_to: 终点列号，为空则读取到空值为止\
+    \nheader_row: header 所在行号，为空表示不需要 header\
+    \nvar: 表示获取结果的变量名"
+  }
+  Blockly.Blocks['fetchRowNoheader']=
+    {
+      init: function() {
+        this.jsonInit(fetchRowNoheader);
+      } 
+    };
+    python.pythonGenerator.forBlock['fetchRowNoheader'] = function(block, generator) {
+      // Collect argument strings.
+      const Workbook = block.getFieldValue('Workbook');
+      var number1= block.getFieldValue('row');
+      if(number1!='')
+      number1='row='+number1;
+      var number2=block.getFieldValue('columnF');
+      if(number2!='')
+      number2='column_from='+number2;
+      var number3=block.getFieldValue('columnT');
+      if(number3!='')
+      number3='column_to='+number3;
+      var number4=block.getFieldValue('header_row');
+      if(number4!='')
+      number4='header_row='+number4;
+      var VAR=block.getFieldValue('VAR');
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
       return code;
     }   
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"获取名为%1的Workbook中的\n第%2列，将内容存入%5\n注：默认为该列全行，填写下列参数：起始行%3，结束行%4\n",
+    "message0":"获取名为%1的工作簿中\n第%2列的第%3-%4行，将内容存入%5\n",
     "args0": [
       {
         "type": "field_input",
@@ -990,38 +1070,38 @@ function registerFetchCol(){
         {
           code+='    ';
         }
-      if(number3=='')
-        {
-          if(number2=='')
-          {
-            if(number1=='')
-            {
-              code +=VAR+"="+Workbook+".read_col()\n";
-            }
-            else
-            code +=VAR+"="+Workbook+".read_col("+number1+")\n";
-          }
-          else if(number1=='')
-          {
-            code +=VAR+"="+Workbook+".read_col("+number2+")\n";
-          }
-          else
-          code +=VAR+"="+Workbook+".read_col("+number1+","+number2+")\n";
-        }
-      else if(number2=='')
-      {
-        if(number1=='')
-        {
-          code +=VAR+"="+Workbook+".read_col("+number3+")\n";
-        }
-        else 
-        code +=VAR+"="+Workbook+".read_col("+number1+","+number3+")\n";
-      }
-      else if(number1=='')
-      {
-        code +=VAR+"="+Workbook+".read_col("+number2+","+number3+")\n";
-      }
-      else
+      // if(number3=='')
+      //   {
+      //     if(number2=='')
+      //     {
+      //       if(number1=='')
+      //       {
+      //         code +=VAR+"="+Workbook+".read_col()\n";
+      //       }
+      //       else
+      //       code +=VAR+"="+Workbook+".read_col("+number1+")\n";
+      //     }
+      //     else if(number1=='')
+      //     {
+      //       code +=VAR+"="+Workbook+".read_col("+number2+")\n";
+      //     }
+      //     else
+      //     code +=VAR+"="+Workbook+".read_col("+number1+","+number2+")\n";
+      //   }
+      // else if(number2=='')
+      // {
+      //   if(number1=='')
+      //   {
+      //     code +=VAR+"="+Workbook+".read_col("+number3+")\n";
+      //   }
+      //   else 
+      //   code +=VAR+"="+Workbook+".read_col("+number1+","+number3+")\n";
+      // }
+      // else if(number1=='')
+      // {
+      //   code +=VAR+"="+Workbook+".read_col("+number2+","+number3+")\n";
+      // }
+      // else
         code +=VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
       return code;
     }   
@@ -1029,7 +1109,7 @@ function registerFetchCol(){
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"获取名为%1的Workbook中\n第%2行到第%3行，第%4列到第%5列的全部内容\n是否需要头部？%6\n存入%7",
+    "message0":"获取名为%1的工作簿中\n第%2行-%3行，第%4列-%5列的全部内容\n是否需要头部？%6\n将内容存入%7",
     "args0": [
       {
         "type": "field_input",
@@ -1128,7 +1208,7 @@ function registerFetchArea(){
 }
 function registerInsertCol(){
   var InsertCol ={
-    "message0":"在名为%1的工作表之中插入新列，列号为%2，列值为%3",
+    "message0":"在名为%1的工作簿之中插入新列，列号为%2，列值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1192,9 +1272,65 @@ function registerInsertCol(){
     }   
 
 }
+function registerInsertRowNoheader(){
+  var InsertRowNoheader ={
+    "message0":"往名为%1的工作簿中插入新行，行号为%2，行值为%3",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"row",
+        "value": 100,
+        "min":1,
+      },
+      {
+        "type": "field_input",
+        "check":"string",
+        "name":"row_content",
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":160,
+    "tooltip":'{workbook} Insert Row {row} {row_content}: 插入行\
+    \nworkbook: Excel 文档变量名\
+    \nrow_content: 待写入的行'
+  }
+  Blockly.Blocks['InsertRowNoheader']=
+    {
+      init: function() {
+        this.jsonInit(InsertRowNoheader);
+      } 
+    };
+    python.pythonGenerator.forBlock['InsertRowNoheader'] = function(block, generator) {
+      // Collect argument strings.
+      const workbook = block.getFieldValue('Workbook');
+      var row= block.getFieldValue('row');
+      if(row!='')
+      row='row='+row;
+      var row_content=block.getFieldValue('row_content');
+      if(row_content!='')
+      row_content='row_content='+row_content;
+      var header_row=block.getFieldValue('header_row');
+      if(header_row!='')
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code+=workbook+".insert_row("+row+","+row_content+")\n";
+      return code;
+    }   
+
+}
 function registerInsertRow(){
   var InsertRow ={
-    "message0":"往名为%1的工作表中插入新行，行号为%2，行值为%3，行头为%4（不需要则为空）",
+    "message0":"往名为%1的工作簿中插入新行，行号为%2，行值为%3，行头为%4",
     "args0": [
       {
         "type": "field_input",
@@ -1227,7 +1363,7 @@ function registerInsertRow(){
     "tooltip":'{workbook} Insert Row {row} {row_content} {header_row} : 插入行\
     \nworkbook: Excel 文档变量名\
     \nrow_content: 待写入的行\
-    \nheader_row: header 所在行号，为空表示不需要 header'
+    \nheader_row: header 所在行号'
   }
   Blockly.Blocks['InsertRow']=
     {
@@ -1252,9 +1388,6 @@ function registerInsertRow(){
       {
         code+='    ';
       }
-      if(header_row=='')
-      code+=workbook+".insert_row("+row+","+row_content+")\n";
-      else
       code+=workbook+".insert_row("+row+","+row_content+","+header_row+")\n";
       return code;
     }   
@@ -1262,7 +1395,7 @@ function registerInsertRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"为名为%1的工作表第%2行,第%3列的单元格设置新值%4",
+    "message0":"为名为%1的工作簿中的第%2行,第%3列设置新值%4",
     "args0": [
       {
         "type": "field_input",
@@ -1385,7 +1518,7 @@ function registerSettoBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"在名为%1的工作表里创建新的sheet%2",
+    "message0":"在名为%1的工作簿里创建新的sheet%2",
     "args0": [
       {
         "type": "field_input",
@@ -1425,7 +1558,7 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"在名为%1的工作表里设置活跃sheet%2",
+    "message0":"在名为%1的工作簿里设置活跃sheet%2",
     "args0": [
       {
         "type": "field_input",

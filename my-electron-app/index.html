@@ -117,25 +117,32 @@
       <block type="addWorkbook"></block>
       <block type="saveWorkbook"></block>
     </category>
-    <category name="Workbook字典操作" categorystyle="procedure_category">
+    <category name="Workbook集合操作" categorystyle="procedure_category">
       <!-- <block type="text"></block> -->
       <block type="MakeWorkbookDict"></block>
       <block type="SetDictHeaders"></block>
       <block type="AddRowDict"></block>
       <block type="GenerateFile"></block>
     </category>
-    <category name="行、列及单元格操作" categorystyle="loop_category">
+    <category name="行、列操作" categorystyle="loop_category">
+      <!-- <block type="math_number" gap="32">
+        <field name="NUM">0</field>
+      </block> -->
+      <block type="fetchRowNoheader"></block>
+      <block type="fetchRow"></block>
+      <block type="fetchCol"></block>
+      <block type="InsertRowNoheader"></block>
+      <block type="InsertRow"></block>
+      <block type="InsertCol"></block>
+    </category>
+    <category name="单元格操作" categorystyle="loop_category">
       <!-- <block type="math_number" gap="32">
         <field name="NUM">0</field>
       </block> -->
       <block type="MoveActiveCell"></block>
       <block type="SetActiveCell"></block>
       <block type="fetchCell"></block>
-      <block type="fetchRow"></block>
-      <block type="fetchCol"></block>
       <block type="fetchArea"></block>
-      <block type="InsertRow"></block>
-      <block type="InsertCol"></block>
       <block type="SetCellValue"></block>
     </category>
     <category name="Sheet操作" categorystyle="math_category">
@@ -153,7 +160,8 @@
       <block type="Foreach"></block>
     </category>
     <category name="设置变量" categorystyle="variable_category">
-      <block type="setto"></blockquote>
+      <block type="setto"></block>
+      <block type="Variable"></block>
     </category>
     <category name="条件语句" categorystyle="procedure_category">
       <block type="Compare"></block>
