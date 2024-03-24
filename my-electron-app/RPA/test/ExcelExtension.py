@@ -1,6 +1,13 @@
 from RPA.Excel.Application import Application as ExcelApplication
 
 
+def index_to_character(index: int):
+    result = ''
+    while index != 0:
+        result = chr(ord('A') + index % 26 - 1) + result
+        index = index // 26
+    return result
+
 class ExcelApplicationExtension(ExcelApplication):
     def __init__(self):
         super().__init__()
@@ -26,44 +33,44 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: int = None,
         header_row: int = None,
     ):
-        if row is None:
-            row = self.active_row
-
-        index_from = column_from - 1 if column_from is not None else None
-        index_to = column_to if column_to is not None else None
-        contents = self.app.Rows(row).Value[0][index_from : index_to]
+        index_from = column_from - 1
+        index_to = column_to
+        contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         if header_row is None:
             return contents
         else:
-            headers = self.app.Rows(header_row).Value[0][index_from : index_to]
+            headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
             contents_dict = {}
             for header, content in zip(headers, contents):
                 contents_dict[header] = content
             return contents_dict
-        
-    def insert(self, row_content):
-        self.app.Rows(1).Insert()
-        self.app.Rows(1).Value = row_content
 
-    def insert_row(self, row: int = None, row_content=None, header_row: int = None):
-        if row is None:
-            row = self.active_row
+    def insert_row(self, row: int = None, 
+                   row_content=None,
+                   column_from: int = None,
+                   columne_to: int = None):
+        row_value = row_content
+        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
+        self.worksheet.Range(rangeStr).Value = row_value
 
-        if header_row is not None:
-            headers = self.read_row(header_row)
-            row_value = []
-            for header in headers:
-                if header in row_content.keys():
-                    row_value.append(row_content[header])
-        else:
-            row_value = row_content
-        self.app.Rows(row).Value = row_value
+    def insert_row_with_header(self, 
+                               row: int = None, 
+                               row_content = None, 
+                               header_row: int = None, 
+                               column_from: int = None,
+                               columne_to: int = None):
+        headers = self.read_row(row=header_row, column_from=column_from, column_to=columne_to)
+        row_value = []
+        for header in headers:
+            if header in row_content.keys():
+                row_value.append(row_content[header])
+        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
+        self.worksheet.Range(rangeStr).Value = row_value
 
-    def insert_column(self, column: int = None, column_content=None):
-        if column is None:
-            column = self.active_column
+    def insert_column(self, column: int = None, column_content=None, row_from: int = None, row_to: int = None):
         value = [(content,) for content in column_content]
-        self.app.Columns(column).Value = value
+        rangeStr = str(index_to_character(column)) + str(row_from) + ':' + str(index_to_character(column)) + str(row_to)
+        self.worksheet.Range(rangeStr).Value = value
 
     def read_column(
         self,
@@ -74,10 +81,10 @@ class ExcelApplicationExtension(ExcelApplication):
         if column is None:
             column = self.active_column
 
-        index_from = row_from - 1 if row_from is not None else None
-        index_to = row_to if row_to is not None else None
+        index_from = row_from - 1
+        index_to = row_to
 
-        contents = [content[0] for content in self.app.Columns(column).Value[index_from : index_to]]
+        contents = [content[0] for content in self.worksheet.Columns(column).Value[index_from : index_to]]
         return contents
 
     def read_area(
@@ -88,9 +95,6 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: int = None,
         with_header: bool = False,
     ):
-        row_from = row_from if row_from is not None else 1
-        column_from = column_from if column_from is not None else 1
-
         if with_header:
             headers = self.read_row(
                 row=row_from, column_from=column_from, column_to=column_to
