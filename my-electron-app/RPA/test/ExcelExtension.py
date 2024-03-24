@@ -38,15 +38,21 @@ class ExcelApplicationExtension(ExcelApplication):
                 contents_dict[header] = content
             return contents_dict
 
-    def insert_row(self, row: int = None, row_content=None, header_row: int = None):
-        if header_row is not None:
-            headers = self.read_row(header_row)
-            row_value = []
-            for header in headers:
-                if header in row_content.keys():
-                    row_value.append(row_content[header])
-        else:
-            row_value = row_content
+    def insert_row(self, row: int = None, row_content=None):
+        row_value = row_content
+        self.worksheet.Rows(row).Value = row_value
+
+    def insert_row_with_header(self, 
+                               row: int = None, 
+                               row_content = None, 
+                               header_row: int = None, 
+                               column_from: int = None,
+                               columne_to: int = None):
+        headers = self.read_row(row=header_row, column_from=column_from, column_to=columne_to)
+        row_value = []
+        for header in headers:
+            if header in row_content.keys():
+                row_value.append(row_content[header])
         self.worksheet.Rows(row).Value = row_value
 
     def insert_column(self, column: int = None, column_content=None):
