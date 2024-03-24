@@ -28,19 +28,15 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         index_from = column_from - 1
         index_to = column_to
-        contents = self.app.Rows(row).Value[0][index_from : index_to]
+        contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         if header_row is None:
             return contents
         else:
-            headers = self.app.Rows(header_row).Value[0][index_from : index_to]
+            headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
             contents_dict = {}
             for header, content in zip(headers, contents):
                 contents_dict[header] = content
             return contents_dict
-        
-    def insert(self, row_content):
-        self.app.Rows(1).Insert()
-        self.app.Rows(1).Value = row_content
 
     def insert_row(self, row: int = None, row_content=None, header_row: int = None):
         if header_row is not None:
@@ -51,11 +47,11 @@ class ExcelApplicationExtension(ExcelApplication):
                     row_value.append(row_content[header])
         else:
             row_value = row_content
-        self.app.Rows(row).Value = row_value
+        self.worksheet.Rows(row).Value = row_value
 
     def insert_column(self, column: int = None, column_content=None):
         value = [(content,) for content in column_content]
-        self.app.Columns(column).Value = value
+        self.worksheet.Columns(column).Value = value
 
     def read_column(
         self,
@@ -69,7 +65,7 @@ class ExcelApplicationExtension(ExcelApplication):
         index_from = row_from - 1
         index_to = row_to
 
-        contents = [content[0] for content in self.app.Columns(column).Value[index_from : index_to]]
+        contents = [content[0] for content in self.worksheet.Columns(column).Value[index_from : index_to]]
         return contents
 
     def read_area(
