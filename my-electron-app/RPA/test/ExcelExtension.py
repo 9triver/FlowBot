@@ -26,11 +26,8 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: int = None,
         header_row: int = None,
     ):
-        if row is None:
-            row = self.active_row
-
-        index_from = column_from - 1 if column_from is not None else None
-        index_to = column_to if column_to is not None else None
+        index_from = column_from - 1
+        index_to = column_to
         contents = self.app.Rows(row).Value[0][index_from : index_to]
         if header_row is None:
             return contents
@@ -46,9 +43,6 @@ class ExcelApplicationExtension(ExcelApplication):
         self.app.Rows(1).Value = row_content
 
     def insert_row(self, row: int = None, row_content=None, header_row: int = None):
-        if row is None:
-            row = self.active_row
-
         if header_row is not None:
             headers = self.read_row(header_row)
             row_value = []
@@ -60,8 +54,6 @@ class ExcelApplicationExtension(ExcelApplication):
         self.app.Rows(row).Value = row_value
 
     def insert_column(self, column: int = None, column_content=None):
-        if column is None:
-            column = self.active_column
         value = [(content,) for content in column_content]
         self.app.Columns(column).Value = value
 
@@ -74,8 +66,8 @@ class ExcelApplicationExtension(ExcelApplication):
         if column is None:
             column = self.active_column
 
-        index_from = row_from - 1 if row_from is not None else None
-        index_to = row_to if row_to is not None else None
+        index_from = row_from - 1
+        index_to = row_to
 
         contents = [content[0] for content in self.app.Columns(column).Value[index_from : index_to]]
         return contents
@@ -88,9 +80,6 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: int = None,
         with_header: bool = False,
     ):
-        row_from = row_from if row_from is not None else 1
-        column_from = column_from if column_from is not None else 1
-
         if with_header:
             headers = self.read_row(
                 row=row_from, column_from=column_from, column_to=column_to
