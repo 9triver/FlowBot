@@ -1,6 +1,13 @@
 from RPA.Excel.Application import Application as ExcelApplication
 
 
+def index_to_character(index: int):
+    result = ''
+    while index != 0:
+        result = chr(ord('A') + index % 26 - 1) + result
+        index = index // 26
+    return result
+
 class ExcelApplicationExtension(ExcelApplication):
     def __init__(self):
         super().__init__()
@@ -38,9 +45,13 @@ class ExcelApplicationExtension(ExcelApplication):
                 contents_dict[header] = content
             return contents_dict
 
-    def insert_row(self, row: int = None, row_content=None):
+    def insert_row(self, row: int = None, 
+                   row_content=None,
+                   column_from: int = None,
+                   columne_to: int = None):
         row_value = row_content
-        self.worksheet.Rows(row).Value = row_value
+        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
+        self.worksheet.Range(rangeStr).Value = row_value
 
     def insert_row_with_header(self, 
                                row: int = None, 
@@ -53,11 +64,13 @@ class ExcelApplicationExtension(ExcelApplication):
         for header in headers:
             if header in row_content.keys():
                 row_value.append(row_content[header])
-        self.worksheet.Rows(row).Value = row_value
+        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
+        self.worksheet.Range(rangeStr).Value = row_value
 
-    def insert_column(self, column: int = None, column_content=None):
+    def insert_column(self, column: int = None, column_content=None, row_from: int = None, row_to: int = None):
         value = [(content,) for content in column_content]
-        self.worksheet.Columns(column).Value = value
+        rangeStr = str(index_to_character(column)) + str(row_from) + ':' + str(index_to_character(column)) + str(row_to)
+        self.worksheet.Range(rangeStr).Value = value
 
     def read_column(
         self,
