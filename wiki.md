@@ -123,29 +123,46 @@ def solve_challenge():
 
     * column_to: 终点列号，为空则读取到空值为止
 
-    * header_row: header 所在行号，为空表示不需要 header
-
     * var: 表示获取结果的变量名
 
     * ```
-        {var} = {workbook}.read_row(row={row}, column_from={column_from}, column_to={column_to}, header_row={header_row})
+        {var} = {workbook}.read_row(row={row}, column_from={column_from}, column_to={column_to})
         ```
-
-* {workbook} Fetch Column {column} {row_from} {row_to} As {var} :  获取一列
+    
+* {workbook} Fetch Row {row} {column_from} {column_to}  With Header {header_row} As {var} :  获取的一行，以某行作为列名
+    
     * workbook: Excel 文档变量名
-
-    * column: 列号，为空则采用当前活跃列
-
-    * row_from: 起点行号，为空则采用第一行
-
-    * row_to: 终点行号，为空则读取到空值为止
-
+    
+    * row: 行号，为空则采用当前活跃行
+    
+    * column_from: 起点列号，为空则采用第一列
+    
+    * column_to: 终点列号，为空则读取到空值为止
+    
+    * header_row: header 所在行号
+    
     * var: 表示获取结果的变量名
-
+    
+    * ```
+        {var} = {workbook}.read_row_with_header(row={row}, column_from={column_from}, column_to={column_to}, header_row={header_row})
+        ```
+    
+* {workbook} Fetch Column {column} {row_from} {row_to} As {var} :  获取一列
+    
+    * workbook: Excel 文档变量名
+    
+    * column: 列号，为空则采用当前活跃列
+    
+    * row_from: 起点行号
+    
+    * row_to: 终点行号
+    
+    * var: 表示获取结果的变量名
+    
     * ```
         {var} = {workbook}.read_column(column={column}, row_from={row_from}, row_to={row_to})
         ```
-
+    
 * {workbook} Fetch area {row_from} {row_to} {column_from} {column_to} {with_header} As {var} : 获取一个区域
 
     * workbook: Excel 文档变量名
@@ -158,34 +175,72 @@ def solve_challenge():
 
     * column_to: 终点列号
 
-    * with_header: 是否将第一行作为列名
+    * var: 表示获取结果的变量名
+
+    * ```
+        {var} = {workbook}.read_area(row_from={row_from}, row_to={row_to}, column_from={column_from}, column_to={column_to})
+        ```
+    
+* {workbook} Fetch area with header {row_from} {row_to} {column_from} {column_to} {with_header} As {var} : 获取一个区域，以第一行作为列名
+
+    * workbook: Excel 文档变量名
+
+    * row_from: 起点行号
+
+    * row_to: 终点行号
+
+    * column_from: 起点列号
+
+    * column_to: 终点列号
 
     * var: 表示获取结果的变量名
 
     * ```
-        {var} = {workbook}.read_area(row_from={row_from}, row_to={row_to}, column_from={column_from}, column_to={column_to}, with_header={with_header})
+        {var} = {workbook}.read_area_with_header(row_from={row_from}, row_to={row_to}, column_from={column_from}, column_to={column_to})
         ```
 
-* {workbook} Insert Row {row} {row_content} {header_row} :  插入行
+* {workbook} Write Row {row} {row_content} {header_row} :  插入行
 
     * workbook: Excel 文档变量名
 
     * row_content: 待写入的行
 
+    * column_from: 起点列号
+
+    * column_to: 终点列号
+
+    * ```
+        {workbook}.write_row(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to})
+        ```
+
+* {workbook} Write Row {row} {row_content} {column_from} {column_to} With Header {header_row} :  插入带有列名信息的行
+
+    * workbook: Excel 文档变量名
+
+    * row_content: 待写入的行
+
+    * column_from: 起点列号
+
+    * column_to: 终点列号
+
     * header_row: header 所在行号，为空表示不需要 header
 
     * ```
-        {workbook}.insert_row(row={row}, row_content={row_content}, header_row={header_row})
+        {workbook}.write_row(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to}, header_row={header_row})
         ```
 
-* {workbook} Insert Column {column} {column_content} : 插入列
+* {workbook} WriteColumn {column} {column_content} : 插入列
 
     * workbook: Excel 文档变量名
 
     * column_content: 待写入的列
 
+    * row_from: 起点行号
+
+    * row_to: 终点行号
+
     * ```
-        {workbook}.insert_column(column={column}, column_content={column_content})
+        {workbook}.write_column(column={column}, column_content={column_content}, row_from={row_from}, row_to={row_to})
         ```
 
 * {workbook} Set Cell {row} {column} {value}: 设置单元格的值
