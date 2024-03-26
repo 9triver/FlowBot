@@ -30,22 +30,30 @@ class ExcelApplicationExtension(ExcelApplication):
         self,
         row: int = None,
         column_from: int = None,
+        column_to: int = None
+    ):
+        index_from = column_from - 1
+        index_to = column_to
+        contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
+        return contents
+
+    def read_row_with_header(
+        self,
+        row: int = None,
+        column_from: int = None,
         column_to: int = None,
         header_row: int = None,
     ):
         index_from = column_from - 1
         index_to = column_to
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
-        if header_row is None:
-            return contents
-        else:
-            headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
-            contents_dict = {}
-            for header, content in zip(headers, contents):
-                contents_dict[header] = content
-            return contents_dict
-
-    def insert_row(self, row: int = None, 
+        headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
+        contents_dict = {}
+        for header, content in zip(headers, contents):
+            contents_dict[header] = content
+        return contents_dict
+        
+    def write_row(self, row: int = None, 
                    row_content=None,
                    column_from: int = None,
                    columne_to: int = None):
@@ -53,21 +61,23 @@ class ExcelApplicationExtension(ExcelApplication):
         rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
-    def insert_row_with_header(self, 
+    def write_row_with_header(self, 
                                row: int = None, 
                                row_content = None, 
-                               header_row: int = None, 
                                column_from: int = None,
-                               columne_to: int = None):
+                               columne_to: int = None, 
+                               header_row: int = None):
         headers = self.read_row(row=header_row, column_from=column_from, column_to=columne_to)
         row_value = []
         for header in headers:
             if header in row_content.keys():
                 row_value.append(row_content[header])
+            else:
+                row_value.append('')
         rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
-    def insert_column(self, column: int = None, column_content=None, row_from: int = None, row_to: int = None):
+    def write_column(self, column: int = None, column_content=None, row_from: int = None, row_to: int = None):
         value = [(content,) for content in column_content]
         rangeStr = str(index_to_character(column)) + str(row_from) + ':' + str(index_to_character(column)) + str(row_to)
         self.worksheet.Range(rangeStr).Value = value
@@ -93,27 +103,37 @@ class ExcelApplicationExtension(ExcelApplication):
         row_to: int = None,
         column_from: int = None,
         column_to: int = None,
-        with_header: bool = False,
     ):
-        if with_header:
-            headers = self.read_row(
-                row=row_from, column_from=column_from, column_to=column_to
+        row_contents = []
+        for row in range(row_from, row_to + 1):
+            row_content = self.read_row(
+                row=row, column_from=column_from, column_to=column_to
             )
-            row_from += 1
+            row_contents.append(row_content)
+
+        return row_contents
+
+    def read_area_with_header(
+        self,
+        row_from: int = None,
+        row_to: int = None,
+        column_from: int = None,
+        column_to: int = None,
+    ):
+        headers = self.read_row(
+            row=row_from, column_from=column_from, column_to=column_to
+        )
+        row_from += 1
 
         row_contents = []
         for row in range(row_from, row_to + 1):
             row_content = self.read_row(
                 row=row, column_from=column_from, column_to=column_to
             )
-            if with_header:
-                row_dict = {}
-                for i in range(0, len(headers)):
-                    row_dict[headers[i]] = row_content[i]
-                row_contents.append(row_dict)
-            else:
-                row_contents.append(row_content)
-
+            row_dict = {}
+            for i in range(0, len(headers)):
+                row_dict[headers[i]] = row_content[i]
+            row_contents.append(row_dict)
         return row_contents
 
     class WorkbookDict:
@@ -147,10 +167,10 @@ class ExcelApplicationExtension(ExcelApplication):
                 if self.headers is None:
                     i = 1
                     for row_content in row_contents:
-                        app.insert_row(row=i, row_content=row_content)
+                        app.write_row(row=i, row_content=row_content)
                         i += 1
                 else:
-                    app.insert_row(row=self.header_row, row_content=self.headers)
+                    app.write_row(row=self.header_row, row_content=self.headers)
                     i = 1
                     for row_content in row_contents:
                         if i == self.header_row:
@@ -159,7 +179,7 @@ class ExcelApplicationExtension(ExcelApplication):
                         for header in self.headers:
                             if header in row_content.keys():
                                 row_value.append(row_content[header])
-                        app.insert_row(
+                        app.write_row(
                             row=i, row_content=row_value
                         )
                         i += 1
