@@ -130,7 +130,7 @@ def solve_challenge():
         ```
     
 * {workbook} Fetch Row {row} {column_from} {column_to}  With Header {header_row} As {var} :  获取的一行，以某行作为列名
-    
+  
     * workbook: Excel 文档变量名
     
     * row: 行号，为空则采用当前活跃行
@@ -148,7 +148,7 @@ def solve_challenge():
         ```
     
 * {workbook} Fetch Column {column} {row_from} {row_to} As {var} :  获取一列
-    
+  
     * workbook: Excel 文档变量名
     
     * column: 列号，为空则采用当前活跃列
@@ -229,7 +229,7 @@ def solve_challenge():
         {workbook}.write_row(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to}, header_row={header_row})
         ```
 
-* {workbook} WriteColumn {column} {column_content} : 插入列
+* {workbook} Write Column {column} {column_content} : 插入列
 
     * workbook: Excel 文档变量名
 
