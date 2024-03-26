@@ -133,9 +133,9 @@ function start() {
   registerFetchRow();
   registerFetchCol();
   registerFetchArea();
-  registerInsertRowNoheader();
-  registerInsertRow();
-  registerInsertCol();
+  registerWriteRowNoheader();
+  registerWriteRow();
+  registerWriteCol();
   registerSetCellValue();
 
   registerCreateSheet();
@@ -802,7 +802,7 @@ function registerFetchRow(){
         "type": "field_input",
         "check":"number",
         "name":"columnT",
-        "text":"2",
+        "text":"3",
       },
       {
         "type": "field_input",
@@ -846,9 +846,9 @@ function registerFetchRow(){
       var number3=block.getFieldValue('columnT');
       if(number3!='')
       number3='column_to='+number3;
-      var number4=block.getFieldValue('header_row');
-      if(number4!='')
-      number4='header_row='+number4;
+      var header_row=block.getFieldValue('header_row');
+      if(header_row!='')
+      header_row='header_row='+header_row;
       var VAR=block.getFieldValue('VAR');
       var code ="";
         for(var i=0;i<depth;i++)
@@ -919,7 +919,7 @@ function registerFetchRow(){
       //   code += VAR +"="+Workbook+".read_row("+number2+","+number3+","+number4+")\n";
       // }
       // else
-      code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+","+number4+")\n";
+      code += VAR +"="+Workbook+".read_row_with_header("+number1+","+number2+","+number3+","+header_row+")\n";
       return code;
     }   
 }
@@ -949,7 +949,7 @@ function registerFetchRowNoheader(){
         "type": "field_input",
         "check":"number",
         "name":"columnT",
-        "text":"2",
+        "text":"3",
       },
       {
         "type": "field_input",
@@ -1026,7 +1026,7 @@ function registerFetchCol(){
         "type": "field_input",
         "check":"number",
         "name":"rowT",
-        "text":"2",
+        "text":"3",
       },
       {
         "type": "field_input",
@@ -1185,7 +1185,6 @@ function registerFetchArea(){
       var number4=block.getFieldValue('colF');
       number4='column_to='+number4;
       var header=block.getFieldValue('with_header');
-      if(header!='')
       header='header='+header;
       var VAR=block.getFieldValue('VAR');
       var code ="";
@@ -1193,17 +1192,17 @@ function registerFetchArea(){
         {
           code+='    ';
         }
-      if(header=='')
+      if(header=='header=True')
+      code +=VAR+"="+Workbook+".read_area_wite_header("+number1+","+number2+","+number3+","+number4+")\n";
+      else if(header=='header=False')
       code +=VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+")\n";
-      else
-      code +=VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+","+header+")\n";
       return code;
     }   
 
 }
-function registerInsertCol(){
-  var InsertCol ={
-    "message0":"在名为%1的工作簿之中插入新列，列号为%2，列值为%3",
+function registerWriteCol(){
+  var WriteCol ={
+    "message0":"在名为%1的工作簿的第%4行和第%5行之间写入新列，列号为%2，列值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1223,21 +1222,30 @@ function registerInsertCol(){
         "name":"col_content",
         "text":"2",
       },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"row_from",
+        "text":"3",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"row_to",
+        "text":"4",
+      },
     ],
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
-    "tooltip":'{workbook} Insert Column {column} {column_content} : 插入列\
-    \nworkbook: Excel 文档变量名\
-    \ncolumn_content: 待写入的列'
   }
-  Blockly.Blocks['InsertCol']=
+  Blockly.Blocks['WriteCol']=
     {
       init: function() {
-        this.jsonInit(InsertCol);
+        this.jsonInit(WriteCol);
       } 
     };
-    python.pythonGenerator.forBlock['InsertCol'] = function(block, generator) {
+    python.pythonGenerator.forBlock['WriteCol'] = function(block, generator) {
       // Collect argument strings.
       const workbook = block.getFieldValue('Workbook');
       var column= block.getFieldValue('column');
@@ -1246,31 +1254,35 @@ function registerInsertCol(){
       var col_content=block.getFieldValue('col_content');
       if(col_content!='')
       col_content='column_content='+col_content;
+      var row_from=block.getFieldValue('row_from');
+      row_from='row_form='+row_from;
+      var row_to=block.getFieldValue('row_to');
+      row_to='row_to='+row_to;
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-        if(col_content=='')
-      {
-        if(column=='')
-        code +=workbook+".insert_column()\n";
-        else
-        code +=workbook+".insert_column("+column+")\n";
-      }
-      else if(column=='')
-      {
-        code+=workbook+".insert_column("+col_content+")\n";
-      }
-      else
-        code+=workbook+".insert_column("+column+","+col_content+")\n";
+      //   if(col_content=='')
+      // {
+      //   if(column=='')
+      //   code +=workbook+".insert_column()\n";
+      //   else
+      //   code +=workbook+".insert_column("+column+")\n";
+      // }
+      // else if(column=='')
+      // {
+      //   code+=workbook+".insert_column("+col_content+")\n";
+      // }
+      // else
+        code+=workbook+".write_column("+column+","+col_content+","+row_form+","+row_to+")\n";
       return code;
     }   
 
 }
-function registerInsertRowNoheader(){
-  var InsertRowNoheader ={
-    "message0":"往名为%1的工作簿中插入新行，行号为%2，行值为%3",
+function registerWriteRowNoheader(){
+  var WriteRowNoheader ={
+    "message0":"在名为%1的工作簿的第%4列和第%5列之间写入新行，行号为%2，行值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1290,6 +1302,18 @@ function registerInsertRowNoheader(){
         "name":"row_content",
         "text":"",
       },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"column_from",
+        "text":"3",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"column_to",
+        "text":"4",
+      },
     ],
     "previousStatement": null,
     "nextStatement": null,
@@ -1298,13 +1322,13 @@ function registerInsertRowNoheader(){
     \nworkbook: Excel 文档变量名\
     \nrow_content: 待写入的行'
   }
-  Blockly.Blocks['InsertRowNoheader']=
+  Blockly.Blocks['WriteRowNoheader']=
     {
       init: function() {
-        this.jsonInit(InsertRowNoheader);
+        this.jsonInit(WriteRowNoheader);
       } 
     };
-    python.pythonGenerator.forBlock['InsertRowNoheader'] = function(block, generator) {
+    python.pythonGenerator.forBlock['WriteRowNoheader'] = function(block, generator) {
       // Collect argument strings.
       const workbook = block.getFieldValue('Workbook');
       var row= block.getFieldValue('row');
@@ -1316,18 +1340,22 @@ function registerInsertRowNoheader(){
       var header_row=block.getFieldValue('header_row');
       if(header_row!='')
       var code ="";
+      var column_from=block.getFieldValue('column_from');
+      column_from='column_from='+column_from;
+      var column_to=block.getFieldValue('column_to');
+      column_to='column_to='+column_to;
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code+=workbook+".insert_row("+row+","+row_content+")\n";
+      code+=workbook+".write_row("+row+","+row_content+","+column_from+","+column_to+")\n";
       return code;
     }   
 
 }
-function registerInsertRow(){
-  var InsertRow ={
-    "message0":"往名为%1的工作簿中插入新行，行号为%2，行值为%3，行头为%4",
+function registerWriteRow(){
+  var WriteRow ={
+    "message0":"在名为%1的工作簿的第%5列和第%6列之间写入新行，行号为%2，行值为%3，行头为%4",
     "args0": [
       {
         "type": "field_input",
@@ -1353,6 +1381,18 @@ function registerInsertRow(){
         "name":"header_row",
         "text":"2",
       },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"column_from",
+        "text":"5",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"column_to",
+        "text":"6",
+      },
     ],
     "previousStatement": null,
     "nextStatement": null,
@@ -1362,13 +1402,13 @@ function registerInsertRow(){
     \nrow_content: 待写入的行\
     \nheader_row: header 所在行号'
   }
-  Blockly.Blocks['InsertRow']=
+  Blockly.Blocks['WriteRow']=
     {
       init: function() {
-        this.jsonInit(InsertRow);
+        this.jsonInit(WriteRow);
       } 
     };
-    python.pythonGenerator.forBlock['InsertRow'] = function(block, generator) {
+    python.pythonGenerator.forBlock['WriteRow'] = function(block, generator) {
       // Collect argument strings.
       const workbook = block.getFieldValue('Workbook');
       var row= block.getFieldValue('row');
@@ -1380,12 +1420,16 @@ function registerInsertRow(){
       var header_row=block.getFieldValue('header_row');
       if(header_row!='')
       header_row='header_row='+header_row;
+      var column_from=block.getFieldValue('column_from');
+      column_from='column_from='+column_from;
+      var column_to=block.getFieldValue('column_to');
+      column_to='column_to'+column_to;
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code+=workbook+".insert_row("+row+","+row_content+","+header_row+")\n";
+      code+=workbook+".write_row_with_header("+row+","+row_content+","+","+column_from+","+column_to+","+header_row+")\n";
       return code;
     }   
 
