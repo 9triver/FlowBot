@@ -199,7 +199,7 @@ def solve_challenge():
         {var} = {workbook}.read_area_with_header(row_from={row_from}, row_to={row_to}, column_from={column_from}, column_to={column_to})
         ```
 
-* {workbook} Write Row {row} {row_content} {header_row} :  插入行
+* {workbook} Write Row {row} {row_content} {header_row} :  写入行
 
     * workbook: Excel 文档变量名
 
@@ -213,7 +213,7 @@ def solve_challenge():
         {workbook}.write_row(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to})
         ```
 
-* {workbook} Write Row {row} {row_content} {column_from} {column_to} With Header {header_row} :  插入带有列名信息的行
+* {workbook} Write Row {row} {row_content} {column_from} {column_to} With Header {header_row} :  写入带有列名信息的行
 
     * workbook: Excel 文档变量名
 
@@ -226,10 +226,11 @@ def solve_challenge():
     * header_row: header 所在行号，为空表示不需要 header
 
     * ```
-        {workbook}.write_row(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to}, header_row={header_row})
+        {workbook}.write_row_with_header(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to}, header_row={header_row})
         ```
 
-* {workbook} Write Column {column} {column_content} : 插入列
+
+* {workbook} Write Column {column} {column_content} : 写入列
 
     * workbook: Excel 文档变量名
 
