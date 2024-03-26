@@ -223,7 +223,7 @@ def solve_challenge():
 
     * column_to: 终点列号
 
-    * header_row: header 所在行号，为空表示不需要 header
+    * header_row: header 所在行号
 
     * ```
         {workbook}.write_row_with_header(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to}, header_row={header_row})
