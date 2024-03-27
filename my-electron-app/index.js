@@ -404,7 +404,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "为名为%1的工作簿集合下的所有工作簿设置表头：第%3行，插入到第%2行\n",
+    "message0": "将名为%1的工作簿集合的第%2行设置为表头，表头内容为%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -420,9 +420,9 @@ function registerSetDictHeaders()
       },
       {
         "type": "field_input",
-        "check":"number",
+        "check":"String",
         "name":"headers",
-        "text":"2",
+        "text":"header",
       },
     ],
     "nextStatement": null,
@@ -590,7 +590,7 @@ function registerGenerateFile()
 
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"将名为%1的工作簿中的\n活跃单元格移动%2行,%3列",
+    "message0":"将名为%1的工作簿中的活跃单元格移动%2行,%3列",
     "args0": [
       {
         "type": "field_input",
@@ -644,7 +644,7 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"将名为%1的工作簿中的\n活跃单元格设置为第%2行,第%3列",
+    "message0":"将名为%1的工作簿中的活跃单元格设置为第%2行,第%3列",
     "args0": [
       {
         "type": "field_input",
@@ -699,7 +699,7 @@ function registerSetActiveCell(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"获取名为%1的工作簿的\n第%2行 第%3列，将内容存入%4中",
+    "message0":"获取名为%1的工作簿的第%2行 第%3列，将内容存入%4中",
     "args0": [
       {
         "type": "field_input",
@@ -778,7 +778,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"获取名为%1的工作簿中\n第%2行的第%3-%4列，第%5行 为头部行，将内容存入%6中\n",
+    "message0":"获取名为%1的工作簿中第%2行的第%3-%4列，将内容存入%6中，表头为%5",
     "args0": [
       {
         "type": "field_input",
@@ -925,7 +925,7 @@ function registerFetchRow(){
 }
 function registerFetchRowNoheader(){
   var fetchRowNoheader ={
-    "message0":"获取名为%1的工作簿中\n第%2行的第%3-%4列，将内容存入%5中\n",
+    "message0":"获取名为%1的工作簿中第%2行的第%3-%4列，将内容存入%5中",
     "args0": [
       {
         "type": "field_input",
@@ -1002,7 +1002,7 @@ function registerFetchRowNoheader(){
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"获取名为%1的工作簿中\n第%2列的第%3-%4行，将内容存入%5\n",
+    "message0":"获取名为%1的工作簿中第%2列的第%3-%4行，将内容存入%5中",
     "args0": [
       {
         "type": "field_input",
@@ -1108,7 +1108,7 @@ function registerFetchCol(){
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"获取名为%1的工作簿中\n第%2行-%3行，第%4列-%5列的全部内容\n是否需要头部？%6\n将内容存入%7",
+    "message0":"获取名为%1的工作簿中第%2行-%3行，第%4列-%5列的全部内容\n是否需要头部？%6\n将内容存入%7",
     "args0": [
       {
         "type": "field_input",
@@ -1202,7 +1202,7 @@ function registerFetchArea(){
 }
 function registerWriteCol(){
   var WriteCol ={
-    "message0":"在名为%1的工作簿的第%4行和第%5行之间写入新列，列号为%2，列值为%3",
+    "message0":"写入名为%1的工作簿的第%4行-%5行的第%2列，列值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1282,7 +1282,7 @@ function registerWriteCol(){
 }
 function registerWriteRowNoheader(){
   var WriteRowNoheader ={
-    "message0":"在名为%1的工作簿的第%4列和第%5列之间写入新行，行号为%2，行值为%3",
+    "message0":"写入名为%1的工作簿的第%4列-%5列的第%2行，行值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1355,7 +1355,7 @@ function registerWriteRowNoheader(){
 }
 function registerWriteRow(){
   var WriteRow ={
-    "message0":"在名为%1的工作簿的第%5列和第%6列之间写入新行，行号为%2，行值为%3，行头为%4",
+    "message0":"写入名为%1的工作簿的第%5列-%6列的第%2行，行值为%3，表头为%4",
     "args0": [
       {
         "type": "field_input",
@@ -1423,20 +1423,20 @@ function registerWriteRow(){
       var column_from=block.getFieldValue('column_from');
       column_from='column_from='+column_from;
       var column_to=block.getFieldValue('column_to');
-      column_to='column_to'+column_to;
+      column_to='column_to='+column_to;
       var code ="";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code+=workbook+".write_row_with_header("+row+","+row_content+","+","+column_from+","+column_to+","+header_row+")\n";
+      code+=workbook+".write_row_with_header("+row+","+row_content+","+column_from+","+column_to+","+header_row+")\n";
       return code;
     }   
 
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"为名为%1的工作簿中的第%2行,第%3列设置新值%4",
+    "message0":"为名为%1的工作簿中的第%2行,第%3列，设置新值%4",
     "args0": [
       {
         "type": "field_input",
