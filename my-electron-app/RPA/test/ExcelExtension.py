@@ -56,25 +56,25 @@ class ExcelApplicationExtension(ExcelApplication):
     def write_row(self, row: int = None, 
                    row_content=None,
                    column_from: int = None,
-                   columne_to: int = None):
+                   column_to: int = None):
         row_value = row_content
-        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
+        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(column_to)) + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
     def write_row_with_header(self, 
                                row: int = None, 
                                row_content = None, 
                                column_from: int = None,
-                               columne_to: int = None, 
+                               column_to: int = None, 
                                header_row: int = None):
-        headers = self.read_row(row=header_row, column_from=column_from, column_to=columne_to)
+        headers = self.read_row(row=header_row, column_from=column_from, column_to=column_to)
         row_value = []
         for header in headers:
             if header in row_content.keys():
                 row_value.append(row_content[header])
             else:
                 row_value.append('')
-        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(columne_to)) + str(row)
+        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(column_to)) + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
     def write_column(self, column: int = None, column_content=None, row_from: int = None, row_to: int = None):
