@@ -11,8 +11,10 @@ def index_to_character(index: int):
 def character_to_index(character: str):
     result = 0
     length = len(character)
-    for i in range(length):
-        result += (ord(character[length - i]) - ord('A') + 1) + i * 26
+    base = 1
+    for i in range(0, length):
+        result += (ord(character[length - i - 1]) - ord('A') + 1) * base
+        base *= 26
     return result
 
 class ExcelApplicationExtension(ExcelApplication):
@@ -39,7 +41,7 @@ class ExcelApplicationExtension(ExcelApplication):
         column_from: str = None,
         column_to: str = None,
     ):
-        index_from = character_to_index(column_from)
+        index_from = character_to_index(column_from) - 1
         index_to = character_to_index(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         return contents
@@ -51,7 +53,7 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: str = None,
         header_row: int = None,
     ):
-        index_from = character_to_index(column_from)
+        index_from = character_to_index(column_from) - 1
         index_to = character_to_index(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
