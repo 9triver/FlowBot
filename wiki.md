@@ -102,26 +102,25 @@ def solve_challenge():
 
     * workbook: Excel 文档变量名
 
-    * row: 行号，为空则采用当前获取行
+    * row: 行号
 
-    * column: 列号，为空则采用当前活跃列
+    * column: 列号
 
     * var: 表示获取结果的变量名
 
     * ```
         {var} = {workbook}.read_from_cells(row={row}, column={column})
-        {var} = str({var}) if {var} is not None else None
         ```
-
-* {workbook} Fetch Row {row} {column_from} {column_to} {header_row} As {var} :  获取一行
+    
+* {workbook} Fetch Row {row} {column_from} {column_to} As {var} :  获取一行
 
     * workbook: Excel 文档变量名
 
-    * row: 行号，为空则采用当前活跃行
+    * row: 行号
 
-    * column_from: 起点列号，为空则采用第一列
+    * column_from: 起点列号
 
-    * column_to: 终点列号，为空则读取到空值为止
+    * column_to: 终点列号
 
     * var: 表示获取结果的变量名
 
@@ -133,11 +132,11 @@ def solve_challenge():
   
     * workbook: Excel 文档变量名
     
-    * row: 行号，为空则采用当前活跃行
+    * row: 行号
     
-    * column_from: 起点列号，为空则采用第一列
+    * column_from: 起点列号
     
-    * column_to: 终点列号，为空则读取到空值为止
+    * column_to: 终点列号
     
     * header_row: header 所在行号
     
@@ -151,7 +150,7 @@ def solve_challenge():
   
     * workbook: Excel 文档变量名
     
-    * column: 列号，为空则采用当前活跃列
+    * column: 列号
     
     * row_from: 起点行号
     
@@ -163,7 +162,7 @@ def solve_challenge():
         {var} = {workbook}.read_column(column={column}, row_from={row_from}, row_to={row_to})
         ```
     
-* {workbook} Fetch area {row_from} {row_to} {column_from} {column_to} {with_header} As {var} : 获取一个区域
+* {workbook} Fetch area {row_from} {row_to} {column_from} {column_to} As {var} : 获取一个区域
 
     * workbook: Excel 文档变量名
 
@@ -199,7 +198,7 @@ def solve_challenge():
         {var} = {workbook}.read_area_with_header(row_from={row_from}, row_to={row_to}, column_from={column_from}, column_to={column_to})
         ```
 
-* {workbook} Write Row {row} {row_content} {header_row} :  写入行
+* {workbook} Write Row {row} {row_content} :  写入行
 
     * workbook: Excel 文档变量名
 
@@ -229,7 +228,6 @@ def solve_challenge():
         {workbook}.write_row_with_header(row={row}, row_content={row_content}, column_from={column_from}, column_to={column_to}, header_row={header_row})
         ```
 
-
 * {workbook} Write Column {column} {column_content} : 写入列
 
     * workbook: Excel 文档变量名
@@ -248,15 +246,32 @@ def solve_challenge():
 
     * workbook: Excel 文档变量名
 
-    * row: 行号，为空则采用当前获取行
+    * row: 行号
 
-    * column: 列号，为空则采用当前活跃列
+    * column: 列号
 
     * value: 待写入的值
 
     * ```
         {workbook}.write_to_cells(row={row}, column={column}, value={value}, number_format='@')
         ```
+    
+* {workbook} Set area {row_from} {row_to} {column_from} {column_to} data type to text: 将区域的数据类型改为纯文本
+
+    * workbook: Excel 文档变量名
+
+    * row_from: 起点行号
+
+    * row_to: 终点行号
+
+    * column_from: 起点列号
+
+    * column_to: 终点列号
+
+    * ```
+        {workbook}.data_type_to_text(row_from={row_from}, row_to={row_to}, column_from={column_from}, column_to={column_to})
+        ```
+
 
 **Workbook Dictionary operation**
 
@@ -410,6 +425,33 @@ def solve_challenge():
 
     - ```
         (not {condition})
+        ```
+
+
+
+
+##### Common block
+
+- Set {var} to the number index of {strIndex}
+
+    - var: 变量名
+
+    - strIndex: 字符串格式的列序号
+
+    - ```
+        (var) = index_str_to_num({strIndex})
+        ```
+
+        
+
+- Set {var} to the string index of {numIndex}
+
+    - var: 变量名
+
+    - strIndex: 数字格式的列序号
+
+    - ```
+        {var} = index_num_to_str({numIndex})
         ```
 
         
