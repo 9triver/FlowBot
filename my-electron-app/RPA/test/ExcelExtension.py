@@ -149,6 +149,16 @@ class ExcelApplicationExtension(ExcelApplication):
             row_contents.append(row_dict)
         return row_contents
 
+    def data_type_to_text(
+        self,
+        row_from: int = None,
+        row_to: int = None,
+        column_from: str = None,
+        column_to: str = None,
+    ):
+        rangeStr = column_from + str(row_from) + ':' + column_to + str(row_to)
+        self.worksheet.Range(rangeStr).NumberFormat = '@'
+
     class WorkbookDict:
         def __init__(self):
             self.workbook_contents = {}
