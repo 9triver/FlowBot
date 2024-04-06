@@ -1,14 +1,14 @@
 from RPA.Excel.Application import Application as ExcelApplication
 
 
-def index_to_character(index: int):
+def index_num_to_str(index: int):
     result = ''
     while index != 0:
         result = chr(ord('A') + index % 26 - 1) + result
         index = index // 26
     return result
 
-def character_to_index(character: str):
+def index_str_to_num(character: str):
     result = 0
     length = len(character)
     base = 1
@@ -41,8 +41,8 @@ class ExcelApplicationExtension(ExcelApplication):
         column_from: str = None,
         column_to: str = None,
     ):
-        index_from = character_to_index(column_from) - 1
-        index_to = character_to_index(column_to)
+        index_from = index_str_to_num(column_from) - 1
+        index_to = index_str_to_num(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         return contents
 
@@ -53,8 +53,8 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: str = None,
         header_row: int = None,
     ):
-        index_from = character_to_index(column_from) - 1
-        index_to = character_to_index(column_to)
+        index_from = index_str_to_num(column_from) - 1
+        index_to = index_str_to_num(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
         contents_dict = {}
