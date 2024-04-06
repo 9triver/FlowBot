@@ -1,51 +1,60 @@
 from RPA.Excel.Application import Application as ExcelApplication
 
 
-def index_to_character(index: int):
+def index_num_to_str(index: int):
     result = ''
     while index != 0:
         result = chr(ord('A') + index % 26 - 1) + result
         index = index // 26
     return result
 
+def index_str_to_num(character: str):
+    result = 0
+    length = len(character)
+    base = 1
+    for i in range(0, length):
+        result += (ord(character[length - i - 1]) - ord('A') + 1) * base
+        base *= 26
+    return result
+
 class ExcelApplicationExtension(ExcelApplication):
     def __init__(self):
         super().__init__()
         self.active_row = 1
-        self.active_column = 1
+        self.active_column = 'A'
 
     def move_active_cell(self, row_change: int = 0, column_change: int = 0):
         self.active_row += row_change
         if self.active_row < 1:
             self.active_row = 1
-        self.active_column += column_change
+        self.active_column = chr(ord(self.active_column) + column_change)
         if self.active_column < 1:
             self.active_column = 1
 
-    def set_active_cell(self, row: int = 0, column: int = 0):
+    def set_active_cell(self, row: int = 0, column: str = None):
         self.active_row = row
         self.active_column = column
 
     def read_row(
         self,
         row: int = None,
-        column_from: int = None,
-        column_to: int = None
+        column_from: str = None,
+        column_to: str = None,
     ):
-        index_from = column_from - 1
-        index_to = column_to
+        index_from = index_str_to_num(column_from) - 1
+        index_to = index_str_to_num(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         return contents
 
     def read_row_with_header(
         self,
         row: int = None,
-        column_from: int = None,
-        column_to: int = None,
+        column_from: str = None,
+        column_to: str = None,
         header_row: int = None,
     ):
-        index_from = column_from - 1
-        index_to = column_to
+        index_from = index_str_to_num(column_from) - 1
+        index_to = index_str_to_num(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from : index_to]
         headers = self.worksheet.Rows(header_row).Value[0][index_from : index_to]
         contents_dict = {}
@@ -53,44 +62,49 @@ class ExcelApplicationExtension(ExcelApplication):
             contents_dict[header] = content
         return contents_dict
         
-    def write_row(self, row: int = None, 
-                   row_content=None,
-                   column_from: int = None,
-                   column_to: int = None):
+    def write_row(
+        self, 
+        row: int = None, 
+        row_content = None,
+        column_from: str = None,
+        column_to: str = None,
+    ):
         row_value = row_content
-        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(column_to)) + str(row)
+        rangeStr = column_from + str(row) + ':' + column_to + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
-    def write_row_with_header(self, 
-                               row: int = None, 
-                               row_content = None, 
-                               column_from: int = None,
-                               column_to: int = None, 
-                               header_row: int = None):
+    def write_row_with_header(
+        self, 
+        row: int = None, 
+        row_content = None, 
+        column_from: str = None,
+        column_to: str = None,
+        header_row: int = None
+    ):
         headers = self.read_row(row=header_row, column_from=column_from, column_to=column_to)
+
         row_value = []
         for header in headers:
             if header in row_content.keys():
                 row_value.append(row_content[header])
             else:
                 row_value.append('')
-        rangeStr = str(index_to_character(column_from)) + str(row) + ':' + str(index_to_character(column_to)) + str(row)
+
+        rangeStr = column_from + str(row) + ':' + column_to + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
-    def write_column(self, column: int = None, column_content=None, row_from: int = None, row_to: int = None):
+    def write_column(self, column: str = None, column_content=None, row_from: int = None, row_to: int = None):
         value = [(content,) for content in column_content]
-        rangeStr = str(index_to_character(column)) + str(row_from) + ':' + str(index_to_character(column)) + str(row_to)
+        rangeStr = column + str(row_from) + ':' + column + str(row_to)
         self.worksheet.Range(rangeStr).Value = value
 
     def read_column(
         self,
-        column: int = None,
+        column: str = None,
         row_from: int = None,
         row_to: int = None,
     ):
-        if column is None:
-            column = self.active_column
-
+        
         index_from = row_from - 1
         index_to = row_to
 
@@ -101,8 +115,8 @@ class ExcelApplicationExtension(ExcelApplication):
         self,
         row_from: int = None,
         row_to: int = None,
-        column_from: int = None,
-        column_to: int = None,
+        column_from: str = None,
+        column_to: str = None,
     ):
         row_contents = []
         for row in range(row_from, row_to + 1):
@@ -135,6 +149,16 @@ class ExcelApplicationExtension(ExcelApplication):
                 row_dict[headers[i]] = row_content[i]
             row_contents.append(row_dict)
         return row_contents
+
+    def data_type_to_text(
+        self,
+        row_from: int = None,
+        row_to: int = None,
+        column_from: str = None,
+        column_to: str = None,
+    ):
+        rangeStr = column_from + str(row_from) + ':' + column_to + str(row_to)
+        self.worksheet.Range(rangeStr).NumberFormat = '@'
 
     class WorkbookDict:
         def __init__(self):
