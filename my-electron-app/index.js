@@ -145,8 +145,10 @@ function start() {
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
-
+  registerSetAreaText();
   registerSettoBlock();
+  registerSettoStringBlock();
+  registerSettoNumBlock();
 
   registerForBlock();
   registerForeachBlock();
@@ -697,6 +699,75 @@ function registerSetActiveCell(){
       return code;
     }   
 }
+function registerSetAreaText(){
+  var SetAreaText ={
+    "message0":"把名为%1的工作簿中第%2行-第%3行,第%4列-第%5列内的数据改为纯文本类型",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+        "text":"FirstExcel",
+      },
+      {
+        "type": "field_input",
+        "name":"row_from",
+        "check":"number",
+        "text":"2",
+
+      },
+      {
+        "type": "field_input",
+        "name":"row_to",
+        "check":"number",
+        "text":"3",
+
+      },
+      {
+        "type": "field_input",
+        "name":"column_from",
+        "check":"number",
+        "text":"2",
+
+      },
+      {
+        "type": "field_input",
+        "name":"column_to",
+        "check":"number",
+        "text":"3",
+
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['SetAreaText']=
+    {
+      init: function() {
+        this.jsonInit(SetAreaText);
+      } 
+    };
+    python.pythonGenerator.forBlock['SetAreaText'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('Workbook');
+      var row_from= block.getFieldValue('row_from');
+      row_from='row_from='+row_from;
+      var row_to= block.getFieldValue('row_to');
+      row_to='row_to='+row_to;
+      var column_from= block.getFieldValue('column_from');
+      column_from='column_from='+column_from;
+      var column_to= block.getFieldValue('column_to');
+      column_to='column_to='+column_to;
+      var code ="";
+      for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+".data_type_to_text("+row_from+","+row_to+","+column_from+","+column_to+")\n";
+      return code;
+    }   
+}
 function registerFetchCell(){
   var fetchCell ={
     "message0":"获取名为%1的工作簿的第%2行 第%3列，将内容存入%4中",
@@ -745,34 +816,18 @@ function registerFetchCell(){
       // Collect argument strings.
       const Workbook = block.getFieldValue('Workbook');
       const VAR = block.getFieldValue('VAR');
-      var number1= block.getFieldValue('row');
-      if(number1!='')
-      number1='row='+number1;
-      var number2=block.getFieldValue('column');
-      if(number2!='')
-      number2='column='+number2;
+      var row= block.getFieldValue('row');
+      if(row!='')
+      row='row='+row;
+      var column=block.getFieldValue('column');
+      if(column!='')
+      column='column='+column;
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-        if(number1==''&&number2!='')
-        {
-          code +=VAR+"="+Workbook+".read_form_cells("+number2+")\n";
-        }
-        else if(number2==''&&number1!='')
-        {
-          code +=VAR+"="+Workbook+".read_form_cells("+number1+")\n";
-        }
-        else if(number1!=''&&number2!='')
-          code +=VAR+"="+Workbook+".read_form_cells("+number1+","+number2+")\n";
-        else
-        code +=VAR+"="+Workbook+".read_form_cells()\n";
-      for(var i=0;i<depth;i++)
-        {
-          code+='    ';
-        }
-      code +="str("+VAR +")if " +VAR+" is not None else None\n";
+        code +=VAR+"="+Workbook+".read_form_cells("+row+","+column+")\n";
       return code;
     }   
 }
@@ -1557,6 +1612,92 @@ function registerSettoBlock(){
       return code;
     }
 }
+function registerSettoStringBlock(){
+  var SettoString ={
+    "message0":"将数字%2转换成字符串赋值给%1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String",
+        "text":"FirstExcel",
+      },
+      {
+        "type": "field_input",
+        "name": "exp",
+        "check":"number",
+        "text":"SecondExcel",
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
+    \nworkbook: Excel 文档变量名 \
+    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
+  }
+  Blockly.Blocks['SettoString']=
+    {
+      init: function() {
+        this.jsonInit(SettoString);
+      } 
+    };
+    python.pythonGenerator.forBlock['SettoString'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var exp =block.getFieldValue('exp');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+"="+"index_str_to_num("+exp+")\n";
+      // Return code.
+      return code;
+    }
+}
+function registerSettoNumBlock(){
+  var SettoNum ={
+    "message0":"将字符串%2转换成数字赋值给%1",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String",
+        "text":"FirstExcel",
+      },
+      {
+        "type": "field_input",
+        "name": "exp",
+        "check":"String",
+        "text":"SecondExcel",
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+    "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
+    \nworkbook: Excel 文档变量名 \
+    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
+  }
+  Blockly.Blocks['SettoNum']=
+    {
+      init: function() {
+        this.jsonInit(SettoNum);
+      } 
+    };
+    python.pythonGenerator.forBlock['SettoNum'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var exp =block.getFieldValue('exp');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+"="+"index_num_to_str("+exp+")\n";
+      // Return code.
+      return code;
+    }
+}
 function registerCreateSheet(){
   var CreateSheet ={
     "message0":"在名为%1的工作簿里创建新的sheet%2",
@@ -2106,6 +2247,7 @@ function registerNotBlock(){{
     }   
 
 }}
+
 function registerHelpOption() {
   const helpItem = {
     displayText: 'Help! There are no blocks',

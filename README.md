@@ -8,7 +8,7 @@ Blockly是 Google 推出的一款可视化编程编辑器，使用拖放块来�
 3、加强RPA应用语句的前后关联性，项目旨在添加对不同变量的关联，减少使用者的操作量，提高效率。  
 黄大伟同学负责Blockly部分，郭百川同学RPA部分
 # 环境要求
-Node.js 
+Node.js Blockly
 # 安装说明
 在拷贝该项目内容后，在my-electron-app目录下使用命令：
 `npm install --save-dev electron`
