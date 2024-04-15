@@ -177,9 +177,16 @@ class ExcelApplicationExtension(ExcelApplication):
             self.workbook_contents = {}
             self.headers = None
             self.header_row = None
+            self.text_columns = []
 
         def contains_name(self, name: str):
-            return name in self.workbook_contents
+            return name in self.workbook_contents.keys()
+
+        def names(self):
+            return self.workbook_contents.keys()
+
+        def column_data_type_to_text(self, column: str):
+            self.text_columns.append(column)
 
         def add_workbook(self, name: str):
             self.workbook_contents[name] = []
@@ -201,6 +208,13 @@ class ExcelApplicationExtension(ExcelApplication):
                 app.add_new_sheet(name)
 
                 if self.headers is None:
+                    for column in self.text_columns:
+                        app.data_type_to_text(
+                            row_from=1,
+                            row_to=len(row_contents),
+                            column_from=column,
+                            column_to=column,
+                        )
                     i = 1
                     for row_content in row_contents:
                         app.write_row(
@@ -217,21 +231,24 @@ class ExcelApplicationExtension(ExcelApplication):
                         column_from="A",
                         column_to=index_num_to_str(len(self.headers)),
                     )
-                    i = 1
-                    for row_content in row_contents:
-                        if i == self.header_row:
-                            i += 1
+                    for column in self.text_columns:
+                        app.data_type_to_text(
+                            row_from=self.header_row + 1,
+                            row_to=self.header_row + len(row_contents),
+                            column_from=column,
+                            column_to=column,
+                        )
+                    for i in range(len(row_contents)):
                         row_value = []
                         for header in self.headers:
-                            if header in row_content.keys():
-                                row_value.append(row_content[header])
+                            if header in row_contents[i].keys():
+                                row_value.append(row_contents[i][header])
                         app.write_row(
-                            row=i,
+                            row=self.header_row + 1 + i,
                             row_content=row_value,
                             column_from="A",
                             column_to=index_num_to_str(len(self.headers)),
                         )
-                        i += 1
 
                 app.save_excel_as(filename=path + name + ".xls", file_format=56)
                 app.close_document()
