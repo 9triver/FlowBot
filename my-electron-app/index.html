@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title >财务部数据处理</title>
+  <title >财务部表格业务处理</title>
   <link rel="stylesheet" href="toolbox_style.css">
   <style>
     html,
@@ -107,7 +107,7 @@
 <body onload="start()">
   <div id="header">
     <p>
-      财务部数据处理</p>
+      财务部表格业务处理</p>
   </div>
   <xml  id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
@@ -116,12 +116,14 @@
       <block type="openWorkbook"></block>
       <block type="addWorkbook"></block>
       <block type="saveWorkbook"></block>
+      <block type="getAllWorkbook"></block>
     </category>
     <category name="Workbook集合操作" categorystyle="procedure_category">
       <!-- <block type="text"></block> -->
       <block type="MakeWorkbookDict"></block>
       <block type="SetDictHeaders"></block>
       <block type="AddRowDict"></block>
+      <block type="SetDictColText"></block>
       <block type="GenerateFile"></block>
     </category>
     <category name="行、列操作" categorystyle="loop_category">

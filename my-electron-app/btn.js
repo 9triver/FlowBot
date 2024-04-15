@@ -30,7 +30,7 @@ btnRun.onclick  =function(){
         aTag.click();
         URL.revokeObjectURL(objectURL);
     }
-    btnSave.onclick  =function(){
+btnSave.onclick  =function(){
         var blockcontent=Blockly.serialization.workspaces.save(workspace);
         var myblock=JSON.stringify(blockcontent);
         const blob = new Blob([myblock], {
@@ -58,7 +58,7 @@ btnLoadPath.addEventListener('click', async () => {
     //alert(file.toString());
     //let ob= JSON.parse(file);
     //alert(file);
-    let changePath='';
+    let changePath='\'';
     var arr=new Array();
     for(let i=0;i<path.length;i++)
     {   
@@ -71,6 +71,7 @@ btnLoadPath.addEventListener('click', async () => {
         else
             changePath+=path[i];
     }
+    changePath+='\'';
     document.getElementById('generatedFilePath').value = changePath;
     //alert(file);
 })
@@ -80,7 +81,7 @@ btnLoadFolder.addEventListener('click', async () => {
     //alert(file.toString());
     //let ob= JSON.parse(file);
     //alert(file);
-    let changePath='';
+    let changePath='\'';
     var arr=new Array();
     for(let i=0;i<path.length;i++)
     {   
@@ -94,6 +95,7 @@ btnLoadFolder.addEventListener('click', async () => {
             changePath+=path[i];
     }
     changePath+='/';
+    changePath+='\'';
     document.getElementById('generatedFilePath').value = changePath;
     //alert(file);
 })
