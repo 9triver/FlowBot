@@ -11,6 +11,8 @@ from ExcelExtension import ExcelApplicationExtension as ExcelApplication
 def solve_challenge():
 ```
 
+
+
 **Workbook operation**
 
 * Open Workbook {path} As {var} : 打开Excel文档
@@ -48,6 +50,8 @@ def solve_challenge():
         ```
     
 
+
+
 **Sheet operation**
 
 * {workbook} Create Sheet {name} : 新建表
@@ -71,6 +75,8 @@ def solve_challenge():
         ```
 
 * merge sheet (合并表)
+
+
 
 **Row and Column and Cell operation**
 
@@ -256,7 +262,7 @@ def solve_challenge():
         {workbook}.write_to_cells(row={row}, column={column}, value={value}, number_format='@')
         ```
     
-* {workbook} Set area {row_from} {row_to} {column_from} {column_to} data type to text: 将区域的数据类型改为纯文本
+* {workbook} Set data type of area {row_from} {row_to} {column_from} {column_to} to text: 将区域的数据类型改为纯文本
 
     * workbook: Excel 文档变量名
 
@@ -273,11 +279,12 @@ def solve_challenge():
         ```
 
 
+
 **Workbook Dictionary operation**
 
-- Make workbook dictionary {var}: 生成一个workbook集合
+- Make workbook dictionary As {var}: 生成一个workbook集合
 
-    - var: 生成的workbook集合变量名
+    - var: 表示所生成workbook集合的变量名
 
     - ```
         {var} = ExcelApplication.WorkbookDict()
@@ -293,6 +300,26 @@ def solve_challenge():
 
     - ```
         {workbook_dict}.set_headers(headers={headers}, header_row={header_row})
+        ```
+
+- {workbook_dict} get all workbook names {var}: 获取所有workbook名
+
+    - workbook_dict: workbook集合
+
+    - var: 表示workbook名列表的变量名
+
+    - ```
+        {var}={workbook_dict}.names()
+        ```
+    
+- {workbook_dict} set data type of column {column} to text: 将workbook集合一列的数据类型改为纯文本
+
+    - workbook_dict: workbook集合
+
+    - column: 列号
+
+    - ```
+        {workbook_dict}.column_data_type_to_text(column={column})
         ```
 
 - {workbook_dict} add row {name} {row_content}: 向一个workbook新增一行
@@ -316,6 +343,8 @@ def solve_challenge():
     - ```
         {workbook_dict}.generate_workbook_files(path={path})
         ```
+
+
 
 **Variable operation**
 
