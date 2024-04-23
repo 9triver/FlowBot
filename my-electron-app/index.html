@@ -111,12 +111,14 @@
   </div>
   <xml  id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
-    <category name="Workbook操作" categorystyle="logic_category">
+    <category name="赋值" categorystyle="variable_category">
+      <block type="setto"></block>
+    </category>
+    <category name="工作簿操作" categorystyle="logic_category">
       <!-- <block type="text"></block> -->
       <block type="openWorkbook"></block>
       <block type="addWorkbook"></block>
       <block type="saveWorkbook"></block>
-      <block type="getAllWorkbook"></block>
     </category>
     <category name="Workbook集合操作" categorystyle="procedure_category">
       <!-- <block type="text"></block> -->
@@ -125,7 +127,7 @@
       <block type="AddRowDict"></block>
       <block type="SetDictColText"></block>
       <block type="GenerateFile"></block>
-      <block type="SetAreaText"></block>
+      <block type="getAllWorkbook"></block>
     </category>
     <category name="行、列操作" categorystyle="loop_category">
       <!-- <block type="math_number" gap="32">
@@ -138,21 +140,25 @@
       <block type="WriteRow"></block>
       <block type="WriteCol"></block>
     </category>
-    <category name="单元格操作" categorystyle="loop_category">
+    <category name="其他表格操作" categorystyle="loop_category">
       <!-- <block type="math_number" gap="32">
         <field name="NUM">0</field>
       </block> -->
-      <block type="MoveActiveCell"></block>
-      <block type="SetActiveCell"></block>
+      <!-- <block type="MoveActiveCell"></block>
+      <block type="SetActiveCell"></block> -->
       <block type="fetchCell"></block>
       <block type="fetchArea"></block>
       <block type="SetCellValue"></block>
-
+      <block type="SetAreaText"></block>
     </category>
-    <category name="Sheet操作" categorystyle="math_category">
+    <category name="工作表操作" categorystyle="math_category">
       <block type="CreateSheet"></block>
       <block type="SetActiveSheet"></block>
       <!-- <block type="MergeSheet"></block> -->
+    </category>
+    <category name="辅助功能" categorystyle="variable_category">
+      <block type="SettoNum"></block>
+      <block type="SettoString"></block>
     </category>
     <category name="条件语句" categorystyle="text_category">
       <block type="IF"></block>
@@ -163,12 +169,7 @@
       <block type="For"></block>
       <block type="Foreach"></block>
     </category>
-    <category name="设置变量" categorystyle="variable_category">
-      <block type="setto"></block>
-      <block type="SettoNum"></block>
-      <block type="SettoString"></block>
-    </category>
-    <category name="条件运算符" categorystyle="procedure_category">
+    <category name="逻辑块" categorystyle="procedure_category">
       <block type="Compare"></block>
       <block type="and"></block>
       <block type="or"></block>

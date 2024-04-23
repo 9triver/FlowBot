@@ -271,7 +271,7 @@ function registerOpenWorkbook()
 function registerSaveWorkbook(){
   var saveWorkbook ={
     "type":"saveWorkbook",
-    "message0":"保存工作簿：\n将名为%1的工作簿保存到路径%2",
+    "message0":"保存工作簿：\n将工作簿%1保存到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -325,7 +325,7 @@ function registerSaveWorkbook(){
 }
 function registerAddWorkbook(){
   var addWorkbook ={
-    "message0":"添加工作簿：\n新增一个名为%1的工作簿",
+    "message0":"添加工作簿：\n新增一个工作簿%1",
     "args0": [
       {
         "type": "field_input",
@@ -372,7 +372,7 @@ function registerGetAllWorkbook()
 { 
   var getAllWorkbook = {
     "type":"getAllWorkbook",
-    "message0": "获取工作簿名：\n获取名为%1的工作簿集合中所有Workbook的名信息，整合到变量%2中",
+    "message0": "获取工作簿名：\n获取工作簿集合%1中所有Workbook的名信息，整合到变量%2中",
     "args0": [
       {
         "type": "field_input",
@@ -389,7 +389,7 @@ function registerGetAllWorkbook()
     ],
     "nextStatement": null,
     "previousStatement":null,
-    "colour":200,
+    "colour":300,
   };
   Blockly.Blocks['getAllWorkbook']=
     {
@@ -415,7 +415,7 @@ function registerGetAllWorkbook()
 function registerMakeWorkbookDict()
 { 
   var MakeWorkbookDict = {
-    "message0": "创建集合：\n创建名为%1的工作簿集合",
+    "message0": "创建集合：\n创建工作簿集合%1",
     "args0": [
       {
         "type": "field_input",
@@ -452,7 +452,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "设置集合表头：\n将名为%1的工作簿集合的第%2行设置为表头，表头内容为%3\n",
+    "message0": "设置集合表头：\n将工作簿集合%1的第%2行设置为表头，表头内容为%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -521,7 +521,7 @@ function registerSetDictHeaders()
 function registerAddRowDict()
 { 
   var AddRowDict = {
-    "message0": "集合添加新行：\n在名为%1的工作簿集合中找到名为%2的工作簿，新增一行,内容为:%3\n",
+    "message0": "集合添加新行：\n在工作簿集合%1中找到工作簿%2，新增一行,内容为:%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -589,7 +589,7 @@ function registerAddRowDict()
 }
 function registerSetDictColText(){
   var SetDictColText ={
-    "message0":"设置集合列数据格式为文本：\n把名为%1的工作簿集合中第%2列内的数据改为纯文本类型",
+    "message0":"设置集合列数据格式为文本：\n把工作簿集合%1中第%2列内的数据改为纯文本类型",
     "args0": [
       {
         "type": "field_input",
@@ -632,13 +632,13 @@ function registerSetDictColText(){
 function registerGenerateFile()
 { 
   var GenerateFile = {
-    "message0": "导出工作簿：\n将名为%1的工作簿导出到路径%2",
+    "message0": "导出工作簿：\n将工作簿集合%1中的工作簿导出到路径%2",
     "args0": [
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel",
+        "text":"FirstExcelDict",
       },
       {
         "type": "field_input",
@@ -680,7 +680,7 @@ function registerGenerateFile()
 
 function registerMoveActiveCell(){
   var MoveActiveCell ={
-    "message0":"移动活跃单元格：\n将名为%1的工作簿中的活跃单元格移动%2行,%3列",
+    "message0":"移动活跃单元格：\n将工作簿%1中的活跃单元格移动%2行,%3列",
     "args0": [
       {
         "type": "field_input",
@@ -734,7 +734,7 @@ function registerMoveActiveCell(){
 }
 function registerSetActiveCell(){
   var SetActiveCell ={
-    "message0":"设置活跃单元格：\n将名为%1的工作簿中的活跃单元格设置为第%2行,第%3列",
+    "message0":"设置活跃单元格：\n将工作簿%1中的活跃单元格设置为第%2行,第%3列",
     "args0": [
       {
         "type": "field_input",
@@ -789,7 +789,7 @@ function registerSetActiveCell(){
 }
 function registerSetAreaText(){
   var SetAreaText ={
-    "message0":"设置区域数据格式为文本：\n把名为%1的工作簿中第%2行-第%3行,第%4列-第%5列内的数据改为纯文本类型",
+    "message0":"设置区域数据格式为文本：\n把工作簿%1中第%2行-第%3行,第%4列-第%5列内的数据改为纯文本类型",
     "args0": [
       {
         "type": "field_input",
@@ -828,7 +828,7 @@ function registerSetAreaText(){
     ],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":160,
   }
   Blockly.Blocks['SetAreaText']=
     {
@@ -858,7 +858,7 @@ function registerSetAreaText(){
 }
 function registerFetchCell(){
   var fetchCell ={
-    "message0":"获取单元格：\n获取名为%1的工作簿的第%2行 第%3列，将内容存入%4中",
+    "message0":"获取单元格：\n获取工作簿%1的第%2行 第%3列，存储到变量%4中",
     "args0": [
       {
         "type": "field_input",
@@ -921,7 +921,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"获取行（有表头）：\n获取名为%1的工作簿中第%2列的第%3-%4行，将内容存入%6中，表头为%5",
+    "message0":"获取行（有表头）：\n获取工作簿%1中第%2行的第%3-%4列，存储到变量%6中，表头为%5",
     "args0": [
       {
         "type": "field_input",
@@ -1068,7 +1068,7 @@ function registerFetchRow(){
 }
 function registerFetchRowNoheader(){
   var fetchRowNoheader ={
-    "message0":"获取行：\n获取名为%1的工作簿中第%2列的第%3-%4行，将内容存入%5中",
+    "message0":"获取行：\n获取工作簿%1中第%2行的第%3-%4列，存储到变量%5中",
     "args0": [
       {
         "type": "field_input",
@@ -1145,7 +1145,7 @@ function registerFetchRowNoheader(){
 }
 function registerFetchCol(){
   var fetchCol ={
-    "message0":"获取列：\n获取名为%1的工作簿中第%2行的第%3-%4列，将内容存入%5中",
+    "message0":"获取列：\n获取工作簿%1中第%2列的第%3-%4行，存储到变量%5中",
     "args0": [
       {
         "type": "field_input",
@@ -1251,7 +1251,7 @@ function registerFetchCol(){
 }
 function registerFetchArea(){
   var fetchArea ={
-    "message0":"获取区域：\n获取名为%1的工作簿中第%2行-%3行，第%4列-%5列的全部内容\n是否需要头部？%6\n将内容存入%7",
+    "message0":"获取区域：\n获取工作簿%1中第%2行-%3行，第%4列-%5列的全部内容\n是否需要头部？%6\n存储到变量%7",
     "args0": [
       {
         "type": "field_input",
@@ -1345,7 +1345,7 @@ function registerFetchArea(){
 }
 function registerWriteCol(){
   var WriteCol ={
-    "message0":"写入列：\n写入名为%1的工作簿的第%4行-%5行的第%2列，列值为%3",
+    "message0":"写入列：\n写入工作簿%1的第%4行-%5行的第%2列，列值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1425,7 +1425,7 @@ function registerWriteCol(){
 }
 function registerWriteRowNoheader(){
   var WriteRowNoheader ={
-    "message0":"写入行：\n写入名为%1的工作簿的第%4列-%5列的第%2行，行值为%3",
+    "message0":"写入行：\n写入工作簿%1的第%4列-%5列的第%2行，行值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1498,7 +1498,7 @@ function registerWriteRowNoheader(){
 }
 function registerWriteRow(){
   var WriteRow ={
-    "message0":"写入行（有表头）：\n写入名为%1的工作簿的第%5列-%6列的第%2行，行值为%3，表头为%4",
+    "message0":"写入行（有表头）：\n写入工作簿%1的第%5列-%6列的第%2行，行值为%3，表头为%4",
     "args0": [
       {
         "type": "field_input",
@@ -1579,7 +1579,7 @@ function registerWriteRow(){
 }
 function registerSetCellValue(){
   var SetCellValue ={
-    "message0":"设置单元格内容：\n为名为%1的工作簿中的第%2行,第%3列，设置新值%4",
+    "message0":"设置单元格内容：\n为工作簿%1中的第%2行,第%3列，设置新值%4",
     "args0": [
       {
         "type": "field_input",
@@ -1675,7 +1675,7 @@ function registerSettoBlock(){
       }],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":330,
     "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
     \nworkbook: Excel 文档变量名 \
     \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
@@ -1718,7 +1718,7 @@ function registerSettoStringBlock(){
       }],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":350,
     "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
     \nworkbook: Excel 文档变量名 \
     \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
@@ -1761,7 +1761,7 @@ function registerSettoNumBlock(){
       }],
     "previousStatement": null,
     "nextStatement": null,
-    "colour":200,
+    "colour":350,
   }
   Blockly.Blocks['SettoNum']=
     {
@@ -1785,7 +1785,7 @@ function registerSettoNumBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"创建sheet:\n在名为%1的工作簿里创建新的sheet%2",
+    "message0":"创建工作表:\n在工作簿%1里创建新的工作表%2",
     "args0": [
       {
         "type": "field_input",
@@ -1827,7 +1827,7 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"设置活跃sheet：\n在名为%1的工作簿里设置活跃sheet%2",
+    "message0":"设置活跃工作表：\n在工作簿%1里设置活跃工作表%2",
     "args0": [
       {
         "type": "field_input",
@@ -1869,7 +1869,7 @@ function registerSetActiveSheet(){
 }
 function registerMergeSheet(){
   var MergeSheet ={
-    "message0":"合并sheet：\n在%1工作簿里合并sheet%2和%3",
+    "message0":"合并工作表：\n在%1工作簿里合并工作表%2和%3",
     "args0": [
       {
         "type": "field_input",
