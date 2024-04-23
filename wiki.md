@@ -134,7 +134,7 @@ def solve_challenge():
         {var} = {workbook}.read_row(row={row}, column_from={column_from}, column_to={column_to})
         ```
     
-* {workbook} Fetch Row {row} {column_from} {column_to}  With Header {header_row} As {var} :  获取的一行，以某行作为列名
+* {workbook} Fetch Row {row} {column_from} {column_to}  With Header {header_row} As {var} :  获取一行，以某行作为列名
   
     * workbook: Excel 文档变量名
     
