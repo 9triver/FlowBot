@@ -45,7 +45,7 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
-        contents = self.worksheet.Rows(row).Value[0][index_from:index_to]
+        contents = [None] + list(self.worksheet.Rows(row).Value[0][index_from:index_to])
         return contents
 
     def read_row_with_header(
@@ -71,7 +71,7 @@ class ExcelApplicationExtension(ExcelApplication):
         column_from: str = None,
         column_to: str = None,
     ):
-        row_value = row_content
+        row_value = row_content[1:]
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
 
@@ -85,7 +85,7 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         headers = self.read_row(
             row=header_row, column_from=column_from, column_to=column_to
-        )
+        )[1:]
 
         row_value = []
         for header in headers:
@@ -104,7 +104,8 @@ class ExcelApplicationExtension(ExcelApplication):
         row_from: int = None,
         row_to: int = None,
     ):
-        value = [(content,) for content in column_content]
+        column_value = column_content[1:]
+        value = [(content,) for content in column_value]
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
         self.worksheet.Range(rangeStr).Value = value
 
@@ -117,7 +118,7 @@ class ExcelApplicationExtension(ExcelApplication):
         index_from = row_from - 1
         index_to = row_to
 
-        contents = [
+        contents = [None] + [
             content[0]
             for content in self.worksheet.Columns(column).Value[index_from:index_to]
         ]
@@ -130,7 +131,7 @@ class ExcelApplicationExtension(ExcelApplication):
         column_from: str = None,
         column_to: str = None,
     ):
-        row_contents = []
+        row_contents = [None]
         for row in range(row_from, row_to + 1):
             row_content = self.read_row(
                 row=row, column_from=column_from, column_to=column_to
@@ -149,9 +150,9 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         headers = self.read_row(
             row=header_row, column_from=column_from, column_to=column_to
-        )
+        )[1:]
 
-        row_contents = []
+        row_contents = [None]
         for row in range(row_from, row_to + 1):
             row_content = self.read_row(
                 row=row, column_from=column_from, column_to=column_to
@@ -183,7 +184,7 @@ class ExcelApplicationExtension(ExcelApplication):
             return name in self.workbook_contents.keys()
 
         def names(self):
-            return self.workbook_contents.keys()
+            return [None] + self.workbook_contents.keys()
 
         def column_data_type_to_text(self, column: str):
             self.text_columns.append(column)
@@ -196,9 +197,10 @@ class ExcelApplicationExtension(ExcelApplication):
             self.header_row = header_row
 
         def add_row(self, name: str, row_content=None):
+            row_value = row_content
             if not self.contains_name(name):
                 self.add_workbook(name)
-            self.workbook_contents[name].append(row_content)
+            self.workbook_contents[name].append(row_value)
 
         def generate_workbook_files(self, path=None):
             for name, row_contents in self.workbook_contents.items():
