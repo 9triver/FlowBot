@@ -145,11 +145,11 @@ class ExcelApplicationExtension(ExcelApplication):
         row_to: int = None,
         column_from: int = None,
         column_to: int = None,
+        header_row: int = None
     ):
         headers = self.read_row(
-            row=row_from, column_from=column_from, column_to=column_to
+            row=header_row, column_from=column_from, column_to=column_to
         )
-        row_from += 1
 
         row_contents = []
         for row in range(row_from, row_to + 1):
@@ -200,7 +200,7 @@ class ExcelApplicationExtension(ExcelApplication):
                 self.add_workbook(name)
             self.workbook_contents[name].append(row_content)
 
-        def generate_workbook_files(self, path="./"):
+        def generate_workbook_files(self, path=None):
             for name, row_contents in self.workbook_contents.items():
                 app = ExcelApplicationExtension()
                 app.open_application(visible=True)
