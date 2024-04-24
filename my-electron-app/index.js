@@ -134,6 +134,7 @@ function start() {
   registerFetchRowNoheader();
   registerFetchRow();
   registerFetchCol();
+  registerFetchAreaWithHeader();
   registerFetchArea();
   registerWriteRowNoheader();
   registerWriteRow();
@@ -148,9 +149,13 @@ function start() {
   registerElifBlock();
   registerElseBlock();
   registerSetAreaText();
+
   registerSettoBlock();
   registerSettoStringBlock();
   registerSettoNumBlock();
+
+  registerChangeStringLengthBlock();
+  registerSubStringBlock();
 
   registerForBlock();
   registerForeachBlock();
@@ -217,13 +222,11 @@ function registerOpenWorkbook()
         "type": "field_input",
         "name": "FILE",
         "check":"String",
-        "text":"C:\\Users",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel",
       }
     ],
     "nextStatement": null,
@@ -277,13 +280,11 @@ function registerSaveWorkbook(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "FILE",
         "check":"String",
-        "text":"FirstExcel",
       }],
     "previousStatement": null,
     "nextStatement": null,
@@ -331,7 +332,6 @@ function registerAddWorkbook(){
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel"
       }],
     "previousStatement": null,
     "nextStatement": null,
@@ -378,13 +378,11 @@ function registerGetAllWorkbook()
         "type": "field_input",
         "name": "Dict",
         "check":"String",
-        "text":"FirstExcelList",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"First",
       }
     ],
     "nextStatement": null,
@@ -421,7 +419,6 @@ function registerMakeWorkbookDict()
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcelList",
       }
     ],
     "nextStatement": null,
@@ -458,19 +455,16 @@ function registerSetDictHeaders()
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"header_row",
-        "text":"1",
       },
       {
         "type": "field_input",
         "check":"String",
         "name":"headers",
-        "text":"header",
       },
     ],
     "nextStatement": null,
@@ -527,19 +521,16 @@ function registerAddRowDict()
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcelList",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"name",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"row_content",
-        "text":"",
       },
     ],
     "nextStatement": null,
@@ -595,13 +586,11 @@ function registerSetDictColText(){
         "type": "field_input",
         "name": "Dict",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"column",
         "check":"number",
-        "text":"3",
 
       },
     ],
@@ -638,13 +627,11 @@ function registerGenerateFile()
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcelDict",
       },
       {
         "type": "field_input",
         "name": "Path",
         "check":"String",
-        "text":"C:\\Users",
       },
 
     ],
@@ -686,20 +673,17 @@ function registerMoveActiveCell(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row_change",
         "check":"String",
-        "text":"2",
 
       },
       {
         "type": "field_input",
         "check":"string",
         "name":"column_change",
-        "text":"2",
       }
     ],
     "previousStatement": null,
@@ -740,20 +724,17 @@ function registerSetActiveCell(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row",
         "check":"number",
-        "text":"2",
 
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column",
-        "text":"2",
       }
     ],
     "previousStatement": null,
@@ -795,13 +776,11 @@ function registerSetAreaText(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row_from",
         "check":"number",
-        "text":"2",
 
       },
       {
@@ -864,25 +843,21 @@ function registerFetchCell(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row",
         "check":"number",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column",
-        "text":"2",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"SecondExcel",
       }
     ],
     "previousStatement": null,
@@ -927,37 +902,31 @@ function registerFetchRow(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row",
         "check":"number",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"columnF",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"columnT",
-        "text":"3",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"header_row",
-        "text":"1",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"SecondExcel",
       }
     ],
     "previousStatement": null,
@@ -1074,31 +1043,26 @@ function registerFetchRowNoheader(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row",
         "check":"number",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"columnF",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"columnT",
-        "text":"3",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"SecondExcel",
       }
     ],
     "previousStatement": null,
@@ -1151,31 +1115,26 @@ function registerFetchCol(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"col",
         "check":"number",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"rowF",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"rowT",
-        "text":"3",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"SecondExcel",
       }
     ],
     "previousStatement": null,
@@ -1249,53 +1208,111 @@ function registerFetchCol(){
     }   
 
 }
-function registerFetchArea(){
+function registerFetchAreaWithHeader(){
   var fetchArea ={
-    "message0":"获取区域：\n获取工作簿%1中第%2行-%3行，第%4列-%5列的全部内容\n是否需要头部？%6\n存储到变量%7",
+    "message0":"获取区域：\n获取工作簿%1中第%2行-%3行，第%4列-%5列的全部内容\n以第%6行作为列名\n存储到变量%7",
     "args0": [
       {
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"rowF",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"rowT",
-        "text":"2",
       },
       {
         "type": "field_input",
-        "check":"number",
         "name":"colF",
-        "text":"2",
       },
       {
         "type": "field_input",
-        "check":"number",
         "name":"colT",
-        "text":"2",
       },
       {
-        "type": "field_dropdown",
-        "name": "with_header",
-        "options": [
-          [ "False", "False" ],
-          ["True","True"]
-        ]
+        "type": "field_input",
+        "name": "header",
       },
       {
         "type": "field_input",
         "name": "VAR",
         "check":"String",
         "text":"SecondExcel",
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":160,
+  }
+  Blockly.Blocks['fetchArea']=
+    {
+      init: function() {
+        this.jsonInit(fetchArea);
+      } 
+    };
+    python.pythonGenerator.forBlock['fetchArea'] = function(block, generator) {
+      // Collect argument strings.
+      const Workbook = block.getFieldValue('Workbook');
+      var number1= block.getFieldValue('rowF');
+      number1='row_from='+number1;
+      var number2=block.getFieldValue('rowT');
+      number2='row_to='+number2;
+      var number3=block.getFieldValue('colT');
+      number3='column_from='+number3;
+      var number4=block.getFieldValue('colF');
+      number4='column_to='+number4;
+      var header=block.getFieldValue('header');
+      header='header_row='+header;
+      var VAR=block.getFieldValue('VAR');
+      var code ="";
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +=VAR+"="+Workbook+".read_area_wite_header("+number1+","+number2+","+number3+","+number4+","+header+")\n";
+      return code;
+    }   
+
+}
+function registerFetchArea(){
+  var fetchArea ={
+    "message0":"获取区域：\n获取工作簿%1中第%2行-%3行，第%4列-%5列的全部内容\n存储到变量%6",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"rowF",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"rowT",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"colF",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"colT",
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String",
       }
     ],
     "previousStatement": null,
@@ -1327,17 +1344,12 @@ function registerFetchArea(){
       number3='column_from='+number3;
       var number4=block.getFieldValue('colF');
       number4='column_to='+number4;
-      var header=block.getFieldValue('with_header');
-      header='header='+header;
       var VAR=block.getFieldValue('VAR');
       var code ="";
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-      if(header=='header=True')
-      code +=VAR+"="+Workbook+".read_area_wite_header("+number1+","+number2+","+number3+","+number4+")\n";
-      else if(header=='header=False')
       code +=VAR+"="+Workbook+".read_area("+number1+","+number2+","+number3+","+number4+")\n";
       return code;
     }   
@@ -1351,31 +1363,26 @@ function registerWriteCol(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"string",
         "name":"col_content",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"row_from",
-        "text":"3",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"row_to",
-        "text":"4",
       },
     ],
     "previousStatement": null,
@@ -1431,31 +1438,26 @@ function registerWriteRowNoheader(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"row",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"string",
         "name":"row_content",
-        "text":"",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column_from",
-        "text":"3",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column_to",
-        "text":"4",
       },
     ],
     "previousStatement": null,
@@ -1504,37 +1506,31 @@ function registerWriteRow(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"row",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"string",
         "name":"row_content",
-        "text":"",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"header_row",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column_from",
-        "text":"5",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column_to",
-        "text":"6",
       },
     ],
     "previousStatement": null,
@@ -1585,25 +1581,21 @@ function registerSetCellValue(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name":"row",
         "check":"number",
-        "text":"2",
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"column",
-        "text":"2",
       },
       {
         "type": "field_input",
         "name":"value",
         "check":"string",
-        "text":"",
       }
     ],
     "previousStatement": null,
@@ -1665,13 +1657,11 @@ function registerSettoBlock(){
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "exp",
         "check":"String",
-        "text":"SecondExcel",
       }],
     "previousStatement": null,
     "nextStatement": null,
@@ -1708,13 +1698,11 @@ function registerSettoStringBlock(){
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "exp",
         "check":"number",
-        "text":"SecondExcel",
       }],
     "previousStatement": null,
     "nextStatement": null,
@@ -1751,13 +1739,11 @@ function registerSettoNumBlock(){
         "type": "field_input",
         "name": "VAR",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "exp",
         "check":"String",
-        "text":"SecondExcel",
       }],
     "previousStatement": null,
     "nextStatement": null,
@@ -1783,6 +1769,95 @@ function registerSettoNumBlock(){
       return code;
     }
 }
+function registerChangeStringLengthBlock(){
+  var ChangeStringLength ={
+    "message0":"修改字符串长度：\n将字符串%1长度修改为%2",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "str",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "name": "length",
+        "check":"number",
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['ChangeStringLength']=
+    {
+      init: function() {
+        this.jsonInit(ChangeStringLength);
+      } 
+    };
+    python.pythonGenerator.forBlock['ChangeStringLength'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var length =block.getFieldValue('length');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+"="+"index_str_to_num("+length+")\n";
+      // Return code.
+      return code;
+    }
+}
+function registerSubStringBlock(){
+  var SubString ={
+    "message0":"截取字符串片段：\n截取字符串%1的第%2个字符到第%3个字符，存储到变量%4",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "str",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "name": "head",
+        "check":"number",
+      },
+      {
+        "type": "field_input",
+        "name": "tail",
+        "check":"number",
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"number",
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['SubString']=
+    {
+      init: function() {
+        this.jsonInit(SubString);
+      } 
+    };
+    python.pythonGenerator.forBlock['SubString'] = function(block, generator) {
+      // Collect argument strings.
+      var str = block.getFieldValue('str');
+      var head =block.getFieldValue('head');
+      var tail =block.getFieldValue('tail');
+      var VAR = block.getFieldValue('VAR');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+"="+"index_str_to_num("+length+")\n";
+      // Return code.
+      return code;
+    }
+}
 function registerCreateSheet(){
   var CreateSheet ={
     "message0":"创建工作表:\n在工作簿%1里创建新的工作表%2",
@@ -1791,13 +1866,11 @@ function registerCreateSheet(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "name",
         "check":"String",
-        "text":"Sheet1",
       },
     ],
     "previousStatement": null,
@@ -1833,13 +1906,11 @@ function registerSetActiveSheet(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "name",
         "check":"String",
-        "text":"Sheet1",
       },
     ],
     "previousStatement": null,
@@ -1875,19 +1946,16 @@ function registerMergeSheet(){
         "type": "field_input",
         "name": "Workbook",
         "check":"String",
-        "text":"FirstExcel",
       },
       {
         "type": "field_input",
         "name": "name",
         "check":"String",
-        "text":"Sheet1",
       },
       {
         "type": "field_input",
         "name": "name2",
         "check":"String",
-        "text":"Sheet2",
       },
     ],
     "previousStatement": null,
@@ -2123,14 +2191,12 @@ function registerForBlock(){{
         "type": "field_input",
         "name":"start",
         "check":"number",
-        "text":"2",
 
       },
       {
         "type": "field_input",
         "check":"number",
         "name":"end",
-        "text":"100",
       },
       {
         "type": "input_statement",
@@ -2182,7 +2248,6 @@ function registerForeachBlock(){{
         "type": "field_input",
         "name":"iterable_var",
         "check":"string",
-        "text":"FirstExcel",
 
       },
       {
