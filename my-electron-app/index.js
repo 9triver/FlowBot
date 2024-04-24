@@ -372,7 +372,7 @@ function registerGetAllWorkbook()
 { 
   var getAllWorkbook = {
     "type":"getAllWorkbook",
-    "message0": "获取工作簿名：\n获取工作簿集合%1中所有Workbook的名信息，整合到变量%2中",
+    "message0": "获取工作簿名：\n获取工作簿集合%1中所有工作簿的名信息，整合到变量%2中",
     "args0": [
       {
         "type": "field_input",
@@ -1702,7 +1702,7 @@ function registerSettoBlock(){
 }
 function registerSettoStringBlock(){
   var SettoString ={
-    "message0":"数字转换字符串：\n将数字%2转换成字符串赋值给%1",
+    "message0":"数字列号转换为字符串列号：\n将数字%2转换成字符串赋值给%1",
     "args0": [
       {
         "type": "field_input",
@@ -1745,7 +1745,7 @@ function registerSettoStringBlock(){
 }
 function registerSettoNumBlock(){
   var SettoNum ={
-    "message0":"字符串列号转换为数字：\n将字符串%2转换成数字赋值给%1",
+    "message0":"字符串列号转换为数字列号：\n将字符串%2转换成数字赋值给%1",
     "args0": [
       {
         "type": "field_input",
