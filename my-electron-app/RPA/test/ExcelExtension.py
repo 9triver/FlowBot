@@ -241,7 +241,7 @@ class ExcelApplicationExtension(ExcelApplication):
                             column_to=column,
                         )
                     for i in range(len(row_contents)):
-                        row_value = []
+                        row_value = [None]
                         for header in self.headers:
                             if header in row_contents[i].keys():
                                 row_value.append(row_contents[i][header])
