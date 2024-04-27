@@ -145,6 +145,7 @@ function start() {
   registerSetActiveSheet();
   registerMergeSheet();
   registerCompareBlock();
+  registerisNoneBlock();
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
@@ -787,21 +788,18 @@ function registerSetAreaText(){
         "type": "field_input",
         "name":"row_to",
         "check":"number",
-        "text":"3",
 
       },
       {
         "type": "field_input",
         "name":"column_from",
         "check":"number",
-        "text":"2",
 
       },
       {
         "type": "field_input",
         "name":"column_to",
         "check":"number",
-        "text":"3",
 
       },
     ],
@@ -1432,7 +1430,7 @@ function registerWriteCol(){
 }
 function registerWriteRowNoheader(){
   var WriteRowNoheader ={
-    "message0":"写入行：\n写入工作簿%1的第%4列-%5列的第%2行，行值为%3",
+    "message0":"写入行：\n写入工作簿%1中第%2行的第%4列-%5列，行值为%3",
     "args0": [
       {
         "type": "field_input",
@@ -1500,7 +1498,7 @@ function registerWriteRowNoheader(){
 }
 function registerWriteRow(){
   var WriteRow ={
-    "message0":"写入行（有表头）：\n写入工作簿%1的第%5列-%6列的第%2行，行值为%3，表头为%4",
+    "message0":"写入行（有表头）：\n写入工作簿中第%2行%1的第%5列-%6列，行值为%3，表头为%4",
     "args0": [
       {
         "type": "field_input",
@@ -1894,7 +1892,7 @@ function registerCreateSheet(){
       {
         code+='    ';
       }
-      code +=Workbook+".add_new_sheet('"+name+"')\n";
+      code +=Workbook+".add_new_sheet("+name+")\n";
       return code;
     }   
 }
@@ -2009,6 +2007,7 @@ function registerCompareBlock(){{
           ["==","=="],
           [">=",">="],
           [">",">"],
+          ["!=","!="]
         ]
       },
       {
@@ -2047,6 +2046,52 @@ function registerCompareBlock(){{
       //var prolong=generator.statementToCode(block,'prolong');
       else 
         var code =valueType+"("+exp1+") "+comparation+" "+valueType+"("+exp2+")";
+      return code;
+    }   
+
+}}
+function registerisNoneBlock(){{
+  var isNone ={
+    "message0":" %1 %2 空",
+    "args0": [
+      {
+        "type": "field_input",
+        "name":"VAR",
+        "check":"string",
+      },
+      {
+        "type": "field_dropdown",
+        "name": "option",
+        "options": [
+          [ "为", " is" ],
+          [ "不为", " is not" ],
+        ]
+      },
+    ],
+    "output":null,
+    "previousStatement": null,
+    "nextStatement":null,
+    "colour":220,
+  }
+  Blockly.Blocks['isNone']=
+    {
+      init: function() {
+        this.jsonInit(isNone);
+      } 
+    };
+    python.pythonGenerator.forBlock['isNone'] = function(block, generator) {
+      // Collect argument strings.
+      var VAR =block.getFieldValue('VAR');
+      var option =block.getFieldValue('option');
+      var nextBlock = block.getNextBlock();
+      if(nextBlock!=null && logicOperator!=" null ")
+      {
+        //alert(nextBlock);
+        var code =VAR+option+"None"+logicOperator;
+      }
+      //var prolong=generator.statementToCode(block,'prolong');
+      else 
+        var code =VAR+option+" None";
       return code;
     }   
 
