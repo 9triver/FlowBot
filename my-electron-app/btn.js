@@ -2,6 +2,7 @@
 var btnRun = document.getElementById("run");
 var btnSave = document.getElementById("save");
 var btnLoad =document.getElementById('load');
+var btnEmpty =document.getElementById('empty');
 var btnTest =document.getElementById('test');
 btnTest.onclick  =function(){
     var code ="from robocorp.tasks import task";
@@ -44,7 +45,7 @@ btnSave.onclick  =function(){
         URL.revokeObjectURL(objectURL);
         //alert("save success");
     }
-    btnLoad.addEventListener('click', async () => {
+btnLoad.addEventListener('click', async () => {
         const file = await window.electronAPI.openFile()
         //alert(file.toString());
         //let ob= JSON.parse(file);
@@ -52,6 +53,14 @@ btnSave.onclick  =function(){
         Blockly.serialization.workspaces.load(file,workspace);
         //alert(file);
 })//通过监听点击事件异步加载文件内容
+btnEmpty.addEventListener('click', async () => {
+    const file = null;
+    //alert(file.toString());
+    //let ob= JSON.parse(file);
+    //alert(file);
+    Blockly.serialization.workspaces.load(file,workspace);
+    //alert(file);
+})//通
 var btnLoadPath =document.getElementById('loadfilepath');
 btnLoadPath.addEventListener('click', async () => {
     let path = await window.electronAPI.openFilePath();

@@ -1,7 +1,7 @@
 {
-  "name": "my-electron-app",
+  "name": "njurpa",
   "version": "1.0.0",
-  "description": "electron测试",
+  "description": "测试版",
   "main": "index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -16,7 +16,7 @@
   "keywords": [
     "123456"
   ],
-  "author": "hdw",
+  "author": "hdw gbc",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/9triver/FlowBot/issues"

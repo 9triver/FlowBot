@@ -8,7 +8,7 @@
   <style>
     html,
     body {
-      height: 100%;
+      height: 105%;
       margin: 0px;
     }
     body {
@@ -24,6 +24,15 @@
       margin: 0px;
     }
     div #load {
+      border-color: white;
+      background-color: #00b1ba;
+      margin:10px;
+      color: white;
+      font-size:100%;
+      text-align: center;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
+    }
+    div #empty {
       border-color: white;
       background-color: #00b1ba;
       margin:10px;
@@ -105,10 +114,6 @@
   </style>
 </head>
 <body onload="start()">
-  <div id="header">
-    <p>
-      财务部表格业务处理</p>
-  </div>
   <xml  id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
     <category name="赋值" categorystyle="variable_category">
@@ -159,7 +164,7 @@
     <category name="辅助功能" categorystyle="variable_category">
       <block type="SettoNum"></block>
       <block type="SettoString"></block>
-      <block type="ChangeStringLength"></block>
+      <block type="GetStringLength"></block>
       <block type="SubString"></block>
     </category>
     <category name="条件语句" categorystyle="text_category">
@@ -188,6 +193,7 @@
   <input  id="loadfilefolder" type="button" value="选择文件夹" >
   <br>
   <input  id="load" type="button" value="加载" >
+  <input  id="empty" type="button" value="清空" >
   <br>
   <input  id="save" type="button" value="保存" >
   <br>

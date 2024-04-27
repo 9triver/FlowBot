@@ -154,7 +154,7 @@ function start() {
   registerSettoStringBlock();
   registerSettoNumBlock();
 
-  registerChangeStringLengthBlock();
+  registerGetStringLengthBlock();
   registerSubStringBlock();
 
   registerForBlock();
@@ -1769,9 +1769,9 @@ function registerSettoNumBlock(){
       return code;
     }
 }
-function registerChangeStringLengthBlock(){
-  var ChangeStringLength ={
-    "message0":"修改字符串长度：\n将字符串%1长度修改为%2",
+function registerGetStringLengthBlock(){
+  var GetStringLength ={
+    "message0":"获取字符串长度：\n获取字符串%1的长度，存储到变量%2",
     "args0": [
       {
         "type": "field_input",
@@ -1780,29 +1780,29 @@ function registerChangeStringLengthBlock(){
       },
       {
         "type": "field_input",
-        "name": "length",
-        "check":"number",
+        "name": "VAR",
+        "check":"String",
       }],
     "previousStatement": null,
     "nextStatement": null,
     "colour":220,
   }
-  Blockly.Blocks['ChangeStringLength']=
+  Blockly.Blocks['GetStringLength']=
     {
       init: function() {
-        this.jsonInit(ChangeStringLength);
+        this.jsonInit(GetStringLength);
       } 
     };
-    python.pythonGenerator.forBlock['ChangeStringLength'] = function(block, generator) {
+    python.pythonGenerator.forBlock['GetStringLength'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getFieldValue('VAR');
-      var length =block.getFieldValue('length');
+      var str =block.getFieldValue('str');
         var code='';
         for(var i=0;i<depth;i++)
         {
           code+='    ';
         }
-        code +=VAR+"="+"index_str_to_num("+length+")\n";
+        code +=VAR+"="+"len("+str+")\n";
       // Return code.
       return code;
     }
@@ -1853,7 +1853,7 @@ function registerSubStringBlock(){
         {
           code+='    ';
         }
-        code +=VAR+"="+"index_str_to_num("+length+")\n";
+        code +=VAR+"="+str+"["+(head-1)+":"+tail+"]\n";
       // Return code.
       return code;
     }
