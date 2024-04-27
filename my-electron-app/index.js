@@ -1988,9 +1988,9 @@ function registerCompareBlock(){{
         "type": "field_dropdown",
         "name": "value_type",
         "options": [
-          [ "int", "int" ],
-          [ "float", "float" ],
-          ["str","str"],
+          [ "整数", "int" ],
+          [ "小数", "float" ],
+          ["字符串","str"],
         ]
       },
       {
