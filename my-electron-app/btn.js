@@ -50,7 +50,9 @@ btnLoad.addEventListener('click', async () => {
         //alert(file.toString());
         //let ob= JSON.parse(file);
         //alert(file);
-        Blockly.serialization.workspaces.load(file,workspace);
+        if(file == null);
+        else
+            Blockly.serialization.workspaces.load(file,workspace);
         //alert(file);
 })//通过监听点击事件异步加载文件内容
 btnEmpty.addEventListener('click', async () => {

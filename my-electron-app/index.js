@@ -66,6 +66,7 @@ win.webContents.session.on('will-download', (event, item, webContents) => {
   }
 })
 }
+
 async function handleFileOpen () {
   const { canceled, filePaths } = await dialog.showOpenDialog({})
   if (!canceled) {
@@ -894,7 +895,7 @@ function registerFetchCell(){
 }
 function registerFetchRow(){
   var fetchRow ={
-    "message0":"获取行（有表头）：\n获取工作簿%1中第%2行的第%3-%4列，存储到变量%6中，表头为%5",
+    "message0":"获取行（有表头）：\n获取工作簿%1中第%2行的第%3-%4列，存储到变量%6中，表头行号为%5",
     "args0": [
       {
         "type": "field_input",
@@ -1498,7 +1499,7 @@ function registerWriteRowNoheader(){
 }
 function registerWriteRow(){
   var WriteRow ={
-    "message0":"写入行（有表头）：\n写入工作簿中第%2行%1的第%5列-%6列，行值为%3，表头为%4",
+    "message0":"写入行（有表头）：\n写入工作簿%1中第%2行的第%5列-%6列，行值为%3，表头行号为%4",
     "args0": [
       {
         "type": "field_input",
@@ -2002,12 +2003,12 @@ function registerCompareBlock(){{
         "type": "field_dropdown",
         "name": "comparation",
         "options": [
-          [ "<", "<" ],
-          [ "<=", "<=" ],
-          ["==","=="],
-          [">=",">="],
-          [">",">"],
-          ["!=","!="]
+          [ "小于", "<" ],
+          [ "小于等于", "<=" ],
+          ["等于","=="],
+          ["大于等于",">="],
+          ["大于",">"],
+          ["不等于","!="]
         ]
       },
       {
