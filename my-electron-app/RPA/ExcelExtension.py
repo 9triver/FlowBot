@@ -26,19 +26,7 @@ class ExcelApplicationExtension(ExcelApplication):
         self.active_column = "A"
         self.cached_header_row_value= None
         self.cached_header_row_index = -1
-
-    def move_active_cell(self, row_change: int = 0, column_change: int = 0):
-        self.active_row += row_change
-        if self.active_row < 1:
-            self.active_row = 1
-        self.active_column = chr(ord(self.active_column) + column_change)
-        if self.active_column < 1:
-            self.active_column = 1
-
-    def set_active_cell(self, row: int = 0, column: str = None):
-        self.active_row = row
-        self.active_column = column
-
+        
     def fetch_header_row_value(self, header_index: int):
         if self.cached_header_row_index != header_index:
             self.cached_header_row_index = header_index
