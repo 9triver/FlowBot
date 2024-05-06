@@ -41,7 +41,7 @@ win.webContents.session.on('will-download', (event, item, webContents) => {
       console.log(`Download failed: ${state}`)
     }
   })
-  let myPath = "//RPA//test"
+  let myPath = "//RPA"
   let cmdStr1 = 'rcc.exe run';
   let cmdPath = __dirname+myPath
   // 子进程名称
