@@ -22,7 +22,7 @@ const createWindow = () => {
 win.webContents.session.on('will-download', (event, item, webContents) => {
   // 无需对话框提示， 直接将文件保存到路径
   if(item.getFilename()=='tasks.py'){
-  item.setSavePath(__dirname+"\\RPA\\test\\tasks.py")
+  item.setSavePath(__dirname+"\\RPA\\tasks.py")
   item.on('updated', (event, state) => {
     if (state === 'interrupted') {
       console.log('Download is interrupted but can be resumed')
