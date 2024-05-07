@@ -236,7 +236,7 @@ class ExcelApplicationExtension(ExcelApplication):
                         row=self.header_row,
                         row_content=self.headers,
                         column_from="A",
-                        column_to=index_num_to_str(len(self.headers)),
+                        column_to=index_num_to_str(len(self.headers) - 1),
                     )
                     for column in self.text_columns:
                         app.data_type_to_text(
@@ -246,15 +246,12 @@ class ExcelApplicationExtension(ExcelApplication):
                             column_to=column,
                         )
                     for i in range(len(row_contents)):
-                        row_value = [None]
-                        for header in self.headers:
-                            if header in row_contents[i].keys():
-                                row_value.append(row_contents[i][header])
-                        app.write_row(
+                        app.write_row_with_header(
                             row=self.header_row + 1 + i,
-                            row_content=row_value,
+                            row_content=row_contents[i],
                             column_from="A",
-                            column_to=index_num_to_str(len(self.headers)),
+                            column_to=index_num_to_str(len(self.headers) - 1),
+                            header_row=self.header_row
                         )
 
                 app.save_excel_as(filename=path + name + ".xls", file_format=56)
