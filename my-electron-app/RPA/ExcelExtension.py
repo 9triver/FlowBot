@@ -24,19 +24,15 @@ class ExcelApplicationExtension(ExcelApplication):
         super().__init__()
         self.active_row = 1
         self.active_column = "A"
-
-    def move_active_cell(self, row_change: int = 0, column_change: int = 0):
-        self.active_row += row_change
-        if self.active_row < 1:
-            self.active_row = 1
-        self.active_column = chr(ord(self.active_column) + column_change)
-        if self.active_column < 1:
-            self.active_column = 1
-
-    def set_active_cell(self, row: int = 0, column: str = None):
-        self.active_row = row
-        self.active_column = column
-
+        self.cached_header_row_value= None
+        self.cached_header_row_index = -1
+        
+    def fetch_header_row_value(self, header_index: int):
+        if self.cached_header_row_index != header_index:
+            self.cached_header_row_index = header_index
+            self.cached_header_row_value = self.worksheet.Rows(header_index).Value[0]
+        return self.cached_header_row_value
+    
     def read_row(
         self,
         row: int = None,
@@ -58,7 +54,7 @@ class ExcelApplicationExtension(ExcelApplication):
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
         contents = self.worksheet.Rows(row).Value[0][index_from:index_to]
-        headers = self.worksheet.Rows(header_row).Value[0][index_from:index_to]
+        headers = self.fetch_header_row_value(header_row)[index_from:index_to]
         contents_dict = {}
         for header, content in zip(headers, contents):
             contents_dict[header] = content
@@ -71,6 +67,9 @@ class ExcelApplicationExtension(ExcelApplication):
         column_from: str = None,
         column_to: str = None,
     ):
+        if row == self.cached_header_row_index:
+            self.cached_header_row_index = -1
+        
         row_value = row_content[1:]
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
@@ -83,10 +82,13 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: str = None,
         header_row: int = None,
     ):
-        headers = self.read_row(
-            row=header_row, column_from=column_from, column_to=column_to
-        )[1:]
-
+        if row == self.cached_header_row_index:
+            self.cached_header_row_index = -1
+        
+        index_from = index_str_to_num(column_from) - 1
+        index_to = index_str_to_num(column_to)
+        headers = self.fetch_header_row_value(header_row)[index_from:index_to]
+        
         row_value = []
         for header in headers:
             if header in row_content.keys():
@@ -104,6 +106,9 @@ class ExcelApplicationExtension(ExcelApplication):
         row_from: int = None,
         row_to: int = None,
     ):
+        if row_from <= self.cached_header_row_index and row_to >= self.cached_header_row_index:
+            self.cached_header_row_index = -1
+        
         column_value = column_content[1:]
         value = [(content,) for content in column_value]
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
@@ -148,9 +153,9 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: int = None,
         header_row: int = None
     ):
-        headers = self.read_row(
-            row=header_row, column_from=column_from, column_to=column_to
-        )[1:]
+        index_from = index_str_to_num(column_from) - 1
+        index_to = index_str_to_num(column_to)
+        headers = self.fetch_header_row_value(header_row)[index_from:index_to]
 
         row_contents = [None]
         for row in range(row_from, row_to + 1):
@@ -231,7 +236,7 @@ class ExcelApplicationExtension(ExcelApplication):
                         row=self.header_row,
                         row_content=self.headers,
                         column_from="A",
-                        column_to=index_num_to_str(len(self.headers)),
+                        column_to=index_num_to_str(len(self.headers) - 1),
                     )
                     for column in self.text_columns:
                         app.data_type_to_text(
@@ -241,15 +246,12 @@ class ExcelApplicationExtension(ExcelApplication):
                             column_to=column,
                         )
                     for i in range(len(row_contents)):
-                        row_value = [None]
-                        for header in self.headers:
-                            if header in row_contents[i].keys():
-                                row_value.append(row_contents[i][header])
-                        app.write_row(
+                        app.write_row_with_header(
                             row=self.header_row + 1 + i,
-                            row_content=row_value,
+                            row_content=row_contents[i],
                             column_from="A",
-                            column_to=index_num_to_str(len(self.headers)),
+                            column_to=index_num_to_str(len(self.headers) - 1),
+                            header_row=self.header_row
                         )
 
                 app.save_excel_as(filename=path + name + ".xls", file_format=56)
