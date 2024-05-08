@@ -33,6 +33,15 @@ class ExcelApplicationExtension(ExcelApplication):
             self.cached_header_row_value = self.worksheet.Rows(header_index).Value[0]
         return self.cached_header_row_value
     
+    def set_active_worksheet(
+        self, sheetname: str = None, sheetnumber: int = None
+    ):
+        self.cached_header_row_index = -1
+        if sheetnumber:
+            self.worksheet = self.workbook.Worksheets(int(sheetnumber))
+        elif sheetname:
+            self.worksheet = self.workbook.Worksheets(sheetname)
+            
     def read_row(
         self,
         row: int = None,
