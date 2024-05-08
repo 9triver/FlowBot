@@ -22,7 +22,8 @@ const createWindow = () => {
 win.webContents.session.on('will-download', (event, item, webContents) => {
   // 无需对话框提示， 直接将文件保存到路径
   if(item.getFilename()=='tasks.py'){
-  item.setSavePath(__dirname+"\\RPA\\tasks.py")
+    item.setSavePath(process.cwd()+"\\RPA\\tasks.py")
+  //item.setSavePath(__dirname+"\\RPA\\tasks.py")
   item.on('updated', (event, state) => {
     if (state === 'interrupted') {
       console.log('Download is interrupted but can be resumed')
@@ -41,12 +42,13 @@ win.webContents.session.on('will-download', (event, item, webContents) => {
       console.log(`Download failed: ${state}`)
     }
   })
-  let myPath = "//RPA"
+  let myPath = "//RPA";
   let cmdStr1 = 'rcc.exe run';
-  let cmdPath = __dirname+myPath
+  // let cmdPath = __dirname+myPath;
+  let cmdPath = process.cwd()+myPath;
   // 子进程名称
   let workerProcess
-  runExec(cmdStr1)
+  runExec(cmdStr1);
   function runExec (cmdStr) {
     workerProcess = exec(cmdStr, { cwd: cmdPath })
     // 打印正常的后台可执行程序输出
@@ -2266,6 +2268,8 @@ function registerForBlock(){{
       var VAR = block.getFieldValue('VAR');
       var start = block.getFieldValue('start');
       var end = block.getFieldValue('end');
+      var End=parseInt(end);
+      End=End+1;
       depth+=1;
       var content =generator.statementToCode(block,'content');
       depth-=1;
@@ -2274,7 +2278,7 @@ function registerForBlock(){{
         {
           code+='    ';
         }
-      code +="for "+VAR+" in range"+"("+start+","+end+"):\n";
+      code +="for "+VAR+" in range"+"("+start+","+(End)+"):\n";
       code+=content;
       return code;
     }   
