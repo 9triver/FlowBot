@@ -60,7 +60,7 @@ class ExcelApplicationExtension(ExcelApplication):
         header_row: int = None,
     ):
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
-        contents = [None] + list(self.worksheet.Range(rangeStr).Value[0])
+        contents = list(self.worksheet.Range(rangeStr).Value[0])
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
         headers = self.fetch_header_row_value(header_row)[index_from:index_to]
