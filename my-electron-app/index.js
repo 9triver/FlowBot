@@ -1618,12 +1618,11 @@ function registerSetCellValue(){
     python.pythonGenerator.forBlock['SetCellValue'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getFieldValue('Workbook');
-      var number1= block.getFieldValue('row');
-      if(number1!='')
-      number1='row='+number1;
-      var number2=block.getFieldValue('column');
-      if(number2!='')
-      number2='column='+number2;
+      var row= block.getFieldValue('row');
+      row='row='+row;
+      var column=block.getFieldValue('column');
+      if(column!='')
+      column='column='+column;
       var value=block.getFieldValue('value');
       value='value='+value;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
@@ -1632,21 +1631,7 @@ function registerSetCellValue(){
       {
         code+='    ';
       }
-      
-      if(number2=='')
-        {
-          if(number1=='')
-          {
-            code +=VAR+".set_active_cell("+value+","+"number_format='@'"+")\n";
-          }
-          else
-          code +=VAR+".set_active_cell("+number1+","+value+","+"number_format='@'"+")\n";
-        }
-      else if(number1=='')
-        {
-          code +=VAR+".set_active_cell("+number2+","+value+","+"number_format='@'"+")\n";
-        }
-      code +=VAR+".set_active_cell("+number1+","+number2+","+value+","+"number_format='@'"+")\n";
+      code +=VAR+".write_cell("+row+","+column+","+value+")\n";
       return code;
     }   
 }
