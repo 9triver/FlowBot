@@ -126,10 +126,10 @@ class ExcelApplicationExtension(ExcelApplication):
         self,
         row: str = None,
         column: str = None,
-        cell_content = None
+        value = None
     ):
         rangeStr = column + str(row)
-        self.worksheet.Range(rangeStr).Value = cell_content
+        self.worksheet.Range(rangeStr).Value = value
     
     def read_column(
         self,
