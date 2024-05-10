@@ -33,15 +33,23 @@ class ExcelApplicationExtension(ExcelApplication):
             self.cached_header_row_value = self.worksheet.Rows(header_index).Value[0]
         return self.cached_header_row_value
     
+    def set_active_worksheet(
+        self, sheetname: str = None, sheetnumber: int = None
+    ):
+        self.cached_header_row_index = -1
+        if sheetnumber:
+            self.worksheet = self.workbook.Worksheets(int(sheetnumber))
+        elif sheetname:
+            self.worksheet = self.workbook.Worksheets(sheetname)
+            
     def read_row(
         self,
         row: int = None,
         column_from: str = None,
         column_to: str = None,
     ):
-        index_from = index_str_to_num(column_from) - 1
-        index_to = index_str_to_num(column_to)
-        contents = [None] + list(self.worksheet.Rows(row).Value[0][index_from:index_to])
+        rangeStr = column_from + str(row) + ":" + column_to + str(row)
+        contents = [None] + list(self.worksheet.Range(rangeStr).Value[0])
         return contents
 
     def read_row_with_header(
@@ -51,9 +59,10 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: str = None,
         header_row: int = None,
     ):
+        rangeStr = column_from + str(row) + ":" + column_to + str(row)
+        contents = list(self.worksheet.Range(rangeStr).Value[0])
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
-        contents = self.worksheet.Rows(row).Value[0][index_from:index_to]
         headers = self.fetch_header_row_value(header_row)[index_from:index_to]
         contents_dict = {}
         for header, content in zip(headers, contents):
@@ -109,10 +118,9 @@ class ExcelApplicationExtension(ExcelApplication):
         if row_from <= self.cached_header_row_index and row_to >= self.cached_header_row_index:
             self.cached_header_row_index = -1
         
-        column_value = column_content[1:]
-        value = [(content,) for content in column_value]
+        column_value = [(content,) for content in column_content[1:]]
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
-        self.worksheet.Range(rangeStr).Value = value
+        self.worksheet.Range(rangeStr).Value = column_value
 
     def read_column(
         self,
@@ -120,13 +128,8 @@ class ExcelApplicationExtension(ExcelApplication):
         row_from: int = None,
         row_to: int = None,
     ):
-        index_from = row_from - 1
-        index_to = row_to
-
-        contents = [None] + [
-            content[0]
-            for content in self.worksheet.Columns(column).Value[index_from:index_to]
-        ]
+        rangeStr = column + str(row_from) + ":" + column + str(row_to)
+        contents = [None] + [content[0] for content in self.worksheet.Range(rangeStr).Value]
         return contents
 
     def read_area(
