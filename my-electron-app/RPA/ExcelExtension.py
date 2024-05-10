@@ -122,6 +122,15 @@ class ExcelApplicationExtension(ExcelApplication):
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
         self.worksheet.Range(rangeStr).Value = column_value
 
+    def write_cell(
+        self,
+        row: str = None,
+        column: str = None,
+        cell_content = None
+    ):
+        rangeStr = column + str(row)
+        self.worksheet.Range(rangeStr).Value = cell_content
+    
     def read_column(
         self,
         column: str = None,
