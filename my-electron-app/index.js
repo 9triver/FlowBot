@@ -147,8 +147,10 @@ function start() {
   registerCreateSheet();
   registerSetActiveSheet();
   registerMergeSheet();
+
   registerCompareBlock();
   registerisNoneBlock();
+
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
@@ -164,6 +166,7 @@ function start() {
   registerForBlock();
   registerForeachBlock();
 
+  registerTeleVerifyBlock();
   registerAndBlock();
   registerOrBlock();
   registerNotBlock();
@@ -1789,6 +1792,35 @@ function registerGetStringLengthBlock(){
           code+='    ';
         }
         code +=VAR+"="+"len("+str+")\n";
+      // Return code.
+      return code;
+    }
+}
+function registerTeleVerifyBlock(){
+  var TeleVerify ={
+    "message0":"对字符串进行手机号码规则校验：\n判断字符串%1是否为手机号",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String",
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['TeleVerify']=
+    {
+      init: function() {
+        this.jsonInit(TeleVerify);
+      } 
+    };
+    python.pythonGenerator.forBlock['TeleVerify'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var code='';
+      var nextBlock =block.getNextBlock();
+        code +="phone_check("+VAR+")";
       // Return code.
       return code;
     }
