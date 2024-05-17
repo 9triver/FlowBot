@@ -54,13 +54,24 @@ win.webContents.session.on('will-download', (event, item, webContents) => {
     // 打印正常的后台可执行程序输出
     workerProcess.stdout.on('data', function (data) {
       console.log('stdout: ' + data)
+      
     })
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
       console.log('stderr: ' + data)
     })
+    workerProcess.on("close",function(code){
+      console.log("out code:" + code)
+      const newWin = new BrowserWindow({
+        width:500,
+        height:500,
+    })
+    newWin.loadFile(process.cwd()+"\\RPA\\output\\log.html")
+    newWin.on('close',()=>{})
+    })
     // 退出之后的输出
   }
+  
   }
   else if(item.getFilename()=='myBlock.json')
   {
@@ -333,7 +344,7 @@ function registerSaveWorkbook(){
 }
 function registerAddWorkbook(){
   var addWorkbook ={
-    "message0":"添加工作簿：\n新增一个工作簿%1",
+    "message0":"新建工作簿：\n新建一个工作簿%1",
     "args0": [
       {
         "type": "field_input",
@@ -1878,7 +1889,7 @@ function registerSubStringBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"创建工作表:\n在工作簿%1里创建新的工作表%2",
+    "message0":"新建工作表:\n在工作簿%1里新建名为%2的工作表",
     "args0": [
       {
         "type": "field_input",
@@ -1918,7 +1929,7 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"设置活跃工作表：\n在工作簿%1里设置活跃工作表%2",
+    "message0":"设置活跃工作表：\n在工作簿%1里设置名为%2的工作表为活跃工作表",
     "args0": [
       {
         "type": "field_input",
