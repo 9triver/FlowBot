@@ -905,7 +905,7 @@ function registerFetchCell(){
         {
           code+='    ';
         }
-        code +=VAR+"="+Workbook+".read_form_cells("+row+","+column+")\n";
+        code +=VAR+"="+Workbook+".read_cell("+row+","+column+")\n";
       return code;
     }   
 }

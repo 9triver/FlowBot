@@ -126,7 +126,10 @@ class ExcelApplicationExtension(ExcelApplication):
     def write_cell(self, row: str = None, column: str = None, value=None):
         rangeStr = column + str(row)
         self.worksheet.Range(rangeStr).Value = value
-
+    def read_cell(self, row: str = None, column: str = None):
+        rangeStr = column + str(row)
+        return self.worksheet.Range(rangeStr).Value
+    
     def read_column(
         self,
         column: str = None,
