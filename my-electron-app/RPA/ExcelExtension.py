@@ -24,24 +24,22 @@ class ExcelApplicationExtension(ExcelApplication):
         super().__init__()
         self.active_row = 1
         self.active_column = "A"
-        self.cached_header_row_value= None
+        self.cached_header_row_value = None
         self.cached_header_row_index = -1
-        
+
     def fetch_header_row_value(self, header_index: int):
         if self.cached_header_row_index != header_index:
             self.cached_header_row_index = header_index
             self.cached_header_row_value = self.worksheet.Rows(header_index).Value[0]
         return self.cached_header_row_value
-    
-    def set_active_worksheet(
-        self, sheetname: str = None, sheetnumber: int = None
-    ):
+
+    def set_active_worksheet(self, sheetname: str = None, sheetnumber: int = None):
         self.cached_header_row_index = -1
         if sheetnumber:
             self.worksheet = self.workbook.Worksheets(int(sheetnumber))
         elif sheetname:
             self.worksheet = self.workbook.Worksheets(sheetname)
-            
+
     def read_row(
         self,
         row: int = None,
@@ -78,7 +76,7 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         if row == self.cached_header_row_index:
             self.cached_header_row_index = -1
-        
+
         row_value = row_content[1:]
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
@@ -93,11 +91,11 @@ class ExcelApplicationExtension(ExcelApplication):
     ):
         if row == self.cached_header_row_index:
             self.cached_header_row_index = -1
-        
+
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
         headers = self.fetch_header_row_value(header_row)[index_from:index_to]
-        
+
         row_value = []
         for header in headers:
             if header in row_content.keys():
@@ -115,13 +113,23 @@ class ExcelApplicationExtension(ExcelApplication):
         row_from: int = None,
         row_to: int = None,
     ):
-        if row_from <= self.cached_header_row_index and row_to >= self.cached_header_row_index:
+        if (
+            row_from <= self.cached_header_row_index
+            and row_to >= self.cached_header_row_index
+        ):
             self.cached_header_row_index = -1
-        
+
         column_value = [(content,) for content in column_content[1:]]
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
         self.worksheet.Range(rangeStr).Value = column_value
 
+    def write_cell(self, row: str = None, column: str = None, value=None):
+        rangeStr = column + str(row)
+        self.worksheet.Range(rangeStr).Value = value
+    def read_cell(self, row: str = None, column: str = None):
+        rangeStr = column + str(row)
+        return self.worksheet.Range(rangeStr).Value
+    
     def read_column(
         self,
         column: str = None,
@@ -129,7 +137,9 @@ class ExcelApplicationExtension(ExcelApplication):
         row_to: int = None,
     ):
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
-        contents = [None] + [content[0] for content in self.worksheet.Range(rangeStr).Value]
+        contents = [None] + [
+            content[0] for content in self.worksheet.Range(rangeStr).Value
+        ]
         return contents
 
     def read_area(
@@ -154,7 +164,7 @@ class ExcelApplicationExtension(ExcelApplication):
         row_to: int = None,
         column_from: int = None,
         column_to: int = None,
-        header_row: int = None
+        header_row: int = None,
     ):
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
@@ -254,7 +264,7 @@ class ExcelApplicationExtension(ExcelApplication):
                             row_content=row_contents[i],
                             column_from="A",
                             column_to=index_num_to_str(len(self.headers) - 1),
-                            header_row=self.header_row
+                            header_row=self.header_row,
                         )
 
                 app.save_excel_as(filename=path + name + ".xls", file_format=56)

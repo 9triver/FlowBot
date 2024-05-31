@@ -54,13 +54,24 @@ win.webContents.session.on('will-download', (event, item, webContents) => {
     // 打印正常的后台可执行程序输出
     workerProcess.stdout.on('data', function (data) {
       console.log('stdout: ' + data)
+      
     })
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
       console.log('stderr: ' + data)
     })
+    workerProcess.on("close",function(code){
+      console.log("out code:" + code)
+      const newWin = new BrowserWindow({
+        width:500,
+        height:500,
+    })
+    newWin.loadFile(process.cwd()+"\\RPA\\output\\log.html")
+    newWin.on('close',()=>{})
+    })
     // 退出之后的输出
   }
+  
   }
   else if(item.getFilename()=='myBlock.json')
   {
@@ -147,8 +158,10 @@ function start() {
   registerCreateSheet();
   registerSetActiveSheet();
   registerMergeSheet();
+
   registerCompareBlock();
   registerisNoneBlock();
+
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
@@ -164,6 +177,7 @@ function start() {
   registerForBlock();
   registerForeachBlock();
 
+  registerTeleVerifyBlock();
   registerAndBlock();
   registerOrBlock();
   registerNotBlock();
@@ -330,7 +344,7 @@ function registerSaveWorkbook(){
 }
 function registerAddWorkbook(){
   var addWorkbook ={
-    "message0":"添加工作簿：\n新增一个工作簿%1",
+    "message0":"新建工作簿：\n新建一个工作簿%1",
     "args0": [
       {
         "type": "field_input",
@@ -376,7 +390,7 @@ function registerGetAllWorkbook()
 { 
   var getAllWorkbook = {
     "type":"getAllWorkbook",
-    "message0": "获取工作簿名：\n获取工作簿集合%1中所有工作簿的名信息，整合到变量%2中",
+    "message0": "获取工作簿名：\n获取表格集合%1中所有工作簿的名信息，整合到变量%2中",
     "args0": [
       {
         "type": "field_input",
@@ -417,7 +431,7 @@ function registerGetAllWorkbook()
 function registerMakeWorkbookDict()
 { 
   var MakeWorkbookDict = {
-    "message0": "创建集合：\n创建工作簿集合%1",
+    "message0": "创建集合：\n创建表格集合%1",
     "args0": [
       {
         "type": "field_input",
@@ -453,7 +467,7 @@ function registerMakeWorkbookDict()
 function registerSetDictHeaders()
 { 
   var SetDictHeaders = {
-    "message0": "设置集合表头：\n将工作簿集合%1的第%2行设置为表头，表头内容为%3\n",
+    "message0": "设置集合表头：\n将表格集合%1的第%2行设置为表头，表头内容为%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -519,7 +533,7 @@ function registerSetDictHeaders()
 function registerAddRowDict()
 { 
   var AddRowDict = {
-    "message0": "集合添加新行：\n在工作簿集合%1中找到工作簿%2，新增一行,内容为:%3\n",
+    "message0": "集合添加新行：\n在表格集合%1中找到工作簿%2，新增一行,内容为:%3\n",
     "args0": [
       {
         "type": "field_input",
@@ -584,7 +598,7 @@ function registerAddRowDict()
 }
 function registerSetDictColText(){
   var SetDictColText ={
-    "message0":"设置集合列数据格式为文本：\n把工作簿集合%1中第%2列内的数据改为纯文本类型",
+    "message0":"设置集合列数据格式为文本：\n把表格集合%1中第%2列内的数据改为纯文本类型",
     "args0": [
       {
         "type": "field_input",
@@ -625,7 +639,7 @@ function registerSetDictColText(){
 function registerGenerateFile()
 { 
   var GenerateFile = {
-    "message0": "导出工作簿：\n将工作簿集合%1中的工作簿导出到路径%2",
+    "message0": "导出工作簿：\n将表格集合%1中的工作簿导出到路径%2",
     "args0": [
       {
         "type": "field_input",
@@ -891,7 +905,7 @@ function registerFetchCell(){
         {
           code+='    ';
         }
-        code +=VAR+"="+Workbook+".read_form_cells("+row+","+column+")\n";
+        code +=VAR+"="+Workbook+".read_cell("+row+","+column+")\n";
       return code;
     }   
 }
@@ -1618,12 +1632,11 @@ function registerSetCellValue(){
     python.pythonGenerator.forBlock['SetCellValue'] = function(block, generator) {
       // Collect argument strings.
       const VAR = block.getFieldValue('Workbook');
-      var number1= block.getFieldValue('row');
-      if(number1!='')
-      number1='row='+number1;
-      var number2=block.getFieldValue('column');
-      if(number2!='')
-      number2='column='+number2;
+      var row= block.getFieldValue('row');
+      row='row='+row;
+      var column=block.getFieldValue('column');
+      if(column!='')
+      column='column='+column;
       var value=block.getFieldValue('value');
       value='value='+value;
       const innerCode = generator.statementToCode(block, 'MY_STATEMENT_INPUT');
@@ -1631,22 +1644,8 @@ function registerSetCellValue(){
       for(var i=0;i<depth;i++)
       {
         code+='    ';
-      }
-      
-      if(number2=='')
-        {
-          if(number1=='')
-          {
-            code +=VAR+".set_active_cell("+value+","+"number_format='@'"+")\n";
-          }
-          else
-          code +=VAR+".set_active_cell("+number1+","+value+","+"number_format='@'"+")\n";
-        }
-      else if(number1=='')
-        {
-          code +=VAR+".set_active_cell("+number2+","+value+","+"number_format='@'"+")\n";
-        }
-      code +=VAR+".set_active_cell("+number1+","+number2+","+value+","+"number_format='@'"+")\n";
+      } 
+      code +=VAR+".write_cell("+row+","+column+","+value+")\n";
       return code;
     }   
 }
@@ -1808,6 +1807,35 @@ function registerGetStringLengthBlock(){
       return code;
     }
 }
+function registerTeleVerifyBlock(){
+  var TeleVerify ={
+    "message0":"对字符串进行手机号码规则校验：\n判断字符串%1是否为手机号",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String",
+      }],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['TeleVerify']=
+    {
+      init: function() {
+        this.jsonInit(TeleVerify);
+      } 
+    };
+    python.pythonGenerator.forBlock['TeleVerify'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var code='';
+      var nextBlock =block.getNextBlock();
+        code +="phone_check("+VAR+")";
+      // Return code.
+      return code;
+    }
+}
 function registerSubStringBlock(){
   var SubString ={
     "message0":"截取字符串片段：\n截取字符串%1的第%2个字符到第%3个字符，存储到变量%4",
@@ -1861,7 +1889,7 @@ function registerSubStringBlock(){
 }
 function registerCreateSheet(){
   var CreateSheet ={
-    "message0":"创建工作表:\n在工作簿%1里创建新的工作表%2",
+    "message0":"新建工作表:\n在工作簿%1里新建名为%2的工作表",
     "args0": [
       {
         "type": "field_input",
@@ -1901,7 +1929,7 @@ function registerCreateSheet(){
 }
 function registerSetActiveSheet(){
   var SetActiveSheet ={
-    "message0":"设置活跃工作表：\n在工作簿%1里设置活跃工作表%2",
+    "message0":"设置活跃工作表：\n在工作簿%1里设置名为%2的工作表为活跃工作表",
     "args0": [
       {
         "type": "field_input",

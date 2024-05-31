@@ -4,20 +4,27 @@ var btnSave = document.getElementById("save");
 var btnLoad =document.getElementById('load');
 var btnEmpty =document.getElementById('empty');
 var btnTest =document.getElementById('test');
+var codeHead ="from robocorp.tasks import task\
+\nimport tools\
+\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication\
+\n\n@task\
+\ndef solve_challenge():\n";
 btnTest.onclick  =function(){
-    var code ="from robocorp.tasks import task";
-    code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
-    code +="\n\n@task";
-    code +="\ndef solve_challenge():\n";
+    // var code ="from robocorp.tasks import task";
+    // code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
+    // code +="\n\n@task";
+    // code +="\ndef solve_challenge():\n";
+    var code=codeHead;
     code += python.pythonGenerator.workspaceToCode(workspace);
     document.getElementById('generatedCodeContainer').value = code;
 }
 
 btnRun.onclick  =function(){
-        var code ="from robocorp.tasks import task";
-        code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
-        code +="\n\n@task";
-        code +="\ndef solve_challenge():\n";
+        // var code ="from robocorp.tasks import task";
+        // code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
+        // code +="\n\n@task";
+        // code +="\ndef solve_challenge():\n";
+        var code=codeHead;
         code += python.pythonGenerator.workspaceToCode(workspace);
         document.getElementById('generatedCodeContainer').value = code;
         const blob = new Blob([code], {
