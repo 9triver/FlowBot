@@ -133,3 +133,4 @@ dist
 *.xlsx
 
 *output
+*log.html
