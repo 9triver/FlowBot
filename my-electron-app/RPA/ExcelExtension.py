@@ -47,7 +47,11 @@ class ExcelApplicationExtension(ExcelApplication):
         column_to: str = None,
     ):
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
-        contents = [None] + list(self.worksheet.Range(rangeStr).Value[0])
+        value = self.worksheet.Range(rangeStr).Value
+        if type(value) != tuple:
+            value =((value,),)
+        
+        contents = [None] + list(value[0])
         return contents
 
     def read_row_with_header(
@@ -58,7 +62,11 @@ class ExcelApplicationExtension(ExcelApplication):
         header_row: int = None,
     ):
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
-        contents = list(self.worksheet.Range(rangeStr).Value[0])
+        value = self.worksheet.Range(rangeStr).Value
+        if type(value) != tuple:
+            value =((value,),)
+            
+        contents = list(value[0])
         index_from = index_str_to_num(column_from) - 1
         index_to = index_str_to_num(column_to)
         headers = self.fetch_header_row_value(header_row)[index_from:index_to]
@@ -137,8 +145,12 @@ class ExcelApplicationExtension(ExcelApplication):
         row_to: int = None,
     ):
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
+        value = self.worksheet.Range(rangeStr).Value
+        if type(value) != tuple:
+            value =((value,),)
+            
         contents = [None] + [
-            content[0] for content in self.worksheet.Range(rangeStr).Value
+            content[0] for content in value
         ]
         return contents
 
