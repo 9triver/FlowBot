@@ -176,6 +176,7 @@ function start() {
 
   registerForBlock();
   registerForeachBlock();
+  registerWhileBlock();
 
   registerTeleVerifyBlock();
   registerAndBlock();
@@ -1218,7 +1219,7 @@ function registerFetchCol(){
       //   code +=VAR+"="+Workbook+".read_col("+number2+","+number3+")\n";
       // }
       // else
-        code +=VAR+"="+Workbook+".read_col("+number1+","+number2+","+number3+")\n";
+        code +=VAR+"="+Workbook+".read_column("+number1+","+number2+","+number3+")\n";
       return code;
     }   
 
@@ -1420,7 +1421,7 @@ function registerWriteCol(){
       if(col_content!='')
       col_content='column_content='+col_content;
       var row_from=block.getFieldValue('row_from');
-      row_from='row_form='+row_from;
+      row_from='row_from='+row_from;
       var row_to=block.getFieldValue('row_to');
       row_to='row_to='+row_to;
       var code ="";
@@ -1440,7 +1441,7 @@ function registerWriteCol(){
       //   code+=workbook+".insert_column("+col_content+")\n";
       // }
       // else
-        code+=workbook+".write_column("+column+","+col_content+","+row_form+","+row_to+")\n";
+        code+=workbook+".write_column("+column+","+col_content+","+row_from+","+row_to+")\n";
       return code;
     }   
 
@@ -2118,7 +2119,7 @@ function registerisNoneBlock(){{
       if(nextBlock!=null && logicOperator!=" null ")
       {
         //alert(nextBlock);
-        var code =VAR+option+"None"+logicOperator;
+        var code =VAR+option+" None"+logicOperator;
       }
       //var prolong=generator.statementToCode(block,'prolong');
       else 
@@ -2357,12 +2358,55 @@ function registerForeachBlock(){{
         {
           code+='    ';
         }
-      code +="for "+VAR+"in"+iterableVar+":\n";
-      code+=condition;
+      code +="for "+VAR+" in "+iterableVar+":\n";
+      code+=content;
       return code;
     }   
 
 }}
+function registerWhileBlock(){
+  var While ={
+   "type":"conditionconnective",
+    "message0":"while %1 :%2",
+    "args0": [
+      {
+        "type": "input_statement",
+        "name":"condition1",
+      },
+      {
+        "type": "input_statement",
+        "name":"content",
+        "check":"string",
+      },
+    ],
+    "output": null,
+    "previousStatement":null,
+    "nextStatement":null,
+    "colour":220,
+  }
+  Blockly.Blocks['While']=
+    {
+      init: function() {
+        this.jsonInit(While);
+      } 
+    };
+    python.pythonGenerator.forBlock['While'] = function(block, generator) {
+      // Collect argument strings.
+      var condition1 =generator.statementToCode(block,'condition1');
+      var content =generator.statementToCode(block,'content');
+      depth+=1;
+      depth-=1;
+      var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+      code +="while "+condition1+":\n";
+      code+=content;
+      return code;
+    }   
+
+}
 function registerAndBlock(){{
   var and ={
     "type":"conditionconnective",

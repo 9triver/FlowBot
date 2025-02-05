@@ -26,7 +26,7 @@ class ExcelApplicationExtension(ExcelApplication):
         self.active_column = "A"
         self.cached_header_row_value = None
         self.cached_header_row_index = -1
-
+    
     def fetch_header_row_value(self, header_index: int):
         if self.cached_header_row_index != header_index:
             self.cached_header_row_index = header_index
