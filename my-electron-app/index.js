@@ -183,6 +183,8 @@ function start() {
   registerOrBlock();
   registerNotBlock();
 
+  registerInsertRowBefore();
+
   workspace = Blockly.inject('blocklyDiv',
     {
         toolbox:document.getElementById('toolbox-categories'),
@@ -1442,6 +1444,55 @@ function registerWriteCol(){
       // }
       // else
         code+=workbook+".write_column("+column+","+col_content+","+row_from+","+row_to+")\n";
+      return code;
+    }   
+
+}
+function registerInsertRowBefore(){
+  var InsertRowBefore ={
+    "message0":"往前插入行：\n在工作簿%1中第%2行前插入%3行新行",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"row",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"num_rows",
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['InsertRowBefore']=
+    {
+      init: function() {
+        this.jsonInit(InsertRowBefore);
+      } 
+    };
+    python.pythonGenerator.forBlock['InsertRowBefore'] = function(block, generator) {
+      // Collect argument strings.
+      const workbook = block.getFieldValue('Workbook');
+      var row= block.getFieldValue('row');
+      if(row!='')
+      row='row='+row;
+      var num_rows=block.getFieldValue('num_rows');
+      if(num_rows!='')
+        num_rows='num_rows='+num_rows;
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code+=workbook+".insert_rows_before("+row+","+num_rows+")\n";
       return code;
     }   
 

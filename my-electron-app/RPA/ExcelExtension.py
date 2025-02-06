@@ -74,7 +74,10 @@ class ExcelApplicationExtension(ExcelApplication):
         for header, content in zip(headers, contents):
             contents_dict[header] = content
         return contents_dict
-
+    # def insert_rows_before(
+    #     self,
+    #     column:str=None,
+    # ):
     def write_row(
         self,
         row: int = None,
@@ -88,7 +91,24 @@ class ExcelApplicationExtension(ExcelApplication):
         row_value = row_content[1:]
         rangeStr = column_from + str(row) + ":" + column_to + str(row)
         self.worksheet.Range(rangeStr).Value = row_value
+    def insert_rows_before(self, row: int = None, num_rows: int = 1):
+        if row is None:
+            raise ValueError("必须指定插入行的位置。")
 
+        # 如果插入位置在缓存表头行之前或覆盖缓存表头行，清除缓存
+        if row <= self.cached_header_row_index:
+            self.cached_header_row_index += num_rows
+
+        # 获取当前活动工作表
+        worksheet = self.worksheet
+
+        # 插入新行
+        worksheet.Rows(row).Insert(Shift=-4121)  # -4121 表示向上插入行
+
+        # 如果插入多行，重复操作
+        if num_rows > 1:
+            for _ in range(num_rows - 1):
+                worksheet.Rows(row).Insert(Shift=-4121)
     def write_row_with_header(
         self,
         row: int = None,
@@ -130,6 +150,7 @@ class ExcelApplicationExtension(ExcelApplication):
         column_value = [(content,) for content in column_content[1:]]
         rangeStr = column + str(row_from) + ":" + column + str(row_to)
         self.worksheet.Range(rangeStr).Value = column_value
+
 
     def write_cell(self, row: str = None, column: str = None, value=None):
         rangeStr = column + str(row)
