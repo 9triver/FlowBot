@@ -182,6 +182,7 @@ function start() {
   registerAndBlock();
   registerOrBlock();
   registerNotBlock();
+  registerLeftjustBlock();
 
   registerInsertRowBefore();
 
@@ -1855,6 +1856,51 @@ function registerGetStringLengthBlock(){
           code+='    ';
         }
         code +=VAR+"="+"len("+str+")\n";
+      // Return code.
+      return code;
+    }
+}
+function registerLeftjustBlock(){
+  var LeftJust ={
+    "message0":"左对齐：\n获取字符串%1，将其补齐到%3位，存储到变量%2",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "str",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "name": "VAR",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "name": "Length",
+        "check":"Number",
+      }
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":220,
+  }
+  Blockly.Blocks['LeftJust']=
+    {
+      init: function() {
+        this.jsonInit(LeftJust);
+      } 
+    };
+    python.pythonGenerator.forBlock['LeftJust'] = function(block, generator) {
+      // Collect argument strings.
+      const VAR = block.getFieldValue('VAR');
+      var str =block.getFieldValue('str');
+      var length=block.getFieldValue('Length');
+        var code='';
+        for(var i=0;i<depth;i++)
+        {
+          code+='    ';
+        }
+        code +=VAR+"=str(int("+str+")).ljust("+length+","+"'0')\n";
       // Return code.
       return code;
     }
