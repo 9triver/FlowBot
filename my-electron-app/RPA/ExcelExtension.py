@@ -109,6 +109,52 @@ class ExcelApplicationExtension(ExcelApplication):
         if num_rows > 1:
             for _ in range(num_rows - 1):
                 worksheet.Rows(row).Insert(Shift=-4121)
+    def insert_columns_before(self, column: str = None, num_columns: int = 1):
+        if not column:
+            raise ValueError("必须指定目标列字母标识（如'A'、'B'）")
+        if num_columns < 1:
+            raise ValueError("插入列数必须为至少1")
+
+        # 列字母转数字索引
+        target_col_num = index_str_to_num(column)
+        
+        # 缓存处理：如果插入位置在已缓存表头列的左侧，需要更新缓存索引
+        if self.cached_header_row_index != -1 and target_col_num <= index_str_to_num(self.active_column):
+            # 将当前激活列字母转换为数字索引
+            current_col_num = index_str_to_num(self.active_column)
+            new_col_num = current_col_num + num_columns
+            self.active_column = index_num_to_str(new_col_num)
+        
+        # 处理表头缓存（如果存在）
+        if self.cached_header_row_index != -1:
+            # 获取当前缓存表头的列范围
+            header_values = self.cached_header_row_value
+            original_col_count = len(header_values)
+            
+            # 如果插入位置在表头范围内，需要扩展表头缓存
+            if target_col_num <= original_col_count:
+                new_header = list(header_values)
+                # 在目标位置插入空值占位符
+                for _ in range(num_columns):
+                    new_header.insert(target_col_num - 1, None)
+                self.cached_header_row_value = tuple(new_header)
+
+        # 获取列范围对象（Excel列索引从1开始）
+        col_range = self.worksheet.Columns(target_col_num)
+        
+        # 插入操作（Shift=-4161对应xlToRight）
+        try:
+            # 批量插入多列（更高效的方式）
+            col_range.Resize(ColumnSize=num_columns).Insert(Shift=-4161)
+        except Exception as e:
+            # 回退到循环插入（兼容旧版本Excel）
+            for _ in range(num_columns):
+                col_range.Insert(Shift=-4161)
+
+        # 自动扩展列宽（可选）
+        inserted_columns = [index_num_to_str(target_col_num + i) for i in range(num_columns)]
+        for col in inserted_columns:
+            self.worksheet.Columns(col).AutoFit()
     def write_row_with_header(
         self,
         row: int = None,

@@ -185,6 +185,7 @@ function start() {
   registerLeftjustBlock();
 
   registerInsertRowBefore();
+  registerInsertColBefore();
 
   workspace = Blockly.inject('blocklyDiv',
     {
@@ -1494,6 +1495,55 @@ function registerInsertRowBefore(){
         code+='    ';
       }
       code+=workbook+".insert_rows_before("+row+","+num_rows+")\n";
+      return code;
+    }   
+
+}
+function registerInsertColBefore(){
+  var InsertColBefore ={
+    "message0":"往前插入列：\n在工作簿%1中第%2列前插入%3列新列",
+    "args0": [
+      {
+        "type": "field_input",
+        "name": "Workbook",
+        "check":"String",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"col",
+      },
+      {
+        "type": "field_input",
+        "check":"number",
+        "name":"num_columns",
+      },
+    ],
+    "previousStatement": null,
+    "nextStatement": null,
+    "colour":200,
+  }
+  Blockly.Blocks['InsertColBefore']=
+    {
+      init: function() {
+        this.jsonInit(InsertColBefore);
+      } 
+    };
+    python.pythonGenerator.forBlock['InsertColBefore'] = function(block, generator) {
+      // Collect argument strings.
+      const workbook = block.getFieldValue('Workbook');
+      var col= block.getFieldValue('col');
+      if(col!='')
+      col='column='+col;
+      var num_cols=block.getFieldValue('num_columns');
+      if(num_cols!='')
+        num_cols='num_columns='+num_cols;
+      var code ="";
+      for(var i=0;i<depth;i++)
+      {
+        code+='    ';
+      }
+      code+=workbook+".insert_columns_before("+col+","+num_cols+")\n";
       return code;
     }   
 
