@@ -86,6 +86,25 @@
       text-align: center;
       box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
     }
+    div #ai-command {
+      width: 23%;
+      border-color: white;
+      background-color: white;
+      margin:10px;
+      color: black;
+      font-size:100%;
+      text-align: center;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
+    }
+    div #ai-generate-btn {
+      border-color: white;
+      background-color: #00b1ba;
+      margin:10px;
+      color: white;
+      font-size:100%;
+      text-align: center;
+      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
+    }
     #blocklyDiv {
       float: left;
       height: 100%;
@@ -195,6 +214,9 @@
   <!-- Toolbox Definition -->
   <div><textarea id="generatedCodeContainer" rows="10" cols="48" readonly placeholder="Generated python will go here..."></textarea>
   <textarea id="generatedFilePath" rows="10" cols="48" readonly placeholder="the file path will go here..."></textarea>
+
+  <br>
+    <input id="ai-command" type="text" placeholder="请输入AI指令">
   <br>
   <input  id="loadfilepath" type="button" value="选择文件路径" >
   <input  id="loadfilefolder" type="button" value="选择文件夹路径" >
@@ -207,6 +229,9 @@
   <br>
   <input  id="test" type="button" value="查看生成代码" >
   <input  id="run" type="button" value="运行" >
+
+  <input id="ai-generate-btn" type="button" value="AI生成">
+  
 </div>
 </body>
 <script src="./node_modules/blockly/blockly_compressed.js"></script>

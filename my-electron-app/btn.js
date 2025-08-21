@@ -10,20 +10,12 @@ var codeHead ="from robocorp.tasks import task\
 \n\n@task\
 \ndef solve_challenge():\n";
 btnTest.onclick  =function(){
-    // var code ="from robocorp.tasks import task";
-    // code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
-    // code +="\n\n@task";
-    // code +="\ndef solve_challenge():\n";
     var code=codeHead;
     code += python.pythonGenerator.workspaceToCode(workspace);
     document.getElementById('generatedCodeContainer').value = code;
 }
 
 btnRun.onclick  =function(){
-        // var code ="from robocorp.tasks import task";
-        // code +="\n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication";
-        // code +="\n\n@task";
-        // code +="\ndef solve_challenge():\n";
         var code=codeHead;
         code += python.pythonGenerator.workspaceToCode(workspace);
         document.getElementById('generatedCodeContainer').value = code;
