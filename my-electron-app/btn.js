@@ -1,9 +1,9 @@
-
 var btnRun = document.getElementById("run");
 var btnSave = document.getElementById("save");
 var btnLoad =document.getElementById('load');
 var btnEmpty =document.getElementById('empty');
 var btnTest =document.getElementById('test');
+var btnAI =document.getElementById('ai');
 var codeHead ="from robocorp.tasks import task\
 \nimport tools\
 \n\nfrom ExcelExtension import ExcelApplicationExtension as ExcelApplication\
@@ -88,9 +88,6 @@ btnLoadPath.addEventListener('click', async () => {
 var btnLoadFolder =document.getElementById('loadfilefolder');
 btnLoadFolder.addEventListener('click', async () => {
     let path = await window.electronAPI.openFileFolder();
-    //alert(file.toString());
-    //let ob= JSON.parse(file);
-    //alert(file);
     let changePath='\'';
     var arr=new Array();
     for(let i=0;i<path.length;i++)
@@ -109,3 +106,20 @@ btnLoadFolder.addEventListener('click', async () => {
     document.getElementById('generatedFilePath').value = changePath;
     //alert(file);
 })
+btnAI.onclick = function () {
+    try {
+        const aiCommand = document.getElementById("ai-command").value;
+        if (!aiCommand.trim()) {
+            alert("请输入AI指令！");
+            return;
+        }
+
+        console.log("捕获的AI指令:", aiCommand);
+
+        // 调用解析函数
+        const blockConfig = handleUserCommand(aiCommand);
+    } catch (error) {
+        console.error("btnAI 函数执行出错:", error);
+        alert("发生错误，请检查控制台日志！"+error);
+    }
+};

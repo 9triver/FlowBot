@@ -1,140 +1,210 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 
 <head>
   <meta charset="utf-8">
-  <title >财务部表格业务处理</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>财务部表格业务处理</title>
   <link rel="stylesheet" href="toolbox_style.css">
   <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #3498db;
+      --accent-color: #00b1ba;
+      --light-color: #ecf0f1;
+      --dark-color: #34495e;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      --border-radius: 6px;
+    }
+
     html,
     body {
-      height: 105%;
-      margin: 0px;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      background-color: #f5f7fa;
     }
-    body {
-      font-family: sans-sevrif;
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    #header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 15px 20px;
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    #header p {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .main-content {
+      display: flex;
+      flex: 1;
       overflow: hidden;
     }
-    #header p{
-      font-size: 150%;
-      color: white;
-      text-align: center;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      margin: 0px;
-    }
-    div #load {
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #empty {
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #save {
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #loadfilepath {
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #loadfilefolder {
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #test{
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #run{
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #ai-command {
-      width: 23%;
-      border-color: white;
-      background-color: white;
-      margin:10px;
-      color: black;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    div #ai-generate-btn {
-      border-color: white;
-      background-color: #00b1ba;
-      margin:10px;
-      color: white;
-      font-size:100%;
-      text-align: center;
-      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    }
-    #blocklyDiv {
-      float: left;
-      height: 100%;
-      width: 75%;
-    }
-    
-    #header {
-      
-      background-color: rgb(39, 170, 187);
-      padding-bottom: 30px;
-      padding-top: 20px;
-      border: solid;
-      border-color:white;
-    }
-  div textarea
-  { 
-    width: 23%;
-    border-color: white;
-    color: black;
-    float: left;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.677);
-    resize: none;
-    margin:0.5%;
-    float: left;
 
-  }
+    #blocklyDiv {
+      flex: 0 0 70%;
+      height: 100%;
+      background: white;
+      border-right: 1px solid #ddd;
+    }
+
+    .sidebar {
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      background-color: white;
+      overflow-y: auto;
+    }
+
+    .code-container {
+      margin-bottom: 15px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9rem;
+      resize: vertical;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    #generatedCodeContainer {
+      height: 150px;
+    }
+
+    #generatedFilePath {
+      height: 80px;
+    }
+
+    #ai-response {
+      height: 120px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .button-row {
+      display: flex;
+      width: 100%;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 8px;
+      border: none;
+      border-radius: var(--border-radius);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow);
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+      background-color: var(--secondary-color);
+    }
+
+    .btn-success {
+      background-color: var(--success-color);
+    }
+
+    .btn-warning {
+      background-color: var(--warning-color);
+    }
+
+    .btn-danger {
+      background-color: var(--danger-color);
+    }
+
+    .btn-accent {
+      background-color: var(--accent-color);
+    }
+
+    .ai-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+    }
+
+    #ai-command {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: var(--border-radius);
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      font-size: 1rem;
+      color: var(--dark-color);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .ai-response-container {
+      margin-top: 10px;
+    }
+
+    @media (max-width: 1200px) {
+      #blocklyDiv {
+        flex: 0 0 60%;
+      }
+      
+      .sidebar {
+        flex: 0 0 40%;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .main-content {
+        flex-direction: column;
+      }
+      
+      #blocklyDiv, .sidebar {
+        flex: 1 1 100%;
+      }
+      
+      #blocklyDiv {
+        height: 50%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+      }
+    }
   </style>
 </head>
+
 <body onload="start()">
-  <xml  id="toolbox-categories" style="display: none">
+  <xml id="toolbox-categories" style="display: none">
     <toolboxlabel name="Custom Toolbox" colour="darkslategrey"></toolboxlabel>
     <category name="赋值" categorystyle="variable_category">
       <block type="setto"></block>
@@ -152,18 +222,15 @@
       <block type="fetchRowNoheader"></block>
       <block type="fetchRow"></block>
       <block type="fetchCol"></block>
+
       <block type="WriteRowNoheader"></block>
       <block type="WriteRow"></block>
       <block type="WriteCol"></block>
+      
       <block type="InsertRowBefore"></block>
       <block type="InsertColBefore"></block>
     </category>
     <category name="其他表格操作" categorystyle="loop_category">
-      <!-- <block type="math_number" gap="32">
-        <field name="NUM">0</field>
-      </block> -->
-      <!-- <block type="MoveActiveCell"></block>
-      <block type="SetActiveCell"></block> -->
       <block type="fetchCell"></block>
       <block type="fetchArea"></block>
       <block type="SetCellValue"></block>
@@ -172,7 +239,6 @@
     <category name="工作表操作" categorystyle="math_category">
       <block type="CreateSheet"></block>
       <block type="SetActiveSheet"></block>
-      <!-- <block type="MergeSheet"></block> -->
     </category>
     <category name="表格集合操作" categorystyle="procedure_category">
       <!-- <block type="text"></block> -->
@@ -209,43 +275,73 @@
       <block type="not"></block>
     </category>
   </xml>
-  <div id="blocklyDiv" >
-  </div >
-  <!-- Toolbox Definition -->
-  <div><textarea id="generatedCodeContainer" rows="10" cols="48" readonly placeholder="Generated python will go here..."></textarea>
-  <textarea id="generatedFilePath" rows="10" cols="48" readonly placeholder="the file path will go here..."></textarea>
 
-  <br>
-    <input id="ai-command" type="text" placeholder="请输入AI指令">
-  <br>
-  <input  id="loadfilepath" type="button" value="选择文件路径" >
-  <input  id="loadfilefolder" type="button" value="选择文件夹路径" >
+  <div class="app-container">
+    <div id="header">
+      <p>财务部表格业务处理</p>
+    </div>
 
-  <br>
-  <input  id="load" type="button" value="加载" >
-  <input  id="empty" type="button" value="清空" >
-  <br>
-  <input  id="save" type="button" value="保存" >
-  <br>
-  <input  id="test" type="button" value="查看生成代码" >
-  <input  id="run" type="button" value="运行" >
+    <div class="main-content">
+      <div id="blocklyDiv"></div>
+      
+      <div class="sidebar">
+        <div class="code-container">
+          <div class="section-title">生成的代码</div>
+          <textarea id="generatedCodeContainer" readonly placeholder="生成的Python代码将显示在这里..."></textarea>
+        </div>
+        
+        <div class="code-container">
+          <div class="section-title">文件路径</div>
+          <textarea id="generatedFilePath" readonly placeholder="文件路径将显示在这里..."></textarea>
+        </div>
+        
+        <div class="button-group">
+          <div class="button-row">
+            <input id="loadfilepath" class="btn btn-primary" type="button" value="选择文件">
+            <input id="loadfilefolder" class="btn btn-primary" type="button" value="选择文件夹">
+          </div>
+          
+          <div class="button-row">
+            <input id="load" class="btn btn-success" type="button" value="加载">
+            <input id="empty" class="btn btn-warning" type="button" value="清空">
+          </div>
+          
+          <div class="button-row">
+            <input id="save" class="btn btn-accent" type="button" value="保存">
+          </div>
+          
+          <div class="button-row">
+            <input id="test" class="btn btn-primary" type="button" value="查看生成代码">
+            <input id="run" class="btn btn-success" type="button" value="运行">
+          </div>
+        </div>
+        
+        <div class="ai-section">
+          <div class="section-title">AI辅助功能</div>
+          <input id="ai-command" type="text" placeholder="请输入AI指令...">
+          
+          <div class="button-row">
+            <input id="ai" class="btn btn-accent" type="button" value="AI生成">
+          </div>
+          
+          <div class="ai-response-container">
+            <div class="section-title">AI回复</div>
+            <textarea id="ai-response" readonly placeholder="AI回复内容将显示在这里..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <input id="ai-generate-btn" type="button" value="AI生成">
-  
-</div>
+  <script src="./node_modules/blockly/blockly_compressed.js"></script>
+  <script src="./node_modules/blockly/blocks_compressed.js"></script>
+  <script src="./node_modules/blockly/javascript_compressed.js"></script>
+  <script src="./node_modules/blockly/python_compressed.js"></script>
+  <script src="./node_modules/blockly/msg/en.js"></script>
+  <script src="CustomCategory.js"></script>
+  <script src="./index.js"></script>
+  <script src="./btn.js"></script>
+  <script src="./AIcommand.js"></script>
 </body>
-<script src="./node_modules/blockly/blockly_compressed.js"></script>
-<script src="./node_modules/blockly/blocks_compressed.js"></script>
-<script src="./node_modules/blockly/javascript_compressed.js"></script>
-<script src="./node_modules/blockly/python_compressed.js"></script>
-<script src="./node_modules/blockly/msg/en.js"></script>
-<!-- <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-<script src="https://unpkg.com/@blockly/dev-tools"></script>
-<script src="https://unpkg.com/blockly/python_compressed"></script>
-<script src="https://unpkg.com/blockly/javascript_compressed"></script> -->
-<script src="CustomCategory.js"></script>
-<script src="./index.js"></script>
-<script src="./btn.js">  </script>
-<script>
- </script>
+
 </html>

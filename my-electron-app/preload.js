@@ -8,3 +8,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     openFileFolder: () => ipcRenderer.invoke('dialog:openFileFolder'),
     // 除函数之外，我们也可以暴露变量
   })
+contextBridge.exposeInMainWorld('node', {
+  require: require
+});

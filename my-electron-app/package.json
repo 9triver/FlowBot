@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "测试版",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -33,6 +34,7 @@
   },
   "dependencies": {
     "blockly": "^10.4.2",
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "openai": "^5.15.0"
   }
 }

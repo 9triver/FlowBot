@@ -8,16 +8,18 @@ const exec = require('child_process').exec;
 const path = require('node:path');
 const { app, BrowserWindow,shell,ipcMain} = require('electron');
 const { dialog } = require('electron');
+
 const { Connection } = require('blockly');
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
     }
   })
-  win.loadFile('index.html')
+  win.loadFile('index.html');
+  win.webContents.openDevTools();
 // 在主进程中.
 win.webContents.session.on('will-download', (event, item, webContents) => {
   // 无需对话框提示， 直接将文件保存到路径
@@ -129,63 +131,66 @@ app.on('window-all-closed', () => {
 function start() {
   registerFirstContextMenuOptions();
 
- 
+  registerSettoBlock();
+
   registerOpenWorkbook();
-  
   registerAddWorkbook();
   registerSaveWorkbook();
-  registerGetAllWorkbook();
 
-  registerSetDictHeaders();
-  registerMakeWorkbookDict();
-  registerAddRowDict();
-  registerSetDictColText();
-  registerGenerateFile();
-
-  registerMoveActiveCell();
-  registerSetActiveCell();
-  registerFetchCell();
   registerFetchRowNoheader();
   registerFetchRow();
   registerFetchCol();
-  registerFetchAreaWithHeader();
-  registerFetchArea();
   registerWriteRowNoheader();
   registerWriteRow();
   registerWriteCol();
+  registerInsertRowBefore();
+  registerInsertColBefore();
+
+  registerFetchCell();
+  registerFetchAreaWithHeader();
+  registerFetchArea();
   registerSetCellValue();
+  registerSetAreaText();
 
   registerCreateSheet();
   registerSetActiveSheet();
-  registerMergeSheet();
 
-  registerCompareBlock();
-  registerisNoneBlock();
+  registerMakeWorkbookDict();
+  registerSetDictHeaders();
+  registerAddRowDict();
+  registerSetDictColText();
+  registerGenerateFile();
+  registerGetAllWorkbook();
+
+  registerSettoNumBlock();
+  registerSettoStringBlock();
+  registerGetStringLengthBlock();  
+  registerSubStringBlock();
+  registerTeleVerifyBlock();
+  registerLeftjustBlock();
 
   registerIfBlock();
   registerElifBlock();
   registerElseBlock();
-  registerSetAreaText();
-
-  registerSettoBlock();
-  registerSettoStringBlock();
-  registerSettoNumBlock();
-
-  registerGetStringLengthBlock();
-  registerSubStringBlock();
 
   registerForBlock();
   registerForeachBlock();
   registerWhileBlock();
 
-  registerTeleVerifyBlock();
+  registerCompareBlock();
+  registerisNoneBlock();
   registerAndBlock();
   registerOrBlock();
   registerNotBlock();
-  registerLeftjustBlock();
 
-  registerInsertRowBefore();
-  registerInsertColBefore();
+  // registerMoveActiveCell();
+  // registerSetActiveCell();
+  // registerMergeSheet();
+
+
+
+
+
 
   workspace = Blockly.inject('blocklyDiv',
     {
@@ -243,21 +248,19 @@ function registerOpenWorkbook()
     "args0": [
       {
         "type": "field_input",
-        "name": "FILE",
+        "name": "FILE_PATH",
         "check":"String",
       },
       {
         "type": "field_input",
-        "name": "VAR",
+        "name": "WORKBOOK_VAR",
         "check":"String",
       }
     ],
     "nextStatement": null,
     "previousStatement":null,
     "colour":200,
-    "tooltip":'Open Workbook {path} As {var} : 打开Excel文档 \
-    \npath: Excel 文档路径，为空表示新建文档 \
-    \nvar: 表示文档的变量名'
+    "tooltip":"打开指定路径的Excel工作簿并赋值给变量\n路径: Excel文档路径\n变量名: 工作簿对象的变量名称"
   };
   Blockly.Blocks['openWorkbook']=
     {
@@ -266,12 +269,12 @@ function registerOpenWorkbook()
       } 
     };
     python.pythonGenerator.forBlock['openWorkbook'] = function(block, generator) {
-      // Collect argument strings.
-      const VAR = block.getFieldValue('VAR');
-      var FILE =block.getFieldValue('FILE');
+      // 获取输入字段值
+      const WORKBOOK_VAR = block.getFieldValue('WORKBOOK_VAR');
+      var FILE =block.getFieldValue('FILE_PATH');
       var FILEPATH;
       if(FILE!='')
-      FILEPATH = FILE;
+        FILEPATH = FILE;
       else
         FILEPATH=FILE;
         var code='';
@@ -279,17 +282,17 @@ function registerOpenWorkbook()
         {
           code+='    ';
         }
-      code +=VAR+"=ExcelApplication()\n";
+      code +=WORKBOOK_VAR+"=ExcelApplication()\n";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-      code +=VAR+".open_application(visible=True)\n";
+      code +=WORKBOOK_VAR+".open_application(visible=True)\n";
       for(var i=0;i<depth;i++)
       {
         code+='    ';
       }
-        code +=VAR+".open_workbook("+FILEPATH+")\n";
+        code +=WORKBOOK_VAR+".open_workbook("+FILEPATH+")\n";
       return code;
     }       
           
@@ -987,70 +990,6 @@ function registerFetchRow(){
         {
           code+='    ';
         }
-      // if(number4=='')
-      // { 
-      //   if(number3=='')
-      //   {
-      //     if(number2=='')
-      //       {
-      //       if(number1=='')
-      //       code += VAR +"="+Workbook+".read_row()\n"; 
-      //       else
-      //       code += VAR +"="+Workbook+".read_row("+number1+")\n";
-      //       }
-      //     else if(number1=='')
-      //     {
-      //       code += VAR +"="+Workbook+".read_row("+number2+")\n";
-      //     }
-      //     else
-      //       code += VAR +"="+Workbook+".read_row("+number1+","+number2+")\n";
-      //   }
-      //   else if(number2=='')
-      //   { 
-      //     if(number1=='')
-      //       {
-      //         code += VAR +"="+Workbook+".read_row("+number3+")\n";
-      //       }
-      //     else 
-      //     code += VAR +"="+Workbook+".read_row("+number1+","+number3+")\n";
-      //   }
-      //   else if(number1=='')
-      //   code += VAR +"="+Workbook+".read_row("+number2+","+number3+")\n";
-      //   else
-      //   code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number3+")\n";
-      // }
-      // else if(number3=='')
-      // {
-      //   if(number2=='')
-      //   {
-      //     if(number1=='')
-      //     {
-      //       code += VAR +"="+Workbook+".read_row("+number4+")\n";
-      //     }
-      //     else
-      //     code += VAR +"="+Workbook+".read_row("+number1+","+number4+")\n";
-      //   }
-      //   else if(number1=='')
-      //   {
-      //     code += VAR +"="+Workbook+".read_row("+number3+")\n";
-      //   }
-      //   else
-      //   code += VAR +"="+Workbook+".read_row("+number1+","+number2+","+number4+")\n";
-      // }
-      // else if(number2=='')
-      // { 
-      //   if(number1=='')
-      //   {
-      //     code += VAR +"="+Workbook+".read_row("+number3+","+number4+")\n";
-      //   }
-      //   else
-      //   code += VAR +"="+Workbook+".read_row("+number1+","+number3+","+number4+")\n";
-      // }
-      // else if(number1=='')
-      // { 
-      //   code += VAR +"="+Workbook+".read_row("+number2+","+number3+","+number4+")\n";
-      // }
-      // else
       code += VAR +"="+Workbook+".read_row_with_header("+number1+","+number2+","+number3+","+header_row+")\n";
       return code;
     }   
@@ -1408,6 +1347,7 @@ function registerWriteCol(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":160,
+    "tooltip": "向工作簿中写入指定列的内容\nWorkbook: Excel工作簿变量名\ncolumn: 要写入的列号（A=1, B=2, C=3...）\ncol_content: 要写入的列内容（逗号分隔的值）\nrow_from: 起始行号\nrow_to: 结束行号"
   }
   Blockly.Blocks['WriteCol']=
     {
@@ -1769,9 +1709,7 @@ function registerSettoBlock(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":330,
-    "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
-    \nworkbook: Excel 文档变量名 \
-    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
+"tooltip": "将表达式的结果赋值给变量\nVAR: 目标变量名\nexp: 要赋值的表达式，可以是计算式、函数调用或其他值"
   }
   Blockly.Blocks['setto']=
     {
@@ -1810,9 +1748,6 @@ function registerSettoStringBlock(){
     "previousStatement": null,
     "nextStatement": null,
     "colour":350,
-    "tooltip":'{workbook} Save Workbook {path} : 保存 Excel 文档 \
-    \nworkbook: Excel 文档变量名 \
-    \npath: 目标保存路径，为空表示在文档原位置覆盖保存'
   }
   Blockly.Blocks['SettoString']=
     {
