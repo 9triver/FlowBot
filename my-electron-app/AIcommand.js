@@ -1657,8 +1657,383 @@ const tools = [
     }
   }
   },
-
-
+//辅助功能
+{
+  type: "function",
+  function: {
+    name: "convert_string_to_number",
+    description: "将字符串列号转换为数字列号",
+    parameters: {
+      type: "object",
+      properties: {
+        variable_name: {
+          type: "string",
+          description: "目标变量名，例如：'column_number'"
+        },
+        expression: {
+          type: "string",
+          description: "字符串列号，例如：'A'、'B'"
+        }
+      },
+      required: ["variable_name", "expression"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "convert_number_to_string",
+    description: "将数字列号转换为字符串列号",
+    parameters: {
+      type: "object",
+      properties: {
+        variable_name: {
+          type: "string",
+          description: "目标变量名，例如：'column_letter'"
+        },
+        expression: {
+          type: "number",
+          description: "数字列号，例如：1、2"
+        }
+      },
+      required: ["variable_name", "expression"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "get_string_length",
+    description: "获取字符串的长度",
+    parameters: {
+      type: "object",
+      properties: {
+        string: {
+          type: "string",
+          description: "目标字符串，例如：'Hello World'"
+        },
+        variable_name: {
+          type: "string",
+          description: "存储结果的变量名，例如：'string_length'"
+        }
+      },
+      required: ["string", "variable_name"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "substring",
+    description: "截取字符串片段",
+    parameters: {
+      type: "object",
+      properties: {
+        string: {
+          type: "string",
+          description: "目标字符串，例如：'Hello World'"
+        },
+        start_index: {
+          type: "number",
+          description: "起始字符索引，例如：0、1"
+        },
+        end_index: {
+          type: "number",
+          description: "结束字符索引，例如：5、10"
+        },
+        variable_name: {
+          type: "string",
+          description: "存储结果的变量名，例如：'substring_result'"
+        }
+      },
+      required: ["string", "start_index", "end_index", "variable_name"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "verify_phone_number",
+    description: "校验字符串是否符合手机号码规则",
+    parameters: {
+      type: "object",
+      properties: {
+        string: {
+          type: "string",
+          description: "目标字符串，例如：'1234567890'"
+        },
+        variable_name: {
+          type: "string",
+          description: "存储校验结果的变量名，例如：'is_valid_phone'"
+        }
+      },
+      required: ["string", "variable_name"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "left_justify",
+    description: "左对齐字符串并补齐到指定长度",
+    parameters: {
+      type: "object",
+      properties: {
+        string: {
+          type: "string",
+          description: "目标字符串，例如：'Hello'"
+        },
+        length: {
+          type: "number",
+          description: "补齐后的长度，例如：10"
+        },
+        variable_name: {
+          type: "string",
+          description: "存储结果的变量名，例如：'justified_string'"
+        }
+      },
+      required: ["string", "length", "variable_name"]
+    }
+  }
+},
+//条件
+{
+  type: "function",
+  function: {
+    name: "if_statement",
+    description: "条件语句块，用于执行满足条件的代码块",
+    parameters: {
+      type: "object",
+      properties: {
+        condition: {
+          type: "string",
+          description: "条件表达式，例如：'A1 > 100'、'is_valid == true'"
+        },
+        true_content: {
+          type: "array",
+          description: "满足条件时执行的代码块列表"
+        }
+      },
+      required: ["condition", "true_content"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "elif_statement",
+    description: "条件语句块，用于执行满足条件的代码块（else if）",
+    parameters: {
+      type: "object",
+      properties: {
+        condition: {
+          type: "string",
+          description: "条件表达式，例如：'A1 > 100'、'is_valid == true'"
+        },
+        content: {
+          type: "array",
+          description: "满足条件时执行的代码块列表"
+        }
+      },
+      required: ["condition", "content"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "else_statement",
+    description: "条件语句块，用于执行不满足条件的代码块",
+    parameters: {
+      type: "object",
+      properties: {
+        content: {
+          type: "array",
+          description: "不满足条件时执行的代码块列表"
+        }
+      },
+      required: ["content"]
+    }
+  }
+},
+//循环
+{
+  type: "function",
+  function: {
+    name: "for_loop",
+    description: "循环语句块，用于执行指定次数的代码块",
+    parameters: {
+      type: "object",
+      properties: {
+        variable_name: {
+          type: "string",
+          description: "循环变量名，例如：'i'"
+        },
+        start: {
+          type: "number",
+          description: "循环起始值，例如：1"
+        },
+        end: {
+          type: "number",
+          description: "循环结束值，例如：10"
+        },
+        content: {
+          type: "array",
+          description: "循环体内执行的代码块列表"
+        }
+      },
+      required: ["variable_name", "start", "end", "content"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "foreach_loop",
+    description: "循环语句块，用于遍历可迭代对象",
+    parameters: {
+      type: "object",
+      properties: {
+        variable_name: {
+          type: "string",
+          description: "循环变量名，例如：'item'"
+        },
+        iterable_var: {
+          type: "string",
+          description: "可迭代对象，例如：'list_items'"
+        },
+        content: {
+          type: "array",
+          description: "循环体内执行的代码块列表"
+        }
+      },
+      required: ["variable_name", "iterable_var", "content"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "while_loop",
+    description: "循环语句块，用于执行满足条件的代码块",
+    parameters: {
+      type: "object",
+      properties: {
+        condition: {
+          type: "string",
+          description: "循环条件，例如：'A1 < 100'、'is_running == true'"
+        },
+        content: {
+          type: "array",
+          description: "循环体内执行的代码块列表"
+        }
+      },
+      required: ["condition", "content"]
+    }
+  }
+},
+//逻辑块
+{
+  type: "function",
+  function: {
+    name: "compare_values",
+    description: "比较两个值的逻辑块",
+    parameters: {
+      type: "object",
+      properties: {
+        value_type: {
+          type: "string",
+          description: "值类型，例如：'int'、'float'、'str'"
+        },
+        exp1: {
+          type: "string",
+          description: "第一个表达式，例如：'A1'、'100'"
+        },
+        comparation: {
+          type: "string",
+          description: "比较运算符，例如：'<'、'=='、'>'"
+        },
+        exp2: {
+          type: "string",
+          description: "第二个表达式，例如：'B1'、'200'"
+        }
+      },
+      required: ["value_type", "exp1", "comparation", "exp2"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "is_none",
+    description: "判断变量是否为空",
+    parameters: {
+      type: "object",
+      properties: {
+        variable_name: {
+          type: "string",
+          description: "变量名，例如：'result'"
+        },
+        option: {
+          type: "string",
+          description: "判断选项，例如：'is'、'is not'"
+        }
+      },
+      required: ["variable_name", "option"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "and_condition",
+    description: "逻辑与条件块",
+    parameters: {
+      type: "object",
+      properties: {
+        condition1: {
+          type: "string",
+          description: "第一个条件表达式，例如：'A1 > 100'"
+        }
+      },
+      required: ["condition1"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "or_condition",
+    description: "逻辑或条件块",
+    parameters: {
+      type: "object",
+      properties: {
+        condition1: {
+          type: "string",
+          description: "第一个条件表达式，例如：'A1 > 100'"
+        }
+      },
+      required: ["condition1"]
+    }
+  }
+},
+{
+  type: "function",
+  function: {
+    name: "not_condition",
+    description: "逻辑非条件块",
+    parameters: {
+      type: "object",
+      properties: {
+        condition1: {
+          type: "string",
+          description: "条件表达式，例如：'A1 > 100'"
+        }
+      },
+      required: ["condition1"]
+    }
+  }
+}
 ];
 
 
@@ -1697,7 +2072,26 @@ const functionToBlockMap = {
   "generate_file": "GenerateFile",
   "get_all_workbooks": "getAllWorkbook",
 
+  "convert_string_to_number": "SettoNum",
+  "convert_number_to_string": "SettoString",
+  "get_string_length": "GetStringLength",
+  "substring": "SubString",
+  "verify_phone_number": "TeleVerify",
+  "left_justify": "LeftJust",
 
+  "if_statement": "IF",
+  "elif_statement": "Elif",
+  "else_statement": "Else",
+
+  "for_loop": "For",
+  "foreach_loop": "Foreach",
+  "while_loop": "While",
+
+  "compare_values": "Compare",
+  "is_none": "isNone",
+  "and_condition": "and",
+  "or_condition": "or",
+  "not_condition": "not"
 };
 
 // 参数映射 - 将AI返回的参数名映射到Blockly块中的字段名
@@ -1838,8 +2232,80 @@ const paramMapping = {
   "workbook_collection": "Dict",
   "variable_name": "VAR"
 },
+//辅助
+"convert_string_to_number": {
+  "variable_name": "VAR",
+  "expression": "exp"
+},
+"convert_number_to_string": {
+  "variable_name": "VAR",
+  "expression": "exp"
+},
+"get_string_length": {
+  "string": "str",
+  "variable_name": "VAR"
+},
+"substring": {
+  "string": "str",
+  "start_index": "head",
+  "end_index": "tail",
+  "variable_name": "VAR"
+},
+"verify_phone_number": {
+  "string": "VAR"
+},
+"left_justify": {
+  "string": "str",
+  "length": "Length",
+  "variable_name": "VAR"
+},
+"if_statement": {
+  "condition": "condition",
+  "true_content": "content"
+},
+"elif_statement": {
+  "condition": "condition",
+  "content": "content"
+},
+"else_statement": {
+  "content": "content"
+},
 
+"for_loop": {
+  "variable_name": "VAR",
+  "start": "start",
+  "end": "end",
+  "content": "content"
+},
+"foreach_loop": {
+  "variable_name": "VAR",
+  "iterable_var": "iterable_var",
+  "content": "content"
+},
+"while_loop": {
+  "condition": "condition1",
+  "content": "content"
+},
 
+"compare_values": {
+  "value_type": "value_type",
+  "exp1": "exp1",
+  "comparation": "comparation",
+  "exp2": "exp2"
+},
+"is_none": {
+  "variable_name": "VAR",
+  "option": "option"
+},
+"and_condition": {
+  "condition1": "condition1"
+},
+"or_condition": {
+  "condition1": "condition1"
+},
+"not_condition": {
+  "condition1": "condition1"
+}
 };
 
 async function getAIResponse(userInput) {
